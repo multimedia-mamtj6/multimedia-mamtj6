@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scheduled Image Embed with Google Sheets</title>
+    <style>
+        html, body {
+            height: 100%;
+            margin: 0;
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #f4f4f4;
+        }
+        #image-container {
+            position: relative;
+            width: 100%;
+            max-width: 1920px;
+            aspect-ratio: 1920 / 912; /* Maintain the 1920x912 aspect ratio */
+            background-color: transparent; /* Make the background transparent */
+            overflow: hidden;
+        }
+        img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0; /* Start fully transparent */
+            transition: opacity 1s ease-in-out; /* Smooth fade-in */
+        }
+        .caption, #loading-bar-container {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            text-align: center;
+            font-size: 16px;
+            color: #fff;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 10px;
+        }
+        .caption {
+            bottom: 50px; /* Position the caption above the loading bar */
+        }
+        #loading-bar-container {
+            height: 5px;
+            background-color: rgba(255, 255, 255, 0.3);
+        }
+        #loading-bar {
+            width: 0;
+            height: 100%;
+            background-color: #007bff;
+            animation: loading 2s infinite;
+        }
+        @keyframes loading {
+            0% { width: 0; }
+            50% { width: 75%; }
+            100% { width: 100%; }
+        }
+    </style>
+</head>
+<body>
+    <div id="image-container">
+        <div id="loading-bar-container">
+            <div id="loading-bar"></div>
+        </div>
+        <div id="image-caption" class="caption"></div>
+        <img id="daily-image" src="" alt="Image of the day" onload="imageLoaded()">
+    </div>
+
+    <script>
+        const malaysiaTime = new Date().toLocaleString("en-US", { timeZone: "Asia/Kuala_Lumpur" });
+        const currentDate = new Date(malaysiaTime).toISOString().split("T")[0]; // YYYY-MM-DD format
+
+        // Google Sheets URL
+        const sheetUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRuHEJKi6DIRWPJMCZWAovQ9UINlPn6BNvhnY_9rpLDL7_mFFUmkgbdwCQy4wR3xXVM_KUetY-3fb25/pub?gid=964903189&single=true&output=csv";
+
+        async function fetchSchedule() {
+            try {
+                const response = await fetch(sheetUrl);
+                const csvText = await response.text();
+                const schedule = parseCSV(csvText);
+
+                // Find today's image
+                const todayImage = schedule.find(item => item.Tarikh === currentDate) || {
+                    "Source Image": "default.jpg", // Default image
+                    Caption: "Tiada imej khas dijadualkan untuk hari ini."
+                };
+
+                // Update the image and caption
+                document.getElementById("daily-image").src = todayImage["Source Image"];
+                document.getElementById("daily-image").alt = todayImage.Caption;
+                document.getElementById("image-caption").textContent = todayImage.Caption;
+            } catch (error) {
+                console.error("Failed to fetch schedule:", error);
+            }
+        }
+
+        function parseCSV(csvText) {
+            const rows = csvText.split("\n");
+            const headers = rows.shift().split(","); // First row contains headers
+
+            return rows.map(row => {
+                const values = row.split(",");
+                return headers.reduce((obj, header, index) => {
+                    obj[header.trim()] = values[index]?.trim();
+                    return obj;
+                }, {});
+            });
+        }
+
+        function imageLoaded() {
+            const image = document.getElementById("daily-image");
+            const loadingBarContainer = document.getElementById("loading-bar-container");
+            const imageCaption = document.getElementById("image-caption");
+
+            // Hide loading bar and caption, then fade in the image
+            loadingBarContainer.style.display = "none";
+            imageCaption.style.display = "none";
+            image.style.opacity = 1;
+        }
+
+        // Fetch schedule on page load
+        fetchSchedule();
+    </script>
+</body>
+</html>
