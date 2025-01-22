@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Waktu Solat Countdown</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #transparent;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+      }
+
+      .prayer-container {
+        background-color: #ffffff;
+        border-radius: 10px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        width: 90%;
+        max-width: 400px;
+        text-align: center;
+        padding: 20px;
+      }
+
+      .header {
+        background-color: #28a745;
+        color: #fff;
+        padding: 15px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+      }
+
+      .header .title {
+        font-size: 20px;
+        font-weight: bold;
+        margin: 0;
+      }
+
+      .header .date-line {
+        font-size: 14px;
+        margin-top: 5px;
+        color: #fff;
+      }
+
+      .countdown-container {
+        text-align: center;
+        margin: 20px 0;
+      }
+
+      .countdown-title {
+        font-size: 16px;
+        color: #333;
+        font-weight: bold;
+        margin-bottom: 10px;
+      }
+
+      .next-prayer {
+        font-size: 24px;
+        font-weight: bold;
+        color: #28a745;
+        margin-bottom: 10px;
+      }
+
+      .countdown {
+        display: flex;
+        justify-content: center;
+        gap: 20px;
+      }
+
+      .countdown-unit {
+        font-size: 24px;
+        color: #333;
+        text-align: center;
+        font-weight: bold;
+      }
+
+      .prayer-times {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+        margin: 20px 0;
+      }
+
+      .prayer {
+        background-color: #f8f8f8;
+        border-radius: 8px;
+        padding: 10px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+
+      .prayer-name {
+        font-weight: bold;
+        color: #28a745;
+        margin-bottom: 5px;
+      }
+
+      .prayer-time {
+        font-size: 16px;
+        color: #333;
+      }
+
+      .footer {
+        font-size: 12px;
+        text-align: center;
+        color: #555;
+      }
+
+      .footer a {
+        color: #28a745;
+        text-decoration: none;
+      }
+
+      .footer a:hover {
+        text-decoration: underline;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="prayer-container">
+      <!-- Header Section -->
+      <div class="header">
+        <div class="title">Waktu Solat Daerah Temerloh</div>
+        <div class="date-line" id="dateLine">---</div>
+      </div>
+
+      <!-- Countdown Section -->
+      <div class="countdown-container">
+        <div class="countdown-title">Waktu Solat Seterusnya</div>
+        <div class="next-prayer" id="nextPrayer">---</div>
+        <div class="countdown">
+          <div class="countdown-unit">
+            <span id="hours">00</span> <br /> JAM
+          </div>
+          <div class="countdown-unit">
+            <span id="minutes">00</span> <br /> MINIT
+          </div>
+          <div class="countdown-unit">
+            <span id="seconds">00</span> <br /> SAAT
+          </div>
+        </div>
+      </div>
+
+      <!-- Prayer Times Section -->
+      <div class="prayer-times" id="prayerTimes"></div>
+
+      <!-- Footer Section -->
+      <div class="footer">
+        © 2025 <a href="https://api.waktusolat.app" target="_blank">Waktu Solat API</a>
+        | design by <a href="https://www.mamtj6.com" target="_blank">mamtj6.com</a>
+      </div>
+    </div>
+
+    <script>
+      const apiUrl = "https://api.waktusolat.app/v2/solat/PHG03";
+
+      async function fetchPrayerTimes() {
+        try {
+          const response = await fetch(apiUrl);
+          const data = await response.json();
+          const today = new Date();
+          const day = today.getDate();
+
+          const todayPrayer = data.prayers.find((prayer) => prayer.day === day);
+
+          if (todayPrayer) {
+            const hijriDate = todayPrayer.hijri.split("-");
+            const hijriDay = hijriDate[2];
+            const hijriMonthNames = {
+              "01": "Muharram",
+              "02": "Safar",
+              "03": "Rabi'ul Awwal",
+              "04": "Rabi'ul Akhir",
+              "05": "Jumadil Awwal",
+              "06": "Jumadil Akhir",
+              "07": "Rejab",
+              "08": "Syaaban",
+              "09": "Ramadan",
+              "10": "Syawal",
+              "11": "Zulkaedah",
+              "12": "Zulhijjah",
+            };
+            const hijriMonth = hijriMonthNames[hijriDate[1]];
+            const hijriYear = hijriDate[0];
+            const weekdayNames = [
+              "Ahad",
+              "Isnin",
+              "Selasa",
+              "Rabu",
+              "Khamis",
+              "Jumaat",
+              "Sabtu",
+            ];
+            const weekday = weekdayNames[today.getDay()];
+            const monthNames = [
+              "Januari",
+              "Februari",
+              "Mac",
+              "April",
+              "Mei",
+              "Jun",
+              "Julai",
+              "Ogos",
+              "September",
+              "Oktober",
+              "November",
+              "Disember",
+            ];
+            const month = monthNames[today.getMonth()];
+            const year = today.getFullYear();
+
+            document.getElementById("dateLine").innerText = `${weekday}, ${day} ${month} ${year} / ${hijriDay} ${hijriMonth} ${hijriYear}`;
+
+            const prayers = [
+              { name: "Subuh", time: todayPrayer.fajr },
+              { name: "Syuruk", time: todayPrayer.syuruk },
+              { name: "Zohor", time: todayPrayer.dhuhr },
+              { name: "Asar", time: todayPrayer.asr },
+              { name: "Maghrib", time: todayPrayer.maghrib },
+              { name: "Isyak", time: todayPrayer.isha },
+            ];
+
+            updateCountdown(prayers);
+
+            const prayerTimes = document.getElementById("prayerTimes");
+            prayers.forEach((prayer) => {
+              const prayerDiv = document.createElement("div");
+              prayerDiv.className = "prayer";
+              prayerDiv.innerHTML = `
+                <div class="prayer-name">${prayer.name}</div>
+                <div class="prayer-time">${convertTimestamp(prayer.time)}</div>
+              `;
+              prayerTimes.appendChild(prayerDiv);
+            });
+          } else {
+            showErrorMessage("Tiada waktu solat tersedia untuk hari ini.");
+          }
+        } catch (error) {
+          console.error("Error fetching prayer times:", error);
+          showErrorMessage("Tidak dapat mendapatkan waktu solat. Sila cuba lagi.");
+        }
+      }
+
+      function updateCountdown(prayers) {
+        const now = new Date();
+        let nextPrayer = null;
+
+        for (const prayer of prayers) {
+          const prayerTime = new Date(
+            now.toDateString() + " " + convertTimestamp(prayer.time)
+          );
+          if (prayerTime > now) {
+            nextPrayer = { name: prayer.name, time: prayerTime };
+            break;
+          }
+        }
+
+        if (nextPrayer) {
+          document.getElementById("nextPrayer").innerText = nextPrayer.name;
+
+          const countdownInterval = setInterval(() => {
+            const now = new Date();
+            const diff = nextPrayer.time - now;
+
+            if (diff <= 0) {
+              clearInterval(countdownInterval);
+              fetchPrayerTimes();
+              return;
+            }
+
+            const hours = Math.floor(diff / (1000 * 60 * 60));
+            const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+            document.getElementById("hours").innerText = String(hours).padStart(2, "0");
+            document.getElementById("minutes").innerText = String(minutes).padStart(2, "0");
+            document.getElementById("seconds").innerText = String(seconds).padStart(2, "0");
+          }, 1000);
+        }
+      }
+
+      function convertTimestamp(timestamp) {
+        const date = new Date(timestamp * 1000);
+        return date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+      }
+
+      fetchPrayerTimes();
+    </script>
+  </body>
+</html>
