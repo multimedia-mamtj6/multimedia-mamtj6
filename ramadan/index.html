@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ramadan Countdown</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      padding: 20px;
+      background-color: #f9f9f9;
+    }
+    h1 {
+      color: #444;
+    }
+    #rss-content {
+      margin-top: 20px;
+      padding: 15px;
+      background: #fff;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+    small {
+      display: block;
+      margin-top: 10px;
+      color: #888;
+    }
+  </style>
+</head>
+<body>
+  <h1>Ramadan Countdown</h1>
+  <div id="rss-content">
+    <!-- Countdown will load here -->
+    <p>Loading Ramadan countdown...</p>
+  </div>
+
+  <script>
+    // RSS Feed URL
+    const rssUrl = 'http://fetchrss.com/rss/6791a4ba7214f884630ef7946791a4a3c2f491098e03f773.xml';
+
+    // Fetch RSS Feed
+    async function loadRSS() {
+      try {
+        const response = await fetch(rssUrl);
+        const text = await response.text();
+        const parser = new DOMParser();
+        const xml = parser.parseFromString(text, "application/xml");
+
+        // Extract RSS Data
+        const item = xml.querySelector("item");
+        const title = item.querySelector("title").textContent;
+        const description = item.querySelector("description").textContent;
+        const pubDate = item.querySelector("pubDate").textContent;
+
+        // Display RSS Data
+        const contentDiv = document.getElementById("rss-content");
+        contentDiv.innerHTML = `
+          <h2>${title}</h2>
+          <p>${description}</p>
+          <small>Published: ${new Date(pubDate).toLocaleString()}</small>
+        `;
+      } catch (error) {
+        document.getElementById("rss-content").innerHTML = `<p>Failed to load countdown. Please try again later.</p>`;
+      }
+    }
+
+    // Load RSS Data
+    loadRSS();
+  </script>
+</body>
+</html>
