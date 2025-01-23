@@ -39,14 +39,15 @@
   <script>
     // RSS Feed URL
     const rssUrl = 'http://fetchrss.com/rss/6791a4ba7214f884630ef7946791a4a3c2f491098e03f773.xml';
+    const proxyUrl = 'https://api.allorigins.win/get?url=' + encodeURIComponent(rssUrl);
 
     // Fetch RSS Feed
     async function loadRSS() {
       try {
-        const response = await fetch(rssUrl);
-        const text = await response.text();
+        const response = await fetch(proxyUrl);
+        const data = await response.json();
         const parser = new DOMParser();
-        const xml = parser.parseFromString(text, "application/xml");
+        const xml = parser.parseFromString(data.contents, "application/xml");
 
         // Extract RSS Data
         const item = xml.querySelector("item");
@@ -62,6 +63,7 @@
           <small>Published: ${new Date(pubDate).toLocaleString()}</small>
         `;
       } catch (error) {
+        console.error("Error fetching RSS feed:", error);
         document.getElementById("rss-content").innerHTML = `<p>Failed to load countdown. Please try again later.</p>`;
       }
     }
