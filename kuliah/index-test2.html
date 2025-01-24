@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scheduled Image Embed with Google Sheets</title>
+    <style>
+        html, body {
+            height: 100%;
+            margin: 0;
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: url('https://i.postimg.cc/9Q7HVK4C/JADUAL-KULIAH-copy.webp') no-repeat center center / cover; /* Same background as loading screen */
+        }
+        #image-container {
+            position: relative;
+            width: 100%;
+            max-width: 1920px;
+            height: 912px; /* Fixed height to match the aspect ratio of 1920x912 */
+            overflow: hidden;
+        }
+        img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover; /* Ensures the image covers the entire container */
+            object-position: center center; /* Ensure the image is centered */
+            opacity: 0; /* Start fully transparent */
+            transition: opacity 1s ease-in-out; /* Smooth fade-in */
+        }
+        #loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('https://i.postimg.cc/9Q7HVK4C/JADUAL-KULIAH-copy.webp') no-repeat center center / cover;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: #fff;
+            font-size: 32px; /* Resize the loading screen text */
+            font-weight: bold;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+            z-index: 9999;
+        }
+        #loading-text {
+            margin-top: 20px;
+        }
+        #loading-date {
+            font-size: 14px; /* Make the date smaller */
+            margin-top: 5px;
+        }
+        #loading-screen.hidden {
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.5s ease-out;
+        }
+    </style>
+</head>
+<body>
+    <div id="loading-screen">
+        <div id="loading-text">KULIAH MAGHRIB HARI INI</div>
+        <div id="loading-date"></div> <!-- Date will be added here -->
+    </div>
+
+    <div id="image-container">
+        <img id="daily-image" src="" alt="Image of the day">
+    </div>
+
+    <script>
+        const malaysiaTime = new Date().toLocaleString("en-US", { timeZone: "Asia/Kuala_Lumpur" });
+        const currentDate = new Date(malaysiaTime);
+
+        // Function to format the date in Malay
+        function formatDateInMalay(date) {
+            const options = { day: '2-digit', month: 'long', year: 'numeric' };
+            return date.toLocaleDateString('ms-MY', options); // 'ms-MY' is the Malay locale
+        }
+
+        const formattedDate = formatDateInMalay(currentDate);
+
+        // Google Sheets URL
+        const sheetUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRuHEJKi6DIRWPJMCZWAovQ9UINlPn6BNvhnY_9rpLDL7_mFFUmkgbdwCQy4wR3xXVM_KUetY-3fb25/pub?gid=964903189&single=true&output=csv";
+
+        async function fetchSchedule() {
+            try {
+                // Start fetching the CSV
+                const response = await fetch(sheetUrl);
+                const csvText = await response.text();
+                const schedule = parseCSV(csvText);
+
+                // Find today's image
+                const todayImage = schedule.find(item => item.Tarikh === currentDate.toISOString().split("T")[0]) || {
+                    "Source Image": "default.jpg"
+                };
+
+                // Preload today's image
+                preloadImage(todayImage["Source Image"], () => {
+                    const imageElement = document.getElementById("daily-image");
+                    const loadingScreen = document.getElementById("loading-screen");
+
+                    // Update the image source
+                    imageElement.src = todayImage["Source Image"];
+
+                    // Ensure the loading screen stays visible for at least 5 seconds
+                    setTimeout(() => {
+                        // Hide the loading screen
+                        loadingScreen.classList.add('hidden');
+                        // Fade in the image
+                        imageElement.style.opacity = 1;
+                    }, 5000); // 5-second delay
+                });
+
+            } catch (error) {
+                console.error("Failed to fetch schedule:", error);
+            }
+        }
+
+        // Function to preload an image
+        function preloadImage(src, callback) {
+            const img = new Image();
+            img.onload = callback;
+            img.src = src;
+        }
+
+        function parseCSV(csvText) {
+            const rows = csvText.split("\n");
+            const headers = rows.shift().split(","); // First row contains headers
+
+            return rows.map(row => {
+                const values = row.split(",");
+                return headers.reduce((obj, header, index) => {
+                    obj[header.trim()] = values[index]?.trim();
+                    return obj;
+                }, {});
+            });
+        }
+
+        // Dynamically update the loading screen with today's formatted date
+        document.getElementById("loading-date").textContent = formattedDate; // Add the formatted date below
+
+        // Fetch schedule on page load
+        fetchSchedule();
+    </script>
+</body>
+</html>
