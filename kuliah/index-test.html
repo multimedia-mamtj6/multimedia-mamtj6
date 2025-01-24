@@ -12,14 +12,15 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            background-color: #f4f4f4;
+            background: url('https://i.postimg.cc/9Q7HVK4C/JADUAL-KULIAH-copy.webp') no-repeat center center / cover; /* Same background as loading screen */
         }
         #image-container {
             position: relative;
             width: 100%;
             max-width: 1920px;
             aspect-ratio: 1920 / 912; /* Maintain the 1920x912 aspect ratio */
-            background-color: transparent; /* Make the background transparent */
+            background: transparent
+            background-size: cover;
             overflow: hidden;
         }
         img {
@@ -41,7 +42,7 @@
             justify-content: center;
             align-items: center;
             color: #fff;
-            font-size: 24px;
+            font-size: 32px; /* Resize the loading screen text */
             font-weight: bold;
             text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
             z-index: 9999;
@@ -111,7 +112,7 @@
                         loadingScreen.classList.add('hidden');
                         // Fade in the image
                         imageElement.style.opacity = 1;
-                    }, 3000); // 5-second delay
+                    }, 5000); // 5-second delay
                 });
 
             } catch (error) {
