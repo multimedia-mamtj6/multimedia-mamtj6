@@ -29,25 +29,15 @@
             opacity: 0; /* Start fully transparent */
             transition: opacity 1s ease-in-out; /* Smooth fade-in */
         }
-        .caption {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            text-align: center;
-            font-size: 16px;
-            color: #fff;
-            background: rgba(0, 0, 0, 0.7);
-            padding: 10px;
-        }
         #loading-screen {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: url('background.jpg') no-repeat center center / cover;
+            background: url('https://i.postimg.cc/9Q7HVK4C/JADUAL-KULIAH-copy.webp') no-repeat center center / cover;
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
             color: #fff;
@@ -56,7 +46,13 @@
             text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
             z-index: 9999;
         }
-
+        #loading-text {
+            margin-top: 20px;
+        }
+        #loading-date {
+            font-size: 14px; /* Make the date smaller */
+            margin-top: 5px;
+        }
         #loading-screen.hidden {
             opacity: 0;
             pointer-events: none;
@@ -67,16 +63,24 @@
 <body>
     <div id="loading-screen">
         <div id="loading-text">KULIAH MAGHRIB HARI INI</div>
+        <div id="loading-date"></div> <!-- Date will be added here -->
     </div>
 
     <div id="image-container">
-        <div id="image-caption" class="caption"></div>
         <img id="daily-image" src="" alt="Image of the day">
     </div>
 
     <script>
         const malaysiaTime = new Date().toLocaleString("en-US", { timeZone: "Asia/Kuala_Lumpur" });
-        const currentDate = new Date(malaysiaTime).toISOString().split("T")[0]; // YYYY-MM-DD format
+        const currentDate = new Date(malaysiaTime);
+
+        // Function to format the date in Malay
+        function formatDateInMalay(date) {
+            const options = { day: '2-digit', month: 'long', year: 'numeric' };
+            return date.toLocaleDateString('ms-MY', options); // 'ms-MY' is the Malay locale
+        }
+
+        const formattedDate = formatDateInMalay(currentDate);
 
         // Google Sheets URL
         const sheetUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRuHEJKi6DIRWPJMCZWAovQ9UINlPn6BNvhnY_9rpLDL7_mFFUmkgbdwCQy4wR3xXVM_KUetY-3fb25/pub?gid=964903189&single=true&output=csv";
@@ -89,27 +93,25 @@
                 const schedule = parseCSV(csvText);
 
                 // Find today's image
-                const todayImage = schedule.find(item => item.Tarikh === currentDate) || {
-                    "Source Image": "default.jpg",
-                    Caption: "Tiada imej khas dijadualkan untuk hari ini."
+                const todayImage = schedule.find(item => item.Tarikh === currentDate.toISOString().split("T")[0]) || {
+                    "Source Image": "default.jpg"
                 };
 
                 // Preload today's image
                 preloadImage(todayImage["Source Image"], () => {
                     const imageElement = document.getElementById("daily-image");
-                    const captionElement = document.getElementById("image-caption");
                     const loadingScreen = document.getElementById("loading-screen");
 
-                    // Update the image and caption
+                    // Update the image source
                     imageElement.src = todayImage["Source Image"];
-                    imageElement.alt = todayImage.Caption;
-                    captionElement.textContent = todayImage.Caption;
 
-                    // Hide the loading screen
-                    loadingScreen.classList.add('hidden');
-
-                    // Fade in the image
-                    imageElement.style.opacity = 1;
+                    // Ensure the loading screen stays visible for at least 5 seconds
+                    setTimeout(() => {
+                        // Hide the loading screen
+                        loadingScreen.classList.add('hidden');
+                        // Fade in the image
+                        imageElement.style.opacity = 1;
+                    }, 3000); // 5-second delay
                 });
 
             } catch (error) {
@@ -136,6 +138,9 @@
                 }, {});
             });
         }
+
+        // Dynamically update the loading screen with today's formatted date
+        document.getElementById("loading-date").textContent = formattedDate; // Add the formatted date below
 
         // Fetch schedule on page load
         fetchSchedule();
