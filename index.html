@@ -1,34 +1,119 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MAMTJ6</title>
-    <link rel="icon" href="icons/mamtj6_single.svg" type="image/svg+xml">
-    <!-- Google Fonts Import -->
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <style>
-        body {
-            font-family: 'Poppins', sans-serif;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MAMTJ6 Collapsible Menu</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      margin: 0;
+      padding: 20px;
+      background-color: #f8f9fa;
+      color: #333;
+      display: flex;
+      flex-direction: column; /* Stack items vertically */
+      gap: 10px; /* Add spacing between items */
+    }
+
+    h1 {
+      text-align: left;
+      margin-bottom: 20px;
+    }
+
+    .collapsible {
+      display: block; /* Make buttons block-level */
+      width: 30%; /* Optional: Full-width buttons */
+      cursor: pointer;
+      padding: 10px;
+      font-size: 18px;
+      font-weight: 600;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      text-align: left;
+    }
+
+    .collapsible:hover {
+      background-color: #0056b3;
+    }
+
+    .collapsible:after {
+      content: '+';
+      float: right;
+    }
+
+    .collapsible.active:after {
+      content: '-';
+    }
+
+    .content {
+      display: none; /* Hidden by default */
+      padding: 10px 20px;
+      background-color: #e9ecef;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+    }
+
+    .content a {
+      display: block;
+      text-decoration: none;
+      color: #007bff;
+      margin: 5px 0;
+    }
+
+    .content a:hover {
+      text-decoration: underline;
+    }
+  </style>
 </head>
 <body>
-    <h1>MAMTJ6 MULTIMEDIA PROJECT</h1>
-    <ul>
-        <li><a href="tabung/index.html">Tabung</a></li>
-             <ul>
-                <li><a href="tabung/index-test.html">Tabung (beta)</a></li>
-            </ul>
-<ul>
-                <li><a href="tabung/index-test3.html">Tabung (beta) 3</a></li>
-            </ul>
-        <li><a href="waktu-solat/index.html">Waktu Solat</a></li>
-        <li><a href="kuliah/index.html">Info Kuliah</a></li>
-            <ul>
-                <li><a href="kuliah/index-test.html">Info Kuliah (beta)</a></li>
-            </ul>
-        <li><a href="ramadan/index.html">Ramadan</a></li>
-    </ul>
+  <h1>MAMTJ6 Collapsible Menu</h1>
+
+  <button class="collapsible">1. Tabung</button>
+  <div class="content">
+    <a href="tabung/index.html">Tabung</a>
+    <a href="tabung/index-test.html">Tabung (beta)</a>
+    <a href="tabung/index-test3.html">Tabung (beta 2)</a>
+  </div>
+
+  <button class="collapsible">2. Waktu Solat</button>
+  <div class="content">
+    <a href="waktu-solat/index.html">Waktu Solat</a>
+  </div>
+
+  <button class="collapsible">3. Info Kuliah</button>
+  <div class="content">
+    <a href="kuliah/index.html">Info Kuliah</a>
+    <a href="kuliah/index-test.html">Info Kuliah (beta)</a>
+    <a href="kuliah/index-test3.html">Info Kuliah (beta 2)</a>
+  </div>
+
+  <button class="collapsible">4. Ramadan</button>
+  <div class="content">
+    <a href="ramadan/index.html">Ramadan</a>
+  </div>
+
+  <script>
+    // Select all collapsible buttons
+    const collapsibles = document.querySelectorAll('.collapsible');
+
+    collapsibles.forEach(button => {
+      button.addEventListener('click', () => {
+        // Toggle the "active" class
+        button.classList.toggle('active');
+
+        // Show or hide the content
+        const content = button.nextElementSibling;
+        if (content.style.display === 'block') {
+          content.style.display = 'none';
+        } else {
+          content.style.display = 'block';
+        }
+      });
+    });
+  </script>
 </body>
 </html>
