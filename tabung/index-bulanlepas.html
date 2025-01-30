@@ -146,71 +146,72 @@
     </div>
 
     <script>
-        const csvUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSVbIu9GHCo5W8AOhvltK2FgToinsJ3wQC9KPhv9HWaN53GnsdfbhcrIptBxvV7dzTP6C2nD7Deoiw2/pub?gid=0&single=true&output=csv";
+    const csvUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSVbIu9GHCo5W8AOhvltK2FgToinsJ3wQC9KPhv9HWaN53GnsdfbhcrIptBxvV7dzTP6C2nD7Deoiw2/pub?gid=0&single=true&output=csv";
 
-        async function fetchDataAndUpdate() {
-            try {
-                const response = await fetch(csvUrl);
-                const csvText = await response.text();
+    async function fetchDataAndUpdate() {
+        try {
+            const response = await fetch(csvUrl);
+            const csvText = await response.text();
 
-	    // Parse the CSV
-                const rows = csvText.trim().split("\n");
-                const pastWeeksContainer = document.getElementById("pastWeeks");
-                const pastTotalSection = document.getElementById("pastTotal");
-                const pastMonthHeader = document.getElementById("pastMonth");
+            // Parse the CSV
+            const rows = csvText.trim().split("\n");
+            const pastWeeksContainer = document.getElementById("pastWeeks");
+            const pastTotalSection = document.getElementById("pastTotal");
+            const pastMonthHeader = document.getElementById("pastMonth");
 
- 	    // Clear current data
-                pastWeeksContainer.innerHTML = "";
-                let pastTotalAmount = 0;
-                let pastMonthName = "";
+            // Clear current data
+            pastWeeksContainer.innerHTML = "";
+            let pastTotalAmount = 0;
+            let pastMonthName = "";
 
-  // Iterate over rows to extract data and find month
-                rows.slice(1).forEach((row, index) => {
-                    const cols = row.split(",");
+            // Iterate over rows to extract data and find month (ignore line 7 and below)
+        rows.slice(1, 6).forEach((row, index) => { // Only process rows 1 to 6
+            const cols = row.split(",");
 
- 		// Debugging log to check data format
-                    console.log(cols);
+                // Debugging log to check data format
+                console.log(cols);
 
-                    // Get values for past month columns
-                    let pastMonth = cols[5] || "Unknown Month";  // PAST_BULAN
-                    let pastWeek = cols[6] || "Week Unknown";    // PAST_MINGGU
-                    let pastAmount = parseFloat(cols[7]);        // PAST_JUMLAH
+                // Get values for past month columns
+                let pastMonth = cols[5] || "Unknown Month";  // PAST_BULAN
+                let pastWeek = cols[6] || "Week Unknown";    // PAST_MINGGU
+                let pastAmount = parseFloat(cols[7]);        // PAST_JUMLAH
 
-                    if (isNaN(pastAmount)) {
-                        console.error(`Invalid past amount for row ${index + 1}: ${cols[7]}`);
-                        pastAmount = 0;
-                    }
+                if (isNaN(pastAmount)) {
+                    console.error(`Invalid past amount for row ${index + 1}: ${cols[7]}`);
+                    pastAmount = 0;
+                }
 
-                    // Ensure past month name is set only from the first row
-                    if (index === 0) {
-                        pastMonthName = pastMonth;
-                    }
+                // Ensure past month name is set only from the first row
+                if (index === 0) {
+                    pastMonthName = pastMonth;
+                }
 
-                    const pastWeekDiv = document.createElement("div");
-                    pastWeekDiv.classList.add("week");
-                    pastWeekDiv.innerHTML = `<span>${pastWeek}</span> <span>RM ${pastAmount.toFixed(2)}</span>`;
-                    pastWeeksContainer.appendChild(pastWeekDiv);
+                const pastWeekDiv = document.createElement("div");
+                pastWeekDiv.classList.add("week");
 
-                    pastTotalAmount += pastAmount;
-                });
+                // If the amount is 0 or negative, display "TIADA DATA"
+                const amountText = pastAmount > 0 ? `RM ${pastAmount.toFixed(2)}` : "-";
 
-                // Update the month dynamically
-                pastMonthHeader.textContent = `BULAN: ${pastMonthName}`;
+                pastWeekDiv.innerHTML = `<span>${pastWeek}</span> <span>${amountText}</span>`;
+                pastWeeksContainer.appendChild(pastWeekDiv);
 
-               // Update total amount with 2 decimal places
-                pastTotalSection.textContent = `JUMLAH: RM ${pastTotalAmount.toFixed(2)}`;
-            } catch (error) {
-                console.error("Error fetching or processing CSV:", error);
-            }
+                pastTotalAmount += pastAmount;
+            });
+
+            // Update the month dynamically
+            pastMonthHeader.textContent = `BULAN: ${pastMonthName}`;
+
+            // If the total amount is 0 or negative, display "TIADA DATA"
+            const totalText = pastTotalAmount > 0 ? `RM ${pastTotalAmount.toFixed(2)}` : "-";
+            pastTotalSection.textContent = `JUMLAH: ${totalText}`;
+        } catch (error) {
+            console.error("Error fetching or processing CSV:", error);
         }
+    }
 
-         // Fetch data initially
-        fetchDataAndUpdate();
+    // Fetch data initially
+    fetchDataAndUpdate();
 
-        // Update data every 5 minutes (300,000 ms)
-        setInterval(fetchDataAndUpdate, 300000);
-
-    </script>
-</body>
-</html>
-
+    // Update data every 5 minutes (300,000 ms)
+    setInterval(fetchDataAndUpdate, 300000);
+</script>
