@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Info Tabung MAMTJ6</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: #D8CFCC;
+        }
+
+        .container {
+            background-color: #eae6e3;
+            padding: 2%;
+            border-radius: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            width: 90%;
+            max-width: 1400px;
+            text-align: center;
+        }
+
+        .logo {
+            max-width: 150px;
+            margin: 0 auto 20px;
+        }
+
+        .logo img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        .subheading {
+            font-size: 30px;
+            font-weight: bold;
+            margin-bottom: 0px;
+            text-transform: uppercase;
+            color: #333;
+        }
+
+        h1 {
+            font-weight: bold;
+            text-transform: uppercase;
+            color: black;
+            margin-bottom: 20px;
+            font-size: clamp(24px, 5vw, 48px);
+        }
+
+        .week-container {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .week {
+            background-color: white;
+            padding: 15px 30px;
+            border-radius: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: clamp(16px, 4vw, 24px);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .week span {
+            font-weight: bold;
+            color: #2d7a2d;
+        }
+
+        .total {
+            background-color: white;
+            padding: 20px 30px;
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: clamp(40px, 4vw, 32px);
+            margin-top: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="logo">
+            <img src="https://i.postimg.cc/5y43xCvZ/Asset-2.webp" alt="Logo">
+        </div>
+
+        <div class="subheading">JUMLAH KUTIPAN TABUNG BULAN LEPAS</div>
+
+        <h1 id="pastMonth">DATA SEDANG MEMUAT NAIK</h1>
+        <div class="week-container" id="pastWeeks"></div>
+        <div class="total" id="pastTotal">SILA TUNGGU</div>
+    </div>
+
+    <script>
+        const csvUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSVbIu9GHCo5W8AOhvltK2FgToinsJ3wQC9KPhv9HWaN53GnsdfbhcrIptBxvV7dzTP6C2nD7Deoiw2/pub?gid=0&single=true&output=csv";
+
+        async function fetchDataAndUpdate() {
+            try {
+                const response = await fetch(csvUrl);
+                const csvText = await response.text();
+
+                const rows = csvText.trim().split("\n");
+                const pastWeeksContainer = document.getElementById("pastWeeks");
+                const pastTotalSection = document.getElementById("pastTotal");
+                const pastMonthHeader = document.getElementById("pastMonth");
+
+                pastWeeksContainer.innerHTML = "";
+                let pastTotalAmount = 0;
+                let pastMonthName = "";
+
+                rows.slice(1).forEach((row, index) => {
+                    const cols = row.split(",");
+
+                    // Get values for past month columns
+                    let pastMonth = cols[5] || "Unknown Month";  // PAST_BULAN
+                    let pastWeek = cols[6] || "Week Unknown";    // PAST_MINGGU
+                    let pastAmount = parseFloat(cols[7]);        // PAST_JUMLAH
+
+                    if (isNaN(pastAmount)) {
+                        console.error(`Invalid past amount for row ${index + 1}: ${cols[7]}`);
+                        pastAmount = 0;
+                    }
+
+                    // Ensure past month name is set only from the first row
+                    if (index === 0) {
+                        pastMonthName = pastMonth;
+                    }
+
+                    const pastWeekDiv = document.createElement("div");
+                    pastWeekDiv.classList.add("week");
+                    pastWeekDiv.innerHTML = `<span>${pastWeek}</span> <span>RM ${pastAmount.toFixed(2)}</span>`;
+                    pastWeeksContainer.appendChild(pastWeekDiv);
+
+                    pastTotalAmount += pastAmount;
+                });
+
+                // Update past month title correctly
+                pastMonthHeader.textContent = `BULAN: ${pastMonthName}`;
+
+                // Update past total amount
+                pastTotalSection.textContent = `JUMLAH: RM ${pastTotalAmount.toFixed(2)}`;
+            } catch (error) {
+                console.error("Error fetching or processing CSV:", error);
+            }
+        }
+
+        fetchDataAndUpdate();
+        setInterval(fetchDataAndUpdate, 300000);
+    </script>
+</body>
+</html>
