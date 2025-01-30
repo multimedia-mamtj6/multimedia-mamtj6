@@ -1,3 +1,6 @@
+BETA BULAN LEPAS
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -16,13 +19,13 @@
             background-color: #D8CFCC;
         }
 
-        .container {
+       .container {
             background-color: #eae6e3;
             padding: 2%;
             border-radius: 20px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-            width: 90%;
-            max-width: 1400px;
+            width: 90%; /* Stretch closer to edges */
+            max-width: 1400px; /* Wider for larger screens */
             text-align: center;
         }
 
@@ -85,16 +88,61 @@
             margin-top: 20px;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
+
+  /* Adjustments for larger screens */
+        @media (min-width: 1200px) {
+            .container {
+                max-width: 1600px; /* Wider for desktop */
+            }
+
+            h1 {
+                font-size: 48px;
+            }
+
+            .week {
+                padding: 20px 40px;
+                font-size: 28px;
+            }
+
+            .total {
+                font-size: 36px;
+                padding: 25px 50px;
+            }
+        }
+
+        @media (min-width: 1920px) {
+            .container {
+                max-width: 1800px; /* Very wide for ultra-large screens */
+            }
+
+            h1 {
+                font-size: 56px;
+            }
+
+            .week {
+                padding: 25px 50px;
+                font-size: 32px;
+            }
+
+            .total {
+                font-size: 40px;
+                padding: 30px 60px;
+            }
+        }
+
     </style>
 </head>
 <body>
     <div class="container">
+ <!-- Logo Section -->
         <div class="logo">
             <img src="https://i.postimg.cc/5y43xCvZ/Asset-2.webp" alt="Logo">
         </div>
 
+<!-- Subheading -->
         <div class="subheading">JUMLAH KUTIPAN TABUNG BULAN LEPAS</div>
 
+ <!-- Dynamic Content -->
         <h1 id="pastMonth">DATA SEDANG MEMUAT NAIK</h1>
         <div class="week-container" id="pastWeeks"></div>
         <div class="total" id="pastTotal">SILA TUNGGU</div>
@@ -108,17 +156,23 @@
                 const response = await fetch(csvUrl);
                 const csvText = await response.text();
 
+	    // Parse the CSV
                 const rows = csvText.trim().split("\n");
                 const pastWeeksContainer = document.getElementById("pastWeeks");
                 const pastTotalSection = document.getElementById("pastTotal");
                 const pastMonthHeader = document.getElementById("pastMonth");
 
+ 	    // Clear current data
                 pastWeeksContainer.innerHTML = "";
                 let pastTotalAmount = 0;
                 let pastMonthName = "";
 
+  // Iterate over rows to extract data and find month
                 rows.slice(1).forEach((row, index) => {
                     const cols = row.split(",");
+
+ 		// Debugging log to check data format
+                    console.log(cols);
 
                     // Get values for past month columns
                     let pastMonth = cols[5] || "Unknown Month";  // PAST_BULAN
@@ -143,18 +197,23 @@
                     pastTotalAmount += pastAmount;
                 });
 
-                // Update past month title correctly
+                // Update the month dynamically
                 pastMonthHeader.textContent = `BULAN: ${pastMonthName}`;
 
-                // Update past total amount
+               // Update total amount with 2 decimal places
                 pastTotalSection.textContent = `JUMLAH: RM ${pastTotalAmount.toFixed(2)}`;
             } catch (error) {
                 console.error("Error fetching or processing CSV:", error);
             }
         }
 
+         // Fetch data initially
         fetchDataAndUpdate();
+
+        // Update data every 5 minutes (300,000 ms)
         setInterval(fetchDataAndUpdate, 300000);
+
     </script>
 </body>
 </html>
+
