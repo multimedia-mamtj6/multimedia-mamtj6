@@ -1,133 +1,212 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>MAMTJ6 Collapsible Menu</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-  <style>
-    body {
-      font-family: 'Poppins', sans-serif;
-      margin: 0;
-      padding: 20px;
-      background-color: #f8f9fa;
-      color: #333;
-      display: flex;
-      flex-direction: column; /* Stack items vertically */
-      gap: 10px; /* Add spacing between items */
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Interactive Website</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #333;
+            color: #f4f4f4;
+            transition: background-color 0.3s, color 0.3s;
+        }
 
-    h1 {
-      text-align: left;
-      margin-bottom: 20px;
-    }
-  h2 {
-      text-align: left;
-      margin: 0px 0px 0px 0px;
-    }
-    h3 {
-      text-align: left;
-      margin: 0px 20px;
-    }
-    .collapsible {
-      display: block; /* Make buttons block-level */
-      width: 40%; /* Optional: Full-width buttons */
-      cursor: pointer;
-      padding: 10px;
-      font-size: 18px;
-      font-weight: 600;
-      background-color: #007bff;
-      color: white;
-      border: none;
-      border-radius: 10px;
-      text-align: left;
-    }
+        header {
+            text-align: center;
+            background-color: #444;
+            color: white;
+            padding: 20px 0;
+            transition: background-color 0.3s;
+        }
 
-    .collapsible:hover {
-      background-color: #0056b3;
-    }
+        header img {
+            width: 100%;
+            height: auto;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
 
-    .collapsible:after {
-      content: '+';
-      float: right;
-    }
+        header h1 {
+            margin: 20px 0;
+            font-size: 2.5em;
+            animation: fadeIn 2s ease-in-out;
+        }
 
-    .collapsible.active:after {
-      content: '-';
-    }
+        .description {
+            text-align: center;
+            padding: 40px 20px;
+            background-color: #444;
+            margin: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            transition: background-color 0.3s, box-shadow 0.3s;
+        }
 
-    .content {
-      display: none; /* Hidden by default */
-      padding: 10px 20px;
-      width: 40%;
-      background-color: #e9ecef;
-      border: 1px solid #ddd;
-      border-radius: 5px;
-    }
+        .buttons {
+            margin-top: 20px;
+        }
 
-    .content a {
-      display: block;
-      text-decoration: none;
-      color: #007bff;
-      margin: 5px 0;
-    }
+        .button {
+            display: inline-block;
+            margin: 10px;
+            padding: 15px 30px;
+            background-color: #007BFF;
+            color: white;
+            text-decoration: none;
+            border-radius: 25px;
+            transition: background-color 0.3s, transform 0.3s;
+        }
 
-    .content a:hover {
-      text-decoration: underline;
-    }
-  </style>
+        .button:hover {
+            background-color: #0056b3;
+            transform: translateY(-5px);
+        }
+
+        .collapsible-buttons {
+            margin: 10px auto;
+            max-width: 600px;
+            text-align: center;
+        }
+
+        .collapsible {
+            background-color: #007BFF;
+            color: white;
+            cursor: pointer;
+            padding: 12px 20px;
+            width: 50%;
+            border: none;
+            text-align: center;
+            outline: none;
+            font-size: 16px;
+            margin-bottom: 10px;
+            border-radius: 10px;
+            transition: background-color 0.3s;
+        }
+
+        .collapsible:hover {
+            background-color: #0056b3;
+        }
+
+        .content {
+            padding: 10px 20px;
+            display: none;
+            width: 50%;
+            margin: auto;
+            overflow: hidden;
+            background-color: #555;
+            margin-bottom: 10px;
+            border-radius: 10px;
+            transition: background-color 0.3s;
+        }
+
+        .content .title {
+            font-size: 16px;
+            font-weight: bold;
+            margin: 15px 0 10px 0;
+            color: #f4f4f4;
+        }
+
+        .content .link-button {
+            display: block;
+            margin: 5px 0;
+            padding: 8px 16px;
+            background-color: #007BFF;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            text-align: center;
+            font-size: 14px;
+            transition: background-color 0.3s, transform 0.3s;
+        }
+
+        .content .link-button:hover {
+            background-color: #0056b3;
+            transform: translateY(-3px);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+    </style>
 </head>
 <body>
-  <h1>MAMTJ6 MULTIMEDIA PROJECT</h1>
-  <h2>info tentang projek-projek multimedia yang berkaitan</h2>
-  <h3><a href="https://github.com/multimedia-mamtj6/multimedia-mamtj6">Github repositories</a></h3>
-   <h3><a href="https://mamtj6.com">Website MAMTJ6</a></h3>
+    <header>
+        <img src="https://via.placeholder.com/1200x300" alt="Header Image">
+        <h1>Welcome to My Interactive Website</h1>
+    </header>
 
+    <section class="description">
+        <p>This is a short description of the website. You can add more text here if needed.</p>
+        <div class="buttons">
+            <a href="https://mamtj6.com" class="button">Website MAMTJ6</a>
+            <a href="https://github.com/multimedia-mamtj6/multimedia-mamtj6" class="button">Github repositories</a>
+            <a href="https://github.com/multimedia-mamtj6/multimedia-mamtj6" class="button">Github repositories</a>
+        </div>
+    </section>
 
-  <button class="collapsible">1. Tabung</button>
-  <div class="content">
-    <a href="tabung/index.html">Tabung</a>
-    <a href="tabung/index-test.html">Tabung (beta)</a>
-    <a href="tabung/index-test3.html">Tabung (beta 3)</a>
-  </div>
+    <section class="collapsible-buttons">
+        <h2>This is a short description of the website. You can add more text here if needed.</h2>
+        <button class="collapsible">1. Tabung</button>
+        <div class="content">
+             <div class="title">Alpha</div>
+            <a href="#link1" class="link-button">Bulan Ini</a>
+            <a href="#link2" class="link-button">Bulan Lepas</a>
+            <div class="title">Beta</div>
+            <a href="tabung/index-test.html" class="link-button">Beta 1</a>
+            <a href="tabung/index-test.html" class="link-button">Beta 2</a>
+            <a href="tabung/index-test3.htm" class="link-button">Beta </a>
+        </div>
 
-  <button class="collapsible">2. Waktu Solat</button>
-  <div class="content">
-    <a href="waktu-solat/index.html">Waktu Solat</a>
-  </div>
+        <button class="collapsible">2. Waktu Solat</button>
+        <div class="content">
+             <div class="title">Alpha</div>
+            <div class="title">-</div>
+            <div class="title">Beta</div>
+            <a href="tabung/index.html" class="link-button">Beta 1</a>
+            <a href="kuliah/index-test.html" class="link-button">Beta 2</a>
+            <a href="kuliah/index-test3.html" class="link-button">Beta 2</a>
+            <a href="kuliah/index-desktoptest.html" class="link-button">Beta 3 (for desktop)</a>
+        </div>
 
-  <button class="collapsible">3. Info Kuliah</button>
-  <div class="content">
-    <a href="kuliah/index.html">Info Kuliah</a>
-    <a href="kuliah/index-test.html">Info Kuliah (beta)</a>
-    <a href="kuliah/index-test3.html">Info Kuliah (beta 2)</a>
-    <a href="kuliah/index-desktoptest.html">Info Kuliah (beta for desktop)</a>
+        <button class="collapsible">3. Ramadan Reminder</button>
+        <div class="content">
+           <div class="title">Alpha</div>
+            <a href="https://t.me/Islamic_countdown" class="link-button">Telegram Reminder</a>
+            <div class="title">Beta</div>
+            <div class="title">-</div>
+        </div>
 
-  </div>
+    
+    </section>
 
-  <button class="collapsible">4. Ramadan</button>
-  <div class="content">
-    <a href="ramadan/index.html">Ramadan</a>
-  </div>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            var coll = document.getElementsByClassName("collapsible");
+            for (var i = 0; i < coll.length; i++) {
+                coll[i].addEventListener("click", function() {
+                    // Close all other collapsible sections
+                    for (var j = 0; j < coll.length; j++) {
+                        if (coll[j] !== this) {
+                            coll[j].classList.remove("active");
+                            coll[j].nextElementSibling.style.display = "none";
+                        }
+                    }
 
-  <script>
-    // Select all collapsible buttons
-    const collapsibles = document.querySelectorAll('.collapsible');
-
-    collapsibles.forEach(button => {
-      button.addEventListener('click', () => {
-        // Toggle the "active" class
-        button.classList.toggle('active');
-
-        // Show or hide the content
-        const content = button.nextElementSibling;
-        if (content.style.display === 'block') {
-          content.style.display = 'none';
-        } else {
-          content.style.display = 'block';
-        }
-      });
-    });
-  </script>
+                    // Toggle the clicked collapsible section
+                    this.classList.toggle("active");
+                    var content = this.nextElementSibling;
+                    if (content.style.display === "block") {
+                        content.style.display = "none";
+                    } else {
+                        content.style.display = "block";
+                    }
+                });
+            }
+        });
+    </script>
 </body>
 </html>
