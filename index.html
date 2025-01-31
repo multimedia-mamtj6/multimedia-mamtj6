@@ -1,230 +1,272 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
+  <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MULTIMEDIA MAMTJ6</title>
     <!-- Favicon -->
     <link rel="icon" type="image/svg+xml" href="icons/mamtj6_single.svg">
-
     <!-- Open Graph Meta Tags (for Facebook, LinkedIn, etc.) -->
-    <meta property="og:title" content="MULTIMEDIA MAMTJ6"/>
-    <meta property="og:description" content="Info tentang projek multimedia yang dibangunkan untuk kegunaan umum"/>
-    <meta property="og:image" content="https://multimedia.mamtj6.com/icons/linkpreview.jpg"/>
-    <meta property="og:image" content="https://multimedia.mamtj6.com/icons/linkpreview2.jpg"/>
-    <meta property="og:url" content="https://multimedia.mamtj6.com"/>
-    <meta property="og:type" content="website"/>
-
+    <meta property="og:title" content="MULTIMEDIA MAMTJ6" />
+    <meta property="og:description" content="Info tentang projek multimedia yang dibangunkan untuk kegunaan umum" />
+    <meta property="og:image" content="https://multimedia.mamtj6.com/icons/linkpreview.jpg" />
+    <meta property="og:image" content="https://multimedia.mamtj6.com/icons/linkpreview2.jpg" />
+    <meta property="og:url" content="https://multimedia.mamtj6.com" />
+    <meta property="og:type" content="website" />
     <!-- Twitter Card (for Twitter link preview) -->
     <meta name="twitter:card" content="MULTIMEDIA MAMTJ6">
     <meta name="twitter:title" content="MULTIMEDIA MAMTJ6">
-    <meta name="twitter:description" content=Info tentang projek multimedia yang dibangunkan untuk kegunaan MAMTJ6">
+    <meta name="twitter:description" content="Info tentang projek multimedia yang dibangunkan untuk kegunaan MAMTJ6">
     <meta name="twitter:image" content="https://i.postimg.cc/8cwvsM29/link-preview.jpg">
-
+  </head>
     
-</head>
-    <style>
-        body {
-            font-family: 'Arial', sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #333;
-            color: #f4f4f4;
-            transition: background-color 0.3s, color 0.3s;
-        }
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #333;
+      color: #f4f4f4;
+      transition: background-color 0.3s, color 0.3s;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh; /* Ensure the body takes at least the full viewport height */
+    }
 
-        header {
-            text-align: center;
-            background-color: #444;
-            color: white;
-            padding: 20px 0;
-            transition: background-color 0.3s;
-        }
+    header {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      height: 200px;
+      background-size: cover;
+      background-position: center;
+      color: white;
+      padding: 20px 0;
+      transition: background-color 0.3s;
+    }
 
-        header img {
-            width: 100%;
-            height: auto;
-            border-radius: 10px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-        }
+    .logo {
+      max-width: 200px;
+      height: auto;
+      margin-bottom: 10px;
+      border: none;
+      box-shadow: none;
+    }
 
-        header h1 {
-            margin: 20px 0;
-            font-size: 2.5em;
-            animation: fadeIn 2s ease-in-out;
-        }
+    header img {
+      width: 100%;
+      height: auto;
+      border-radius: 10px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    }
 
-        .description {
-            text-align: center;
-            padding: 40px 20px;
-            background-color: #444;
-            margin: 20px;
-            border-radius: 10px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-            transition: background-color 0.3s, box-shadow 0.3s;
-        }
+    header h1 {
+      margin: 20px 0;
+      font-size: 2.5em;
+      animation: fadeIn 1s ease-in-out;
+    }
 
-        .buttons {
-            margin-top: 20px;
-        }
+    .description {
+      text-align: center;
+      padding: 40px 20px;
+      background-color: #444;
+      margin: 0% 0%;
+      border-radius: 10px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+      transition: background-color 0.3s, box-shadow 0.3s;
+    }
 
-        .button {
-            display: inline-block;
-            margin: 10px;
-            padding: 15px 30px;
-            background-color: #007BFF;
-            color: white;
-            text-decoration: none;
-            border-radius: 25px;
-            transition: background-color 0.3s, transform 0.3s;
-        }
+    .buttons {
+      margin-top: 20px;
+    }
 
-        .button:hover {
-            background-color: #0056b3;
-            transform: translateY(-5px);
-        }
+    .button {
+      display: inline-block;
+      margin: 10px;
+      padding: 15px 30px;
+      background-color: #007BFF;
+      color: white;
+      text-decoration: none;
+      border-radius: 25px;
+      transition: background-color 0.3s, transform 0.3s;
+    }
 
-        .collapsible-buttons {
-            margin: 10px auto;
-            max-width: 600px;
-            text-align: center;
-        }
+    .button:hover {
+      background-color: #0056b3;
+      transform: translateY(-5px);
+    }
 
-        .collapsible {
-            background-color: #007BFF;
-            color: white;
-            cursor: pointer;
-            padding: 12px 20px;
-            width: 50%;
-            border: none;
-            text-align: center;
-            outline: none;
-            font-size: 16px;
-            margin-bottom: 10px;
-            border-radius: 10px;
-            transition: background-color 0.3s;
-        }
+    .collapsible-buttons {
+      margin: 10px auto;
+      max-width: 600px;
+      text-align: center;
+    }
 
-        .collapsible:hover {
-            background-color: #0056b3;
-        }
+    .collapsible {
+      background-color: #007BFF;
+      color: white;
+      cursor: pointer;
+      padding: 12px 20px;
+      width: 50%;
+      border: none;
+      text-align: center;
+      outline: none;
+      font-size: 16px;
+      margin-bottom: 10px;
+      border-radius: 10px;
+      transition: background-color 0.3s;
+    }
 
-        .content {
-            padding: 10px 20px;
-            display: none;
-            width: 50%;
-            margin: auto;
-            overflow: hidden;
-            background-color: #555;
-            margin-bottom: 10px;
-            border-radius: 10px;
-            transition: background-color 0.3s;
-        }
+    .collapsible:hover {
+      background-color: #0056b3;
+    }
 
-        .content .title {
-            font-size: 16px;
-            font-weight: bold;
-            margin: 15px 0 10px 0;
-            color: #f4f4f4;
-        }
+    .content {
+      padding: 10px 20px;
+      display: none;
+      width: 50%;
+      margin: auto;
+      overflow: hidden;
+      background-color: #555;
+      margin-bottom: 10px;
+      border-radius: 10px;
+      transition: background-color 0.3s;
+    }
 
-        .content .link-button {
-            display: block;
-            margin: 5px 0;
-            padding: 8px 16px;
-            background-color: #007BFF;
-            color: white;
-            text-decoration: none;
-            border-radius: 5px;
-            text-align: center;
-            font-size: 14px;
-            transition: background-color 0.3s, transform 0.3s;
-        }
+    .content .title {
+      font-size: 16px;
+      font-weight: bold;
+      margin: 15px 0 10px 0;
+      color: #f4f4f4;
+    }
 
-        .content .link-button:hover {
-            background-color: #0056b3;
-            transform: translateY(-3px);
-        }
+    .content .link-button {
+      display: block;
+      margin: 5px 0;
+      padding: 8px 16px;
+      background-color: #007BFF;
+      color: white;
+      text-decoration: none;
+      border-radius: 5px;
+      text-align: center;
+      font-size: 14px;
+      transition: background-color 0.3s, transform 0.3s;
+    }
 
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-    </style>
-</head>
-<body>
-    <header>
-        <img src="icons/background_plain.png" alt="Header Image">
-        <h1>PROJEK MULTIMEDIA MAMTJ6</h1>
+    .content .link-button:hover {
+      background-color: #0056b3;
+      transform: translateY(-3px);
+    }
+
+    footer {
+      background-color: #222;
+      color: #f4f4f4;
+      text-align: center;
+      padding: 20px 0;
+      border-top: 1px solid #444;
+      margin-top: auto; /* Push the footer to the bottom */
+    }
+
+    footer p {
+      margin: 0;
+      font-size: 14px;
+    }
+
+    footer a {
+      color: #007BFF;
+      text-decoration: none;
+      transition: color 0.3s;
+    }
+
+    footer a:hover {
+      color: #0056b3;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+      }
+
+      to {
+        opacity: 1;
+      }
+    }
+  </style>
+    
+  </head>
+  <body>
+    <header style="background-image: url('https://multimedia.mamtj6.com/icons/background_plain.png');">
+      <img src="https://i.postimg.cc/JnM7F2FC/mamtj6-white-text.webp" alt="Logo" class="logo">
+      <h1>PROJEK MULTIMEDIA MAMTJ6</h1>
     </header>
-
+      
     <section class="description">
-        <p>Info tentang projek multimedia yang dibangunkan untuk kegunaan MAMTJ6</p>
-        <div class="buttons">
-            <a href="https://mamtj6.com" class="button">Website MAMTJ6</a>
-            <a href="https://github.com/multimedia-mamtj6/multimedia-mamtj6" class="button">Github repositories</a>
-        </div>
+      <p>Info tentang projek multimedia yang dibangunkan untuk kegunaan MAMTJ6</p>
+      <div class="buttons">
+        <a href="https://mamtj6.com" class="button">Website MAMTJ6</a>
+        <a href="https://github.com/multimedia-mamtj6/multimedia-mamtj6" class="button">Github repositories</a>
+      </div>
     </section>
-
+      
     <section class="collapsible-buttons">
-        <h2>Sila tekan butang di bawah untuk melihat item yang berkaitan</h2>
-        <button class="collapsible">1. Tabung</button>
-        <div class="content">
-             <div class="title">Alpha</div>
-            <a href="tabung/tabung-bulanini.html" class="link-button">Bulan Ini</a>
-            <a href="tabung/tabung-bulanlepas.html" class="link-button">Bulan Lepas</a>
-            <div class="title">Beta</div>
-            <a href="tabung/index-test.html" class="link-button">Beta 1</a>
-            <a href="tabung/index-test.html" class="link-button">Beta 2</a>
-            <a href="tabung/index-test3.htm" class="link-button">Beta </a>
-        </div>
-
-        <button class="collapsible">2. Waktu Solat</button>
-        <div class="content">
-             <div class="title">Alpha</div>
-            <div class="title">-</div>
-            <div class="title">Beta</div>
-            <a href="tabung/index.html" class="link-button">Beta 1</a>
-            <a href="kuliah/index-test.html" class="link-button">Beta 2</a>
-            <a href="kuliah/index-test3.html" class="link-button">Beta 2</a>
-            <a href="kuliah/index-desktoptest.html" class="link-button">Beta 3 (for desktop)</a>
-        </div>
-
-        <button class="collapsible">3. Ramadan Reminder</button>
-        <div class="content">
-           <div class="title">Alpha</div>
-            <a href="https://t.me/Islamic_countdown" class="link-button">Telegram Reminder</a>
-            <div class="title">Beta</div>
-            <div class="title">-</div>
-        </div>
-
-    
+      <h2>Sila tekan butang di bawah untuk melihat item yang berkaitan</h2>
+      <button class="collapsible">1. Tabung</button>
+      <div class="content">
+        <div class="title">Alpha</div>
+        <a href="tabung/tabung-bulanini.html" class="link-button">Bulan Ini</a>
+        <a href="tabung/tabung-bulanlepas.html" class="link-button">Bulan Lepas</a>
+        <div class="title">Beta</div>
+        <a href="tabung/index-test.html" class="link-button">Beta 1</a>
+        <a href="tabung/index-test.html" class="link-button">Beta 2</a>
+        <a href="tabung/index-test3.htm" class="link-button">Beta </a>
+      </div>
+      <button class="collapsible">2. Waktu Solat</button>
+      <div class="content">
+        <div class="title">Alpha</div>
+        <div class="title">-</div>
+        <div class="title">Beta</div>
+        <a href="tabung/index.html" class="link-button">Beta 1</a>
+        <a href="kuliah/index-test.html" class="link-button">Beta 2</a>
+        <a href="kuliah/index-test3.html" class="link-button">Beta 2</a>
+        <a href="kuliah/index-desktoptest.html" class="link-button">Beta 3 (for desktop)</a>
+      </div>
+      <button class="collapsible">3. Ramadan Reminder</button>
+      <div class="content">
+        <div class="title">Alpha</div>
+        <a href="https://t.me/Islamic_countdown" class="link-button">Telegram Reminder</a>
+        <div class="title">Beta</div>
+        <div class="title">-</div>
+      </div>
     </section>
-
+    <footer>
+      <p>&copy; 2023 MAMTJ6. All rights reserved. | <a href="https://mamtj6.com">Visit our main website</a></p>
+    </footer>
+      
     <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            var coll = document.getElementsByClassName("collapsible");
-            for (var i = 0; i < coll.length; i++) {
-                coll[i].addEventListener("click", function() {
-                    // Close all other collapsible sections
-                    for (var j = 0; j < coll.length; j++) {
-                        if (coll[j] !== this) {
-                            coll[j].classList.remove("active");
-                            coll[j].nextElementSibling.style.display = "none";
-                        }
-                    }
-
-                    // Toggle the clicked collapsible section
-                    this.classList.toggle("active");
-                    var content = this.nextElementSibling;
-                    if (content.style.display === "block") {
-                        content.style.display = "none";
-                    } else {
-                        content.style.display = "block";
-                    }
-                });
+      document.addEventListener("DOMContentLoaded", function() {
+        var coll = document.getElementsByClassName("collapsible");
+        for (var i = 0; i < coll.length; i++) {
+          coll[i].addEventListener("click", function() {
+            // Close all other collapsible sections
+            for (var j = 0; j < coll.length; j++) {
+              if (coll[j] !== this) {
+                coll[j].classList.remove("active");
+                coll[j].nextElementSibling.style.display = "none";
+              }
             }
-        });
+            // Toggle the clicked collapsible section
+            this.classList.toggle("active");
+            var content = this.nextElementSibling;
+            if (content.style.display === "block") {
+              content.style.display = "none";
+            } else {
+              content.style.display = "block";
+            }
+          });
+        }
+      });
     </script>
-</body>
+  </body>
 </html>
