@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>MULTIMEDIA MAMTJ6</title>
     <!-- Favicon -->
-    <link rel="icon" type="image/svg+xml" href="icons/mamtj6_single.svg">
+    <link rel="icon" type="image/svg+xml" href="icons/mamtj6_single.svg" />
     <!-- Open Graph Meta Tags (for Facebook, LinkedIn, etc.) -->
     <meta property="og:title" content="MULTIMEDIA MAMTJ6" />
     <meta property="og:description" content="Info tentang projek multimedia yang dibangunkan untuk kegunaan umum" />
@@ -14,13 +14,13 @@
     <meta property="og:url" content="https://multimedia.mamtj6.com" />
     <meta property="og:type" content="website" />
     <!-- Twitter Card (for Twitter link preview) -->
-    <meta name="twitter:card" content="MULTIMEDIA MAMTJ6">
-    <meta name="twitter:title" content="MULTIMEDIA MAMTJ6">
-    <meta name="twitter:description" content="Info tentang projek multimedia yang dibangunkan untuk kegunaan MAMTJ6">
-    <meta name="twitter:image" content="https://i.postimg.cc/8cwvsM29/link-preview.jpg">
+    <meta name="twitter:card" content="MULTIMEDIA MAMTJ6" />
+    <meta name="twitter:title" content="MULTIMEDIA MAMTJ6" />
+    <meta name="twitter:description" content="Info tentang projek multimedia yang dibangunkan untuk kegunaan MAMTJ6" />
+    <meta name="twitter:image" content="https://i.postimg.cc/8cwvsM29/link-preview.jpg" />
     <style>
       body {
-        font-family: 'Arial', sans-serif;
+        font-family: "Arial", sans-serif;
         margin: 0;
         padding: 0;
         background-color: #333;
@@ -28,7 +28,7 @@
         transition: background-color 0.3s, color 0.3s;
         display: flex;
         flex-direction: column;
-        min-height: 100vh; /* Ensure the body takes at least the full viewport height */
+        min-height: 100vh;
       }
 
       header {
@@ -37,18 +37,18 @@
         justify-content: center;
         align-items: center;
         text-align: center;
-        height: 30vh; /* Responsive height */
-        min-height: 150px; /* Minimum height for smaller screens */
-        background-image: url('https://multimedia.mamtj6.com/icons/background_plain.png');
+        height: 30vh;
+        min-height: 150px;
+        background-image: url("https://multimedia.mamtj6.com/icons/background_plain.png");
         background-size: cover;
         background-position: center;
         color: white;
-        padding: 20px 10px; /* Adjusted padding for smaller screens */
+        padding: 20px 10px;
         transition: background-color 0.3s;
       }
 
       .logo {
-        max-width: 200px; /* Smaller logo for mobile */
+        max-width: 200px;
         height: auto;
         margin-bottom: 10px;
         border: none;
@@ -56,16 +56,16 @@
       }
 
       header h1 {
-        margin: 10px 0; /* Reduced margin for smaller screens */
-        font-size: 2em; /* Smaller font size for mobile */
+        margin: 10px 0;
+        font-size: 2em;
         animation: fadeIn 1s ease-in-out;
       }
 
       .description {
         text-align: center;
-        padding: 20px; /* Reduced padding for smaller screens */
+        padding: 20px;
         background-color: #444;
-        margin: 20px 10px; /* Adjusted margin for smaller screens */
+        margin: 20px 10px;
         border-radius: 10px;
         box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
         transition: background-color 0.3s, box-shadow 0.3s;
@@ -78,8 +78,8 @@
       .button {
         display: inline-block;
         margin: 10px;
-        padding: 12px 24px; /* Slightly smaller padding for mobile */
-        background-color: #007BFF;
+        padding: 12px 24px;
+        background-color: #007bff;
         color: white;
         text-decoration: none;
         border-radius: 25px;
@@ -91,18 +91,18 @@
         transform: translateY(-5px);
       }
 
-      .collapsible-buttons {
+      .popup-buttons {
         margin: 10px auto;
         max-width: 600px;
         text-align: center;
       }
 
-      .collapsible {
-        background-color: #007BFF;
+      .popup-button {
+        background-color: #007bff;
         color: white;
         cursor: pointer;
         padding: 12px 20px;
-        width: 80%; /* Wider buttons for smaller screens */
+        width: 80%;
         border: none;
         text-align: center;
         outline: none;
@@ -112,34 +112,53 @@
         transition: background-color 0.3s;
       }
 
-      .collapsible:hover {
+      .popup-button:hover {
         background-color: #0056b3;
       }
 
-      .content {
-        padding: 10px 20px;
+      .popup {
         display: none;
-        width: 80%; /* Wider content for smaller screens */
-        margin: auto;
-        overflow: hidden;
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
         background-color: #555;
-        margin-bottom: 10px;
+        padding: 20px;
         border-radius: 10px;
-        transition: background-color 0.3s;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+        z-index: 1000;
+        width: 80%;
+        max-width: 500px;
       }
 
-      .content .title {
+      .popup .close-button {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        background: none;
+        border: none;
+        font-size: 24px;
+        color: #f4f4f4;
+        cursor: pointer;
+        line-height: 1;
+      }
+
+      .popup .close-button:hover {
+        color: #007bff;
+      }
+
+      .popup .title {
         font-size: 16px;
         font-weight: bold;
         margin: 15px 0 10px 0;
         color: #f4f4f4;
       }
 
-      .content .link-button {
+      .popup .link-button {
         display: block;
         margin: 5px 0;
         padding: 8px 16px;
-        background-color: #007BFF;
+        background-color: #007bff;
         color: white;
         text-decoration: none;
         border-radius: 5px;
@@ -148,9 +167,101 @@
         transition: background-color 0.3s, transform 0.3s;
       }
 
-      .content .link-button:hover {
+      .popup .link-button:hover {
         background-color: #0056b3;
         transform: translateY(-3px);
+      }
+
+      .overlay {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        z-index: 999;
+      }
+
+      /* Notification Styles */
+      .notification {
+        display: none;
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background-color: #007bff;
+        color: white;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+        z-index: 1000;
+        width: 300px;
+        text-align: center;
+        animation: slideUp 0.5s ease-out;
+      }
+
+      .notification.fade-out {
+        animation: fadeOut 0.5s ease-out forwards;
+      }
+
+      .notification .close-notification {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        background: none;
+        border: none;
+        font-size: 20px;
+        color: white;
+        cursor: pointer;
+        line-height: 1;
+      }
+
+      .notification .close-notification:hover {
+        color: #ddd;
+      }
+
+      .notification .notification-content {
+        margin-top: 10px;
+      }
+
+      .notification .link-button {
+        display: inline-block;
+        margin-top: 10px;
+        padding: 8px 16px;
+        background-color: #0056b3;
+        color: white;
+        text-decoration: none;
+        border-radius: 5px;
+        text-align: center;
+        font-size: 14px;
+        transition: background-color 0.3s, transform 0.3s;
+      }
+
+      .notification .link-button:hover {
+        background-color: #004080;
+        transform: translateY(-3px);
+      }
+
+      /* Animations */
+      @keyframes slideUp {
+        from {
+          transform: translate(-50%, 100%);
+          opacity: 0;
+        }
+        to {
+          transform: translate(-50%, -50%);
+          opacity: 1;
+        }
+      }
+
+      @keyframes fadeOut {
+        from {
+          opacity: 1;
+        }
+        to {
+          opacity: 0;
+        }
       }
 
       footer {
@@ -159,7 +270,7 @@
         text-align: center;
         padding: 20px 0;
         border-top: 1px solid #444;
-        margin-top: auto; /* Push the footer to the bottom */
+        margin-top: auto;
       }
 
       footer p {
@@ -168,7 +279,7 @@
       }
 
       footer a {
-        color: #007BFF;
+        color: #007bff;
         text-decoration: none;
         transition: color 0.3s;
       }
@@ -186,44 +297,43 @@
         }
       }
 
-      /* Media Query for Smaller Screens (e.g., mobile devices) */
       @media (max-width: 768px) {
         header {
-          height: 25vh; /* Adjust height for smaller screens */
-          min-height: 120px; /* Further reduce minimum height */
-          padding: 10px 5px; /* Reduce padding further */
+          height: 25vh;
+          min-height: 120px;
+          padding: 10px 5px;
         }
 
         .logo {
-          max-width: 200px; /* Even smaller logo for very small screens */
+          max-width: 200px;
         }
 
         header h1 {
-          font-size: 1.2em; /* Smaller font size for very small screens */
+          font-size: 1.2em;
         }
 
         .description {
-          padding: 15px; /* Further reduce padding for smaller screens */
-          margin: 10px 5px; /* Further reduce margin for smaller screens */
+          padding: 15px;
+          margin: 10px 5px;
         }
 
         .button {
-          padding: 10px 20px; /* Smaller buttons for mobile */
+          padding: 10px 20px;
         }
 
-        .collapsible {
-          width: 90%; /* Wider buttons for very small screens */
+        .popup-button {
+          width: 90%;
         }
 
-        .content {
-          width: 90%; /* Wider content for very small screens */
+        .popup {
+          width: 90%;
         }
       }
     </style>
   </head>
   <body>
     <header>
-      <img src="https://i.postimg.cc/JnM7F2FC/mamtj6-white-text.webp" alt="Logo" class="logo">
+      <img src="https://i.postimg.cc/JnM7F2FC/mamtj6-white-text.webp" alt="Logo" class="logo" />
       <h1>PROJEK MULTIMEDIA MAMTJ6</h1>
     </header>
 
@@ -235,63 +345,124 @@
       </div>
     </section>
 
-    <section class="collapsible-buttons">
+    <section class="popup-buttons">
       <h2>Sila tekan butang di bawah untuk melihat item yang berkaitan</h2>
-      <button class="collapsible">1. Tabung</button>
-      <div class="content">
-        <div class="title">Alpha</div>
-        <a href="tabung/tabung-bulanini.html" class="link-button">Bulan Ini</a>
-        <a href="tabung/tabung-bulanlepas.html" class="link-button">Bulan Lepas</a>
-        <div class="title">Beta</div>
-        <a href="tabung/infaq-pembangunan.html" class="link-button">Infaq Pembangunan (Beta 1)</a>
-        <a href="tabung/index-test.html" class="link-button">Beta 1</a>
-        <a href="tabung/index-test.html" class="link-button">Beta 2</a>
-        <a href="tabung/index-test3.htm" class="link-button">Beta </a>
-      </div>
-      <button class="collapsible">2. Waktu Solat</button>
-      <div class="content">
-        <div class="title">Alpha</div>
-        <div class="title">-</div>
-        <div class="title">Beta</div>
-        <a href="tabung/index.html" class="link-button">Beta 1</a>
-        <a href="kuliah/index-test.html" class="link-button">Beta 2</a>
-        <a href="kuliah/index-test3.html" class="link-button">Beta 2</a>
-        <a href="kuliah/index-desktoptest.html" class="link-button">Beta 3 (for desktop)</a>
-      </div>
-      <button class="collapsible">3. Ramadan Reminder</button>
-      <div class="content">
-        <div class="title">Alpha</div>
-        <a href="https://t.me/Islamic_countdown" class="link-button">Telegram Reminder</a>
-        <div class="title">Beta</div>
-        <div class="title">-</div>
-      </div>
+      <button class="popup-button" data-popup="popup1">1. Tabung</button>
+      <button class="popup-button" data-popup="popup2">2. Waktu Solat</button>
+      <button class="popup-button" data-popup="popup3">3. Ramadan Reminder</button>
     </section>
+
+    <!-- Popup Menus -->
+    <div id="popup1" class="popup">
+      <button class="close-button">&times;</button>
+      <div class="title">Alpha</div>
+      <a href="tabung/tabung-bulanini.html" class="link-button">Bulan Ini</a>
+      <a href="tabung/tabung-bulanlepas.html" class="link-button">Bulan Lepas</a>
+      <div class="title">Beta</div>
+      <a href="tabung/infaq-pembangunan.html" class="link-button">Infaq Pembangunan (Beta 1)</a>
+      <a href="tabung/index-test.html" class="link-button">Beta 1</a>
+      <a href="tabung/index-test.html" class="link-button">Beta 2</a>
+      <a href="tabung/index-test3.htm" class="link-button">Beta </a>
+    </div>
+
+    <div id="popup2" class="popup">
+      <button class="close-button">&times;</button>
+      <div class="title">Alpha</div>
+      <div class="title">-</div>
+      <div class="title">Beta</div>
+      <a href="tabung/index.html" class="link-button">Beta 1</a>
+      <a href="kuliah/index-test.html" class="link-button">Beta 2</a>
+      <a href="kuliah/index-test3.html" class="link-button">Beta 2</a>
+      <a href="kuliah/index-desktoptest.html" class="link-button">Beta 3 (for desktop)</a>
+    </div>
+
+    <div id="popup3" class="popup">
+      <button class="close-button">&times;</button>
+      <div class="title">Alpha</div>
+      <a href="https://t.me/Islamic_countdown" class="link-button">Telegram Reminder</a>
+      <div class="title">Beta</div>
+      <div class="title">-</div>
+    </div>
+
+    <!-- Overlay for Popup -->
+    <div class="overlay"></div>
+
+    <!-- Notification Popup -->
+    <div id="notification" class="notification">
+      <button class="close-notification">&times;</button>
+      <div class="notification-content">
+        <p>New page added: <strong>Tabung Bulan Ini</strong></p>
+        <a href="tabung/tabung-bulanini.html" class="link-button">Go to Page</a>
+      </div>
+    </div>
 
     <footer>
       <p>&copy; 2023 MAMTJ6. All rights reserved. | <a href="https://mamtj6.com">Visit our main website</a></p>
+      <p>Last updated: <strong>October 10, 2023</strong></p>
     </footer>
 
     <script>
-      document.addEventListener("DOMContentLoaded", function() {
-        var coll = document.getElementsByClassName("collapsible");
-        for (var i = 0; i < coll.length; i++) {
-          coll[i].addEventListener("click", function() {
-            // Close all other collapsible sections
-            for (var j = 0; j < coll.length; j++) {
-              if (coll[j] !== this) {
-                coll[j].classList.remove("active");
-                coll[j].nextElementSibling.style.display = "none";
+      document.addEventListener("DOMContentLoaded", function () {
+        // Popup Button Logic
+        const popupButtons = document.querySelectorAll(".popup-button");
+        const popups = document.querySelectorAll(".popup");
+        const overlay = document.querySelector(".overlay");
+        const closeButtons = document.querySelectorAll(".close-button");
+
+        popupButtons.forEach((button) => {
+          button.addEventListener("click", function () {
+            const popupId = this.getAttribute("data-popup");
+            const popup = document.getElementById(popupId);
+
+            // Close all other popups
+            popups.forEach((p) => {
+              if (p !== popup) {
+                p.style.display = "none";
               }
-            }
-            // Toggle the clicked collapsible section
-            this.classList.toggle("active");
-            var content = this.nextElementSibling;
-            if (content.style.display === "block") {
-              content.style.display = "none";
-            } else {
-              content.style.display = "block";
-            }
+            });
+
+            // Show the clicked popup and overlay
+            popup.style.display = "block";
+            overlay.style.display = "block";
           });
+        });
+
+        // Close popup when clicking the close button
+        closeButtons.forEach((button) => {
+          button.addEventListener("click", function () {
+            const popup = this.closest(".popup");
+            popup.style.display = "none";
+            overlay.style.display = "none";
+          });
+        });
+
+        // Notification Logic
+        const notification = document.getElementById("notification");
+        const closeNotificationButton = document.querySelector(".close-notification");
+        const hasNewUpdate = true; // Set this to false if no new updates
+
+        if (hasNewUpdate) {
+          setTimeout(() => {
+            notification.style.display = "block";
+          }, 2000); // Show notification after 2 seconds
+        }
+
+        // Close notification when clicking the close button
+        closeNotificationButton.addEventListener("click", function () {
+          notification.classList.add("fade-out");
+          setTimeout(() => {
+            notification.style.display = "none";
+          }, 500); // Wait for fade-out animation to complete
+        });
+
+        // Automatically hide notification after 5 seconds
+        if (hasNewUpdate) {
+          setTimeout(() => {
+            notification.classList.add("fade-out");
+            setTimeout(() => {
+              notification.style.display = "none";
+            }, 500); // Wait for fade-out animation to complete
+          }, 7000); // Hide notification after 7 seconds (2s delay + 5s display)
         }
       });
     </script>
