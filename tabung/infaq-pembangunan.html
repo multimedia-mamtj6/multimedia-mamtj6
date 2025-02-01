@@ -5,98 +5,110 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Infaq Pembangunan</title>
     <style>
-      body {
+        body {
             font-family: Arial, sans-serif;
-            background-color: #e0e0e0; /* Background behind the container */
+            background-color: #e0e0e0;
             color: #333;
             text-align: center;
-            margin: 0;
+            margin: -20;
             display: flex;
             justify-content: center;
             align-items: center;
-            min-height: 100vh; /* Full viewport height */
-            padding: 20px; /* Add padding for mobile view */
+            min-height: 100vh;
+            padding: 10px;
+            overflow: hidden; /* Prevent scrolling */
         }
         .container {
-            background-color: #fff; /* Background for the container */
+            background-color: #fff;
             padding: 40px;
             border-radius: 15px;
             box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
-            max-width: 1900px; /* Adjust as needed */
-            width: 95%; /* Responsive width */
-            min-height: 600px; /* Set a minimum height */
-            height: auto; /* Allow height to grow based on content */
+            max-width: 1900px;
+            width: 95%;
+            min-height: 700px;
+            height: auto;
             display: flex;
             flex-direction: column;
-            justify-content: center; /* Center content vertically */
-            align-items: center; /* Center content horizontally */
+            justify-content: center;
+            align-items: center;
         }
         h1 {
-            font-size: 3em; /* Larger heading */
-            margin-bottom: 30px;
+            font-size: 4em;
+            margin: 10px 0 0 -5.0px /* Adjusted margin */
         }
         .progress-bar {
             background-color: #e0e0e0;
-            border-radius: 10px;
+            border-radius: 50px;
             overflow: hidden;
-            width: 90%; /* Full width of the container */
-            margin: 40px auto;
+            width: 90%;
+            margin: 20px auto; /* Adjusted margin */
         }
         .progress {
             background-color: #4caf50;
             font-weight: bold;
-            height: 50px; /* Thicker progress bar */
+            height: 50px;
             width: 100%;
             text-align: center;
             line-height: 50px;
             color: white;
-            font-size: 1.5em; /* Larger progress text */
+            font-size: 1.5em;
         }
         .donation-info {
-            margin-top: 40px;
+            margin-top: 20px; /* Adjusted margin */
         }
         .donation-info p {
-            margin: 20px 0;
-            font-size: 2em; /* Larger text */
+            margin: 10px 0 0 0px; /* Adjusted margin for individual lines */
+            font-size: 2em;
         }
         .donation-info a {
             color: #4caf50;
             text-decoration: none;
-            font-size: 1em; /* Larger link text */
+            font-size: 1em;
         }
         .donation-info a:hover {
             text-decoration: underline;
         }
         #jumlahDerma {
-            font-size: 9em; /* Very large font size for donation amount */
-            color: #4caf50; /* Green color */
+            font-size: 9em;
+            color: #4caf50;
             font-weight: bold;
-            margin: 30px 0;
+            margin: 20px 0; /* Adjusted margin */
         }
         #tarikhKemaskini {
             font-weight: bold;
-            font-size: 1em; /* Larger date text */
+            font-size: 1em;
+            margin: 10px 0; /* Adjusted margin */
+        }
+
+        /* Loading Animation */
+        @keyframes pulse {
+            0% { opacity: 0.5; }
+            50% { opacity: 1; }
+            100% { opacity: 0.5; }
+        }
+        .loading {
+            animation: pulse 1.5s infinite; /* Pulse animation */
         }
 
         /* Mobile Responsiveness */
         @media (max-width: 768px) {
             h1 {
-                font-size: 2em; /* Smaller heading for mobile */
+                font-size: 2em;
             }
             .donation-info p {
-                font-size: 1.5em; /* Smaller text for mobile */
+                font-size: 1.5em;
             }
             #jumlahDerma {
-                font-size: 3em; /* Smaller donation amount for mobile */
+                font-size: 3em; /* Adjusted for mobile */
             }
             .progress {
-                height: 40px; /* Thinner progress bar for mobile */
+                height: 40px;
                 line-height: 40px;
                 font-size: 1.2em;
             }
             .container {
-                padding: 20px; /* Less padding for mobile */
-                min-height: auto; /* Allow container to shrink on mobile */
+                padding: 20px;
+                min-height: auto;
             }
         }
     </style>
@@ -106,18 +118,27 @@
         <h1>INFAQ TABUNG BANGUNAN TAMBAHAN MAMTJ6</h1>
         <div class="donation-info">
             <p>Jumlah derma/sumbangan terkini:</p>
-            <p><strong id="jumlahDerma">Loading...</strong></p>
+            <p><strong id="jumlahDerma" class="loading">Loading...</strong></p>
             <div class="progress-bar">
-                <div id="progress" class="progress">Loading...</div>
+                <div id="progress" class="progress loading">Loading...</div>
             </div>
             <p>Sasaran: RM250,000</p>
-            <p>Kemaskini sehingga <span id="tarikhKemaskini">Loading...</span></p>
+            <p>Kemaskini sehingga </p>
+            <p><span id="tarikhKemaskini" class="loading">Loading...</span></p>
             <p><a href="http://www.mamtj6.com/infaq-wakat/infaq-pembangunan" target="_blank">www.mamtj6.com/infaq-wakat/infaq-pembangunan</a></p>
         </div>
     </div>
 
     <script>
         const scriptUrl = 'https://script.google.com/macros/s/AKfycbyziKtnrgu_OMBuCFMWB9OxYW9xu8GeYOHh7Wio_2el2TF8JgBYG-RYg11KQYW3mc9ahw/exec';
+
+        // Function to remove loading animation
+        function removeLoadingAnimation() {
+            const loadingElements = document.querySelectorAll('.loading');
+            loadingElements.forEach(element => {
+                element.classList.remove('loading');
+            });
+        }
 
         fetch(scriptUrl)
             .then(response => response.json())
@@ -126,9 +147,14 @@
                 document.getElementById('progress').textContent = `${data.peratusan}%`;
                 document.getElementById('progress').style.width = `${data.peratusan}%`;
                 document.getElementById('tarikhKemaskini').textContent = data.tarikhKemaskini;
+                removeLoadingAnimation(); // Remove animation after data loads
             })
             .catch(error => {
                 console.error('Error fetching data:', error);
+                removeLoadingAnimation(); // Remove animation if there's an error
+                document.getElementById('jumlahDerma').textContent = 'Error loading data';
+                document.getElementById('progress').textContent = 'Error';
+                document.getElementById('tarikhKemaskini').textContent = 'Error';
             });
     </script>
 </body>
