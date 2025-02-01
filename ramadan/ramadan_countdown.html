@@ -1,0 +1,251 @@
+const BOT_TOKEN = "BOT_TOKEN"; // Replace with your Telegram Bot Token
+const CHAT_ID = "@CHANNELID"; // Replace with your Telegram Channel Chat ID
+
+
+/**
+ * Sets up the countdown events and creates the daily trigger in one go.
+ */
+function setupAndCreateTrigger() {
+  // Step 1: Set up the countdown events (only once)
+  const events = [
+    { name: "1 RAMADAN 1447H / 2025", date: "2025-03-02T08:00:00+08:00" },
+  ];
+ 
+  // Store events in script properties
+  PropertiesService.getScriptProperties().setProperty("COUNTDOWN_EVENTS", JSON.stringify(events));
+  console.log("Countdown events set.");
+
+
+  // Step 2: Create the daily trigger for sending countdown messages
+  createDailyTrigger();
+}
+
+
+/**
+ * Creates or updates a daily trigger for the sendCountdownMessages function.
+ */
+function createDailyTrigger() {
+  console.log("Running createDailyTrigger...");
+  const triggers = ScriptApp.getProjectTriggers();
+
+
+  // Remove any existing triggers for the same function
+  triggers.forEach(trigger => {
+    if (trigger.getHandlerFunction() === "sendCountdownMessages") {
+      ScriptApp.deleteTrigger(trigger);
+      console.log("Existing trigger for sendCountdownMessages deleted.");
+    }
+  });
+
+
+  // Define trigger time (e.g., 9:05 AM)
+  const triggerHour = 9;
+  const triggerMinute = 5;
+
+
+  // Create a new daily trigger
+  ScriptApp.newTrigger("sendCountdownMessages")
+    .timeBased()
+    .everyDays(1)
+    .atHour(triggerHour)
+    .nearMinute(triggerMinute)
+    .create();
+
+
+  console.log(`New daily trigger created for sendCountdownMessages at ${triggerHour}:${triggerMinute}`);
+}
+
+
+/**
+ * Sends countdown or celebration messages based on the target event dates.
+ */
+function sendCountdownMessages() {
+  console.log("Running sendCountdownMessages...");
+  const countdownEvents = JSON.parse(PropertiesService.getScriptProperties().getProperty("COUNTDOWN_EVENTS") || "[]");
+
+
+  if (!countdownEvents.length) {
+    console.error("No countdown events found. Please set up countdown events first.");
+    return;
+  }
+
+
+  const now = convertToMYT(new Date());
+  const updatedEvents = [];
+
+
+  countdownEvents.forEach(event => {
+    const targetDate = convertToMYT(new Date(event.date));
+    const timeDifference = targetDate - now;
+
+
+    if (timeDifference < 0) {
+      console.log(`Event "${event.name}" has passed. Skipping.`);
+    } else if (now.toDateString() === targetDate.toDateString()) {
+      const celebrationMessage = `🎉 *Alhamdulillah* ${event.name} *telah tiba* 🎉`;
+      sendTelegramMessageWithButton(celebrationMessage);
+      console.log(`Celebration message sent for "${event.name}".`);
+    } else {
+      const countdownMessage = getCountdownMessage(targetDate, event.name);
+      sendTelegramMessageWithButton(countdownMessage);
+      updatedEvents.push(event);
+      console.log(`Countdown message sent for "${event.name}".`);
+    }
+  });
+
+
+  // Update events in script properties
+  PropertiesService.getScriptProperties().setProperty("COUNTDOWN_EVENTS", JSON.stringify(updatedEvents));
+  console.log("Expired events removed. Countdown events updated.");
+}
+
+
+/**
+ * Converts the given date to Malaysian Time (MYT, UTC +8).
+ */
+function convertToMYT(date) {
+  const utcTime = date.getTime() + date.getTimezoneOffset() * 60 * 1000;
+  const mytOffset = 8 * 60 * 60 * 1000;
+  return new Date(utcTime + mytOffset);
+}
+
+
+/**
+ * Generates a countdown or celebration message for an event.
+ */
+function getCountdownMessage(targetDate, eventName) {
+  const now = convertToMYT(new Date());
+  const timeDifference = targetDate - now;
+
+  const daysRemaining = Math.ceil(timeDifference / (1000 * 60 * 60 * 24)); // Use ceil for proper countdown logic
+
+  // Format target date as a readable string
+  const options = { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' };
+  const formattedDate = targetDate.toLocaleDateString('ms-MY', options);
+
+  // Notice there is no space after the colon here
+  return `*Countdown to ${eventName}:* \n ⌛️ *${daysRemaining} hari lagi!* \n 📆 _${formattedDate}_ \n Adakah anda sudah bersedia?\n\n Info lanjut, layari https://ramadan-countdown.mamtj6.com/`;
+}
+
+
+
+/**
+ * Sends a message to the Telegram chat with an inline button.
+ */
+function sendTelegramMessageWithButton(message) {
+  const url = `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`;
+
+
+  // Define the button for WhatsApp sharing
+  const buttons = [
+    { text: "Share on WhatsApp", url: `https://api.whatsapp.com/send?text=${encodeURIComponent(message)}` }
+  ];
+
+
+  const inlineKeyboard = {
+    inline_keyboard: [buttons]
+  };
+
+
+  const payload = {
+    chat_id: CHAT_ID,
+    text: message,
+    parse_mode: "Markdown",
+    reply_markup: JSON.stringify(inlineKeyboard)
+  };
+
+
+  try {
+    const response = UrlFetchApp.fetch(url, {
+      method: "post",
+      contentType: "application/json",
+      payload: JSON.stringify(payload)
+    });
+    const result = JSON.parse(response.getContentText());
+
+
+    if (result.ok) {
+      console.log(`Message sent successfully with ID: ${result.result.message_id}`);
+      scheduleMessageDeletion(result.result.message_id, 15, 0); // Delete after 14 hours
+    } else {
+      console.error("Error sending message with button:", result);
+    }
+  } catch (error) {
+    console.error("Error during API request:", error);
+  }
+}
+
+
+/**
+ * Schedules the deletion of the sent message after a specified delay.
+ */
+function scheduleMessageDeletion(messageId, hours, minutes) {
+  console.log(`Scheduling message deletion. Message ID: ${messageId}`);
+  const triggerTime = new Date(Date.now() + (hours * 60 * 60 * 1000) + (minutes * 60 * 1000));
+
+
+  const deletionKey = `DELETE_TRIGGER_${messageId}`;
+  PropertiesService.getScriptProperties().setProperty(deletionKey, messageId.toString());
+
+
+  ScriptApp.newTrigger("deleteTelegramMessage")
+    .timeBased()
+    .at(triggerTime)
+    .create();
+
+
+  console.log(`Trigger created for message deletion at ${triggerTime}.`);
+}
+
+
+/**
+ * Deletes the previously sent Telegram message.
+ */
+function deleteTelegramMessage() {
+  console.log("Running deleteTelegramMessage...");
+  const scriptProperties = PropertiesService.getScriptProperties();
+  const keys = scriptProperties.getKeys().filter(key => key.startsWith("DELETE_TRIGGER_"));
+
+
+  keys.forEach(key => {
+    const messageId = scriptProperties.getProperty(key);
+    const url = `https://api.telegram.org/bot${BOT_TOKEN}/deleteMessage`;
+
+
+    try {
+      const response = UrlFetchApp.fetch(url, {
+        method: "post",
+        contentType: "application/json",
+        payload: JSON.stringify({ chat_id: CHAT_ID, message_id: parseInt(messageId, 10) })
+      });
+      const result = JSON.parse(response.getContentText());
+
+
+      if (result.ok) {
+        console.log(`Message deleted successfully. Message ID: ${messageId}`);
+        scriptProperties.deleteProperty(key);
+      } else {
+        console.error("Error deleting message:", result);
+      }
+    } catch (error) {
+      console.error("Error during API request:", error);
+    }
+  });
+
+
+  deleteExistingTriggers("deleteTelegramMessage");
+}
+
+
+/**
+ * Deletes all existing triggers for a specific function.
+ */
+function deleteExistingTriggers(functionName) {
+  const triggers = ScriptApp.getProjectTriggers();
+  triggers.forEach(trigger => {
+    if (trigger.getHandlerFunction() === functionName) {
+      ScriptApp.deleteTrigger(trigger);
+      console.log(`Deleted trigger for: ${functionName}`);
+    }
+  });
+}
