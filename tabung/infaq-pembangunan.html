@@ -99,7 +99,7 @@
                 font-size: 1.5em;
             }
             #jumlahDerma {
-                font-size: 3em; /* Adjusted for mobile */
+                font-size: 2em; /* Adjusted for mobile */
             }
             .progress {
                 height: 40px;
@@ -125,12 +125,12 @@
             <p>Sasaran: RM250,000</p>
             <p>Kemaskini sehingga </p>
             <p><span id="tarikhKemaskini" class="loading">Loading...</span></p>
-            <p><a href="http://www.mamtj6.com/infaq-wakat/infaq-pembangunan" target="_blank">www.mamtj6.com/infaq-wakat/infaq-pembangunan</a></p>
+            <p><a href="http://www.mamtj6.com/infaq-wakaf/infaq-pembangunan" target="_blank">www.mamtj6.com/infaq-wakaf/infaq-pembangunan</a></p>
         </div>
     </div>
 
     <script>
-        const scriptUrl = 'https://script.google.com/macros/s/AKfycbyziKtnrgu_OMBuCFMWB9OxYW9xu8GeYOHh7Wio_2el2TF8JgBYG-RYg11KQYW3mc9ahw/exec';
+        const csvUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSVbIu9GHCo5W8AOhvltK2FgToinsJ3wQC9KPhv9HWaN53GnsdfbhcrIptBxvV7dzTP6C2nD7Deoiw2/pub?gid=0&single=true&output=csv';
 
         // Function to remove loading animation
         function removeLoadingAnimation() {
@@ -140,13 +140,70 @@
             });
         }
 
-        fetch(scriptUrl)
-            .then(response => response.json())
-            .then(data => {
-                document.getElementById('jumlahDerma').textContent = `RM ${data.jumlahDerma}`;
-                document.getElementById('progress').textContent = `${data.peratusan}%`;
-                document.getElementById('progress').style.width = `${data.peratusan}%`;
-                document.getElementById('tarikhKemaskini').textContent = data.tarikhKemaskini;
+        // Function to parse CSV data and extract required values
+        function parseCSVData(csvText) {
+            const rows = csvText.split('\n'); // Split CSV into rows
+            const headers = rows[0].split(','); // Extract headers
+            const data = rows[1].split(','); // Extract data row
+
+            // Find indices of required columns
+            const jumlahDermaIndex = headers.indexOf('Jumlah Derma');
+            const peratusanIndex = headers.indexOf('Peratusan');
+            const tarikhKemaskiniIndex = headers.indexOf('Tarikh Kemaskini');
+
+            // Extract values
+            const jumlahDerma = data[jumlahDermaIndex];
+            const peratusan = data[peratusanIndex];
+            const tarikhKemaskini = data[tarikhKemaskiniIndex];
+
+            return { jumlahDerma, peratusan, tarikhKemaskini };
+        }
+
+        // Function to handle quoted fields in CSV
+        function parseCSVRow(row) {
+            const result = [];
+            let insideQuotes = false;
+            let currentField = '';
+
+            for (let i = 0; i < row.length; i++) {
+                const char = row[i];
+
+                if (char === '"') {
+                    insideQuotes = !insideQuotes; // Toggle insideQuotes flag
+                } else if (char === ',' && !insideQuotes) {
+                    result.push(currentField.trim()); // End of field
+                    currentField = ''; // Reset for next field
+                } else {
+                    currentField += char; // Append to current field
+                }
+            }
+
+            result.push(currentField.trim()); // Add the last field
+            return result;
+        }
+
+        fetch(csvUrl)
+            .then(response => response.text())
+            .then(csvText => {
+                const rows = csvText.split('\n'); // Split CSV into rows
+                const headers = parseCSVRow(rows[0]); // Parse headers
+                const data = parseCSVRow(rows[1]); // Parse data row
+
+                // Find indices of required columns
+                const jumlahDermaIndex = headers.indexOf('Jumlah Derma');
+                const peratusanIndex = headers.indexOf('Peratusan');
+                const tarikhKemaskiniIndex = headers.indexOf('Tarikh Kemaskini');
+
+                // Extract values
+                const jumlahDerma = data[jumlahDermaIndex];
+                const peratusan = data[peratusanIndex];
+                const tarikhKemaskini = data[tarikhKemaskiniIndex];
+
+                // Update the DOM with the fetched data
+                document.getElementById('jumlahDerma').textContent = `RM ${jumlahDerma}`;
+                document.getElementById('progress').textContent = `${peratusan}%`;
+                document.getElementById('progress').style.width = `${peratusan}%`;
+                document.getElementById('tarikhKemaskini').textContent = tarikhKemaskini;
                 removeLoadingAnimation(); // Remove animation after data loads
             })
             .catch(error => {
