@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Infaq Pembangunan</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-image: url('background.jpg'); /* Change this to your image URL */
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            color: #333;
+            text-align: center;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 10px;
+        }
+        .container {
+            width: 95%;
+            max-width: 1900px;
+            min-height: 700px;
+            height: auto;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        .frame {
+            background-color: #fff;
+            padding: 40px;
+            border-radius: 15px;
+            max-width: 800px;
+            width: 90%;
+        }
+        h1 {
+            font-size: 3em;
+            margin-bottom: 20px;
+        }
+        .progress-bar {
+            background-color: #e0e0e0;
+            border-radius: 50px;
+            overflow: hidden;
+            width: 100%;
+            margin-top: 20px;
+        }
+        .progress {
+            background-color: #4caf50;
+            font-weight: bold;
+            height: 50px;
+            width: 100%;
+            text-align: center;
+            line-height: 50px;
+            color: white;
+            font-size: 1.5em;
+        }
+        .donation-info {
+            text-align: center;
+        }
+        #jumlahDerma {
+            font-size: 6em;
+            color: #4caf50;
+            font-weight: bold;
+            margin: 20px 0;
+        }
+        #tarikhKemaskini {
+            font-weight: bold;
+            font-size: 1em;
+            margin-top: 10px;
+        }
+        /* Loading Animation */
+        @keyframes pulse {
+            0% { opacity: 0.5; }
+            50% { opacity: 1; }
+            100% { opacity: 0.5; }
+        }
+        .loading {
+            animation: pulse 1.5s infinite;
+        }
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2em;
+            }
+            #jumlahDerma {
+                font-size: 3em;
+            }
+            .progress {
+                height: 40px;
+                line-height: 40px;
+                font-size: 1.2em;
+            }
+            .frame {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>INFAQ TABUNG BANGUNAN TAMBAHAN MAMTJ6</h1>
+        <div class="frame">
+            <p>Jumlah derma/sumbangan terkini:</p>
+            <p><strong id="jumlahDerma" class="loading">Loading...</strong></p>
+            <div class="progress-bar">
+                <div id="progress" class="progress loading">Loading...</div>
+            </div>
+            <p>Sasaran: RM250,000</p>
+        </div>
+        <p>Kemaskini sehingga: <span id="tarikhKemaskini" class="loading">Loading...</span></p>
+    </div>
+    <script>
+        const csvUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSVbIu9GHCo5W8AOhvltK2FgToinsJ3wQC9KPhv9HWaN53GnsdfbhcrIptBxvV7dzTP6C2nD7Deoiw2/pub?gid=0&single=true&output=csv';
+
+        function removeLoadingAnimation() {
+            document.getElementById('jumlahDerma').classList.remove('loading');
+            document.getElementById('progress').classList.remove('loading');
+            document.getElementById('tarikhKemaskini').classList.remove('loading');
+        }
+
+        function parseCSVRow(row) {
+            const result = [];
+            let insideQuotes = false;
+            let currentField = '';
+
+            for (let i = 0; i < row.length; i++) {
+                const char = row[i];
+                if (char === '"') {
+                    insideQuotes = !insideQuotes;
+                } else if (char === ',' && !insideQuotes) {
+                    result.push(currentField.trim());
+                    currentField = '';
+                } else {
+                    currentField += char;
+                }
+            }
+            result.push(currentField.trim());
+            return result;
+        }
+
+        fetch(csvUrl)
+            .then(response => response.text())
+            .then(csvText => {
+                const rows = csvText.split('\n');
+                const headers = parseCSVRow(rows[0]);
+                const data = parseCSVRow(rows[1]);
+
+                const jumlahDermaIndex = headers.indexOf('Jumlah Derma');
+                const peratusanIndex = headers.indexOf('Peratusan');
+                const tarikhKemaskiniIndex = headers.indexOf('Tarikh Kemaskini');
+
+                if (jumlahDermaIndex !== -1 && peratusanIndex !== -1 && tarikhKemaskiniIndex !== -1) {
+                    const jumlahDerma = data[jumlahDermaIndex];
+                    const peratusan = data[peratusanIndex];
+                    const tarikhKemaskini = data[tarikhKemaskiniIndex];
+
+                    document.getElementById('jumlahDerma').textContent = `RM ${jumlahDerma}`;
+                    document.getElementById('progress').textContent = `${peratusan}%`;
+                    document.getElementById('progress').style.width = `${peratusan}%`;
+                    document.getElementById('tarikhKemaskini').textContent = tarikhKemaskini;
+
+                    removeLoadingAnimation();
+                } else {
+                    console.error("Column names not found in CSV.");
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching data:', error);
+                document.getElementById('jumlahDerma').textContent = 'Error loading data';
+                document.getElementById('progress').textContent = 'Error';
+                document.getElementById('tarikhKemaskini').textContent = 'Error';
+            });
+    </script>
+</body>
+</html>
