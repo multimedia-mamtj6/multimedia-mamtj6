@@ -6,30 +6,33 @@
     <title>Infaq Pembangunan</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
-            background-image: url('https://multimedia.mamtj6.com/icons/mimbar-jumaat-bg.webp'); /* Change this to your image URL */
-            background-size: cover;
-            background-position: center;
-            background-attachment: fixed;
-            color: #333;
-            text-align: center;
-            margin: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            padding: 10px;
-        }
-        .container {
-            width: 95%;
-            max-width: 1900px;
-            min-height: 700px;
-            height: auto;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-        }
+    font-family: Arial, sans-serif;
+    background-image: url('https://multimedia.mamtj6.com/icons/mimbar-jumaat-bg.webp'); /* Change this to your image URL */
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    color: #333;
+    text-align: center;
+    margin: 0; /* Ensure no default margin */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 0; /* Remove padding to prevent overflow */
+    box-sizing: border-box; /* Include padding and border in element dimensions */
+}
+
+.container {
+    width: 95%;
+    max-width: 1900px;
+    min-height: 700px;
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    box-sizing: border-box; /* Include padding and border in element dimensions */
+}
         .frame {
             background-color: #fff;
             padding: 50px;
@@ -40,7 +43,8 @@
         h1 {
             font-size: 4em;
             margin-bottom: 20px;
-        }
+            margin-top: 0; /* Add this line to remove the space above the title */
+}
         .progress-bar {
             background-color: #e0e0e0;
             border-radius: 50px;
@@ -124,7 +128,7 @@
                 font-size: 1.5em; /* Even smaller font size for very small screens */
             }
             .frame p:last-child {
-                font-size: 1.2em; /* Even smaller font size for very small screens */
+                font-size: 1.5em; /* Even smaller font size for very small screens */
             }
             #jumlahDerma {
                 font-size: 4em; /* Even smaller font size for very small screens */
@@ -136,10 +140,10 @@
                  width: 50%;
             }
             p:last-of-type {
-                font-size: 1.2em; /* Even smaller font size for very small screens */
+                font-size: 1.4em; /* Even smaller font size for very small screens */
             }
             #tarikhKemaskini {
-                font-size: 0.9em; /* Even smaller font size for very small screens */
+                font-size: 1.2em; /* Even smaller font size for very small screens */
             }
         }
         
