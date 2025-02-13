@@ -1,1 +1,139 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mimbar Jumaat Siri 2 | 2025</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: url('https://multimedia.mamtj6.com/media/img/mimbar-jumaat-bg.webp') no-repeat center center/cover;
+        }
+        
+        .container {
+            text-align: center;
+            width: 90%;
+            max-width: 1920px;
+            padding: 20px;
+            border-radius: 20px;
+        }
+        
+        .logo-small { width: 300px; margin-bottom: 10px; }
+        .logo-big { width: 600px; }
+        
+        .title { font-size: 50px; font-weight: bold; color: black; }
+        .date { font-size: 40px; font-weight: 400; color: gray; }
+        
+        .main-text {
+            font-weight: bold;
+            color: blue;
+            text-align: center;
+            white-space: pre-wrap;
+            display: inline-block;
+            line-height: 1.2;
+            font-size: 150px;
+        }
 
+        .spinner {
+            border: 5px solid rgba(0, 0, 0, 0.1);
+            border-top: 5px solid blue;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+            display: none;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        /* MOBILE VIEW */
+        @media (max-width: 768px) {
+            .logo-small { width: 200px; }
+            .logo-big { width: 300px; }
+            .title { font-size: 17px; }
+            .date { font-size: 15px; }
+            .main-text { font-size: 50px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <img class="logo-small" src="https://multimedia.mamtj6.com/media/logo/mamtj6-mufti.webp" alt="Small Logo">
+        <br>
+        <img class="logo-big" src="https://multimedia.mamtj6.com/media/img/khat/mimbar-jumaat.webp" alt="Big Logo">
+        <div class="spinner" id="spinner"></div>
+        <h1 class="title" id="title">Loading...</h1>
+        <p class="date" id="date">Loading...</p>
+        <h2 class="main-text" id="main-text">Loading...</h2>
+    </div>
+
+    <script>
+        const sheetURL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQDFOdEOVKqjeS1mErtCrV-Z1-dvArp3wteWAEyRM6KKzXN90yggh0Bc7Nq3yhYKdAEo1NkAiV3lZGd/pub?gid=0&single=true&output=csv";
+        let lastFetchedData = "";
+
+        async function fetchSheetData() {
+            document.getElementById("spinner").style.display = "block";
+            try {
+                const response = await fetch(sheetURL, { cache: "no-store" });
+                if (!response.ok) throw new Error("Network response was not ok");
+                const text = await response.text();
+                
+                const rows = text.split("\n").map(row => row.split(","));
+                if (rows.length <= 1) return showError("TIADA DATA");
+                
+                const newData = rows[1].map(cell => cell.trim()).join("|");
+                if (newData === lastFetchedData) return;
+                lastFetchedData = newData;
+
+                document.getElementById("title").innerText = rows[1][1] || "TIADA DATA";
+                document.getElementById("date").innerText = rows[1][2] || "TIADA DATA";
+                document.getElementById("main-text").innerText = rows[1][3] || "TIADA DATA";
+                
+                adjustFontSize();
+            } catch (error) {
+                console.error("Error fetching Google Sheets data:", error);
+                showError("ERROR");
+            } finally {
+                document.getElementById("spinner").style.display = "none";
+            }
+        }
+
+        function showError(message) {
+            document.getElementById("title").innerText = message;
+            document.getElementById("date").innerText = "";
+            document.getElementById("main-text").innerText = "";
+        }
+
+        function adjustFontSize() {
+            const mainText = document.getElementById("main-text");
+            if (window.innerWidth <= 768) return;
+
+            mainText.style.fontSize = "150px";
+            setTimeout(() => {
+                const lineCount = mainText.clientHeight / parseFloat(getComputedStyle(mainText).lineHeight);
+                if (lineCount > 2.5) mainText.style.fontSize = "150px";
+                else if (lineCount > 1.5) mainText.style.fontSize = "100px";
+            }, 100);
+        }
+
+        fetchSheetData();
+        setInterval(fetchSheetData, 60000);
+    </script>
+</body>
+</html>
