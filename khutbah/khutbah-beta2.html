@@ -30,28 +30,11 @@
             border-radius: 20px;
         }
         
-        .logo-small {
-            width: 300px;
-            height: auto;
-            margin-bottom: 10px;
-        }
+        .logo-small { width: 300px; margin-bottom: 10px; }
+        .logo-big { width: 600px; }
         
-        .logo-big {
-            width: 600px;
-            height: auto;
-        }
-        
-        .title {
-            font-size: 50px;
-            font-weight: bold;
-            color: black;
-        }
-        
-        .date {
-            font-size: 40px;
-            font-weight: 400;
-            color: gray;
-        }
+        .title { font-size: 50px; font-weight: bold; color: black; }
+        .date { font-size: 40px; font-weight: 400; color: gray; }
         
         .main-text {
             font-weight: bold;
@@ -60,30 +43,32 @@
             white-space: pre-wrap;
             display: inline-block;
             line-height: 1.2;
-            font-size: 150px; /* Default for one line */
+            font-size: 150px;
         }
 
+        .spinner {
+            border: 5px solid rgba(0, 0, 0, 0.1);
+            border-top: 5px solid blue;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+            display: none;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
         /* MOBILE VIEW */
         @media (max-width: 768px) {
-            .logo-small {
-                width: 200px;
-            }
-            
-            .logo-big {
-                width: 300px;
-            }
-            
-            .title {
-                font-size: 17px;
-            }
-            
-            .date {
-                font-size: 15px;
-            }
-            
-            .main-text {
-                font-size: 50px;
-            }
+            .logo-small { width: 200px; }
+            .logo-big { width: 300px; }
+            .title { font-size: 17px; }
+            .date { font-size: 15px; }
+            .main-text { font-size: 50px; }
         }
     </style>
 </head>
@@ -92,53 +77,63 @@
         <img class="logo-small" src="https://multimedia.mamtj6.com/media/logo/mamtj6-mufti.webp" alt="Small Logo">
         <br>
         <img class="logo-big" src="https://multimedia.mamtj6.com/media/img/khat/mimbar-jumaat.webp" alt="Big Logo">
+        <div class="spinner" id="spinner"></div>
         <h1 class="title" id="title">Loading...</h1>
         <p class="date" id="date">Loading...</p>
         <h2 class="main-text" id="main-text">Loading...</h2>
     </div>
 
     <script>
+        const sheetURL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQDFOdEOVKqjeS1mErtCrV-Z1-dvArp3wteWAEyRM6KKzXN90yggh0Bc7Nq3yhYKdAEo1NkAiV3lZGd/pub?gid=0&single=true&output=csv";
+        let lastFetchedData = "";
+
         async function fetchSheetData() {
-            const sheetURL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQDFOdEOVKqjeS1mErtCrV-Z1-dvArp3wteWAEyRM6KKzXN90yggh0Bc7Nq3yhYKdAEo1NkAiV3lZGd/pub?gid=0&single=true&output=csv";
+            document.getElementById("spinner").style.display = "block";
             try {
-                const response = await fetch(sheetURL);
+                const response = await fetch(sheetURL, { cache: "no-store" });
+                if (!response.ok) throw new Error("Network response was not ok");
                 const text = await response.text();
-
-                // Split CSV into lines
+                
                 const rows = text.split("\n").map(row => row.split(","));
+                if (rows.length <= 1) return showError("TIADA DATA");
+                
+                const newData = rows[1].map(cell => cell.trim()).join("|");
+                if (newData === lastFetchedData) return;
+                lastFetchedData = newData;
 
-                if (rows.length > 1) {  // Skip header row
-                    document.getElementById("title").innerText = rows[1][0].trim(); // Column 1
-                    document.getElementById("date").innerText = rows[1][1].trim();  // Column 2
-                    document.getElementById("main-text").innerText = rows[1][2].trim(); // Column 3
-                    adjustFontSize();
-                }
+                document.getElementById("title").innerText = rows[1][0] || "TIADA DATA";
+                document.getElementById("date").innerText = rows[1][1] || "TIADA DATA";
+                document.getElementById("main-text").innerText = rows[1][2] || "TIADA DATA";
+                
+                adjustFontSize();
             } catch (error) {
                 console.error("Error fetching Google Sheets data:", error);
+                showError("ERROR");
+            } finally {
+                document.getElementById("spinner").style.display = "none";
             }
+        }
+
+        function showError(message) {
+            document.getElementById("title").innerText = message;
+            document.getElementById("date").innerText = "";
+            document.getElementById("main-text").innerText = "";
         }
 
         function adjustFontSize() {
             const mainText = document.getElementById("main-text");
-            mainText.style.fontSize = "150px"; // Default
+            if (window.innerWidth <= 768) return;
 
-            // Wait for text to render
+            mainText.style.fontSize = "150px";
             setTimeout(() => {
                 const lineCount = mainText.clientHeight / parseFloat(getComputedStyle(mainText).lineHeight);
-                
-                if (lineCount > 2.5) {
-                    mainText.style.fontSize = "150px"; // 3+ lines
-                } else if (lineCount > 1.5) {
-                    mainText.style.fontSize = "100px"; // 2 lines
-                }
+                if (lineCount > 2.5) mainText.style.fontSize = "80px";
+                else if (lineCount > 1.5) mainText.style.fontSize = "100px";
             }, 100);
         }
 
         fetchSheetData();
-
-        // Observe for content changes (useful if the text updates dynamically)
-        const observer = new ResizeObserver(() => adjustFontSize());
-        observer.observe(document.getElementById("main-text"));
+        setInterval(fetchSheetData, 60000);
     </script>
 </body>
 </html>
