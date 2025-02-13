@@ -101,9 +101,9 @@
                 if (newData === lastFetchedData) return;
                 lastFetchedData = newData;
 
-                document.getElementById("title").innerText = rows[1][0] || "TIADA DATA";
-                document.getElementById("date").innerText = rows[1][1] || "TIADA DATA";
-                document.getElementById("main-text").innerText = rows[1][2] || "TIADA DATA";
+                document.getElementById("title").innerText = rows[1][1] || "TIADA DATA";
+                document.getElementById("date").innerText = rows[1][2] || "TIADA DATA";
+                document.getElementById("main-text").innerText = rows[1][3] || "TIADA DATA";
                 
                 adjustFontSize();
             } catch (error) {
