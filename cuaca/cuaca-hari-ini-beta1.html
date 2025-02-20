@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ramalan Cuaca Daerah Temerloh</title>
+    <style>
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            text-align: center; 
+            color: white; 
+            margin: 0; 
+            padding: 0; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            height: 100vh; 
+            transition: background 1s ease-in-out; 
+        }
+        .container { 
+            max-width: 800px; 
+            margin: 20px; 
+            padding: 30px; 
+            background: rgba(255, 255, 255, 0.1); 
+            border-radius: 15px; 
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); 
+            backdrop-filter: blur(10px); 
+            animation: fadeIn 1s ease-in-out; 
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        h1 { 
+            margin-bottom: 10px; 
+            font-size: 2em; 
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3); 
+        }
+        h2 { 
+            margin-bottom: 30px; 
+            font-size: 1.5em; 
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3); 
+        }
+        table { 
+            width: 100%; 
+            border-collapse: collapse; 
+            margin-top: 20px; 
+        }
+        th, td { 
+            padding: 15px; 
+            border-bottom: 1px solid rgba(255, 255, 255, 0.3); 
+        }
+        th { 
+            background-color: rgba(255, 255, 255, 0.2); 
+            font-size: 1.1em; 
+            font-weight: 600; 
+        }
+        td { 
+            text-align: center; 
+            font-size: 1em; 
+        }
+        .loading { 
+            font-size: 18px; 
+            font-weight: bold; 
+            color: rgba(255, 255, 255, 0.8); 
+        }
+        .weather-icon { 
+            font-size: 24px; 
+            animation: bounce 2s infinite; 
+        }
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        .summary { 
+            font-weight: bold; 
+            color: #ffdd57; 
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5); 
+        }
+        .temperature { 
+            font-weight: bold; 
+            color: #ff6f61; 
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5); 
+        }
+        .temp-container {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+        .temp-box {
+            width: 48%;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            text-align: center;
+        }
+        .temp-box h3 {
+            margin: 0;
+            font-size: 1.2em;
+            color: #ffdd57;
+        }
+        .temp-box p {
+            margin: 10px 0 0;
+            font-size: 1.5em;
+            color: #ff6f61;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Ramalan Cuaca Daerah Temerloh</h1>
+        <h2 id="date">Khamis, 20 Februari 2025</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Pagi</th>
+                    <th>Tengah Hari</th>
+                    <th>Malam</th>
+                </tr>
+            </thead>
+            <tbody id="weatherTable1">
+                <tr><td colspan="3" class="loading">Loading...</td></tr>
+            </tbody>
+            <!-- Weather Summary Row -->
+            <tfoot>
+                <tr id="weatherSummaryRow">
+                    <td colspan="3" class="summary loading">Loading...</td>
+                </tr>
+            </tfoot>
+        </table>
+        <div class="temp-container" id="tempContainer">
+            <div class="temp-box">
+                <h3>Min Temp (°C)</h3>
+                <p class="loading">Loading...</p>
+            </div>
+            <div class="temp-box">
+                <h3>Max Temp (°C)</h3>
+                <p class="loading">Loading...</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        async function fetchWeather() {
+            const url = "https://api.data.gov.my/weather/forecast/?contains=Ds061@location__location_id";
+            try {
+                const response = await fetch(url);
+                const data = await response.json();
+                const tableBody1 = document.getElementById("weatherTable1");
+                const tempContainer = document.getElementById("tempContainer");
+                const weatherSummaryRow = document.getElementById("weatherSummaryRow");
+                tableBody1.innerHTML = ""; // Clear previous data
+                
+                const today = new Date().toISOString().split('T')[0];
+                const todayWeather = data.find(item => item.date === today);
+                
+                function getWeatherIcon(summary) {
+                    if (summary.toLowerCase().includes("ribut petir")) return "⚡";
+                    if (summary.toLowerCase().includes("hujan")) return "🌧️";
+                    if (summary.toLowerCase().includes("mendung")) return "☁️";
+                    return "☀️";
+                }
+
+                function getBackgroundGradient(summary) {
+                    if (summary.toLowerCase().includes("ribut petir")) {
+                        return "linear-gradient(to right, #2c3e50, #4ca1af)"; // Dark and stormy
+                    }
+                    if (summary.toLowerCase().includes("hujan")) {
+                        return "linear-gradient(to right, #1e3c72, #2a5298)"; // Rainy blue
+                    }
+                    if (summary.toLowerCase().includes("mendung")) {
+                        return "linear-gradient(to right, #606c88, #3f4c6b)"; // Cloudy gray
+                    }
+                    return "linear-gradient(to right, #4facfe, #00f2fe)"; // Sunny default
+                }
+                
+                if (todayWeather) {
+                    // Update date
+                    const dateElement = document.getElementById("date");
+                    const date = new Date(todayWeather.date);
+                    const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+                    dateElement.textContent = date.toLocaleDateString('ms-MY', options);
+
+                    // Table 1: Morning, Afternoon, Night
+                    const row1 = `<tr>
+                        <td>${todayWeather.morning_forecast}</td>
+                        <td>${todayWeather.afternoon_forecast}</td>
+                        <td>${todayWeather.night_forecast}</td>
+                    </tr>`;
+                    tableBody1.innerHTML += row1;
+
+                    // Update weather summary
+                    weatherSummaryRow.innerHTML = `<td colspan="3" class="summary">${todayWeather.summary_forecast}</td>`;
+
+                    // Update temperature boxes
+                    const tempBoxes = tempContainer.querySelectorAll('.temp-box p');
+                    tempBoxes[0].textContent = todayWeather.min_temp;
+                    tempBoxes[1].textContent = todayWeather.max_temp;
+
+                    // Change background based on weather summary
+                    document.body.style.background = getBackgroundGradient(todayWeather.summary_forecast);
+                } else {
+                    tableBody1.innerHTML = "<tr><td colspan='3' class='loading'>No data available for today</td></tr>";
+                    tempContainer.innerHTML = "<div class='loading'>No data available for today</div>";
+                }
+            } catch (error) {
+                document.getElementById("weatherTable1").innerHTML = "<tr><td colspan='3' class='loading'>Error loading data</td></tr>";
+                tempContainer.innerHTML = "<div class='loading'>Error loading data</div>";
+                console.error("Error fetching data:", error);
+            }
+        }
+        fetchWeather();
+    </script>
+</body>
+</html>
