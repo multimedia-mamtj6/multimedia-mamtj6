@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+    <meta charset="UTF-8">
+    <title>Tarikh Hari Ini</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f0f2f5;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .title {
+            text-align: center;
+            color: #1a237e;
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+        .day {
+            text-align: center;
+            font-size: 20px;
+            color: #304ffe;
+            margin-bottom: 30px;
+        }
+        .date-container {
+            display: flex;
+            justify-content: space-between;
+            gap: 30px;
+        }
+        .date-box {
+            flex: 1;
+            background: white;
+            border-radius: 10px;
+            /* Adjust box size here */
+            width: 10px;           /* Set specific width */
+            min-height: 100px;      /* Set minimum height */
+            padding: 20px;          /* Increase padding for more space inside */
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            text-align: center;
+            /* Add display flex to help with vertical centering */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        .date-title {
+            color: #304ffe;
+            font-size: 20px;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        .date-number {
+            font-size: 50px;
+            font-weight: bold;
+            color: #1a237e;
+            margin-bottom: 0px;
+        }
+        .date-month, .date-year {
+            font-size: 18px;
+            color: #1a237e;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">TARIKH HARI INI</div>
+        
+        <div class="day" id="dayName"></div>
+        
+        <div class="date-container">
+            <div class="date-box">
+                <div class="date-title">Tarikh Miladi</div>
+                <div id="gregorianDate">
+                    <div class="date-number" id="gregDay"></div>
+                    <div class="date-month" id="gregMonth"></div>
+                    <div class="date-year" id="gregYear"></div>
+                </div>
+            </div>
+            
+            <div class="date-box">
+                <div class="date-title">Tarikh Hijri</div>
+                <div id="hijriDate">
+                    <div class="date-number" id="hijriDay">25</div>
+                    <div class="date-month" id="hijriMonth">Shaaban</div>
+                    <div class="date-year" id="hijriYear">1446h</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Malay month names
+        const malayMonths = [
+            'Januari', 'Februari', 'Mac', 'April', 'Mei', 'Jun',
+            'Julai', 'Ogos', 'September', 'Oktober', 'November', 'Disember'
+        ];
+
+        const malayDays = [
+            'AHAD', 'ISNIN', 'SELASA', 'RABU', 'KHAMIS', 'JUMAAT', 'SABTU'
+        ];
+
+        function updateDate() {
+            const now = new Date();
+            
+            // Update day name
+            document.getElementById('dayName').textContent = malayDays[now.getDay()];
+            
+            // Update Gregorian date
+            document.getElementById('gregDay').textContent = now.getDate();
+            document.getElementById('gregMonth').textContent = malayMonths[now.getMonth()];
+            document.getElementById('gregYear').textContent = now.getFullYear();
+            
+            // Hijri date is static for this example
+            // In a real implementation, you would need to use a Hijri calendar conversion library
+            document.getElementById('hijriDay').textContent = '25';
+            document.getElementById('hijriMonth').textContent = 'Shaaban';
+            document.getElementById('hijriYear').textContent = '1446h';
+        }
+
+        // Update date when page loads
+        updateDate();
+    </script>
+</body>
+</html>
