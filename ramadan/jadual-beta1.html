@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Jadual Waktu Imsak, Subuh dan Berbuka</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    /* Custom CSS */
+    body {
+      font-family: 'Poppins', sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f4f4f4;
+      color: #333;
+    }
+
+    header {
+      text-align: center;
+      padding: 20px 0;
+      background-color: #fff;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .logo {
+      width: 200px; /* Adjust width as needed */
+      height: auto; /* Maintain aspect ratio */
+      margin: 0 auto 10px;
+    }
+
+    h1 {
+      font-size: 24px;
+      margin: 0;
+      color: #2c3e50;
+    }
+
+    h2 {
+      font-size: 18px;
+      margin: 5px 0 0;
+      color: #7f8c8d;
+    }
+
+    table {
+      width: 100%;
+      max-width: 800px;
+      margin: 20px auto;
+      border-collapse: collapse;
+      background-color: #fff;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    th, td {
+      padding: 12px;
+      text-align: center;
+      border: 1px solid #ddd;
+    }
+
+    th {
+      background-color: #2c3e50;
+      color: #fff;
+      font-weight: 600;
+    }
+
+    tr:nth-child(even) {
+      background-color: #f9f9f9;
+    }
+
+    tr.today {
+      background-color: #e8f5e9;
+      font-weight: 600;
+    }
+
+    footer {
+      text-align: center;
+      padding: 20px;
+      background-color: #2c3e50;
+      color: #fff;
+      margin-top: 40px;
+    }
+
+    footer a {
+      color: #3498db;
+      text-decoration: none;
+    }
+
+    footer a:hover {
+      text-decoration: underline;
+    }
+
+    @media (max-width: 600px) {
+      h1 {
+        font-size: 20px;
+      }
+
+      h2 {
+        font-size: 16px;
+      }
+
+      th, td {
+        padding: 8px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <!-- Logo -->
+    <img src="https://multimedia.mamtj6.com/media/logo/mamtj6-black.webp" alt="Logo" class="logo">
+    <h1>Jadual waktu Imsak, Subuh dan Berbuka</h1>
+    <h2>Bagi Negeri Pahang Zon 3</h2>
+    <h2>Jerantut, Temerloh, Maran, Bera, Chenor & Jengka</h2>
+  </header>
+
+  <table id="schedule-table">
+    <thead>
+      <tr>
+        <th>Tarikh Hijri</th>
+        <th>Tarikh Miladi</th>
+        <th>Hari</th>
+        <th>Imsak</th>
+        <th>Subuh</th>
+        <th>Berbuka</th>
+      </tr>
+    </thead>
+    <tbody>
+      <!-- Data will be populated here dynamically -->
+    </tbody>
+  </table>
+
+  <footer>
+    <p>&copy; 2023 Jadual Waktu. <a href="#">Privacy Policy</a> | <a href="#">Contact Us</a></p>
+  </footer>
+
+  <script>
+    // Function to fetch data from Google Sheets
+    async function fetchData() {
+      const url = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQvqC-vGRofr4nazK2JBrjax9IO71YO8el29259G7ivE9Tgp36mucVVYTSguc_EMyOUrMR3cwtrqW9j/pub?gid=906572148&single=true&output=csv";
+      try {
+        const response = await fetch(url);
+        const csvData = await response.text();
+        const rows = csvData.split("\n").slice(1); // Remove header row
+        const today = new Date().toLocaleDateString('en-MY'); // Get today's date in MY format
+
+        const tbody = document.querySelector("#schedule-table tbody");
+        tbody.innerHTML = ""; // Clear existing rows
+
+        rows.forEach(row => {
+          const [tarikhMiladi, tarikhHijri, hari, imsak, subuh, berbuka] = row.split(",");
+          const tr = document.createElement("tr");
+
+          // Highlight today's row
+          if (tarikhMiladi.trim() === today) {
+            tr.classList.add("today");
+          }
+
+          tr.innerHTML = `
+            <td>${tarikhHijri}</td>
+            <td>${tarikhMiladi}</td>
+            <td>${hari}</td>
+            <td>${imsak}</td>
+            <td>${subuh}</td>
+            <td>${berbuka}</td>
+          `;
+          tbody.appendChild(tr);
+        });
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    }
+
+    // Fetch data on page load and every 5 minutes
+    fetchData();
+    setInterval(fetchData, 300000); // 300000 ms = 5 minutes
+  </script>
+</body>
+</html>
