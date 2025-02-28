@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Jadual Waktu Imsak, Subuh dan Berbuka</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    /* Custom CSS */
+    body {
+      font-family: 'Poppins', sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f4f4f4;
+      color: #333;
+    }
+
+    header {
+      text-align: center;
+      padding: 20px 0;
+      background-color: #fff;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .logo {
+      width: 150px; /* Adjust width as needed */
+      height: auto; /* Maintain aspect ratio */
+      margin: 0 auto 10px;
+    }
+
+    h1 {
+      font-size: 24px;
+      margin: 0;
+      color: #2c3e50;
+    }
+
+    h2 {
+      font-size: 18px;
+      margin: 5px 0 0;
+      color: #7f8c8d;
+    }
+
+    /* Today's Data Section */
+    .today-data {
+      text-align: center;
+      padding: 20px;
+      background-color: #fff;
+      border-bottom: 1px solid #eee;
+    }
+    
+    .today-title {
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 10px;
+      color: #2c3e50;
+    }
+
+    .today-date {
+      font-size: 18px;
+      font-weight: 500;
+      margin-bottom: 20px;
+      color: #2c3e50;
+    }
+
+    .time-boxes {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+
+    .time-box {
+      background-color: #fff;
+      border-radius: 10px;
+      padding: 15px;
+      min-width: 100px;
+      box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+      text-align: center;
+    }
+
+    .time-label {
+      font-weight: 600;
+      margin-bottom: 5px;
+      color: #2c3e50;
+    }
+
+    .time-value {
+      font-size: 18px;
+      color: #e74c3c;
+    }
+    
+    .no-data-message {
+      padding: 20px;
+      text-align: center;
+      font-size: 18px;
+      color: #7f8c8d;
+    }
+
+    table {
+      width: 100%;
+      max-width: 800px;
+      margin: 20px auto;
+      border-collapse: collapse;
+      background-color: #fff;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    th, td {
+      padding: 12px;
+      text-align: center;
+      border: 1px solid #ddd;
+    }
+
+    th {
+      background-color: #2c3e50;
+      color: #fff;
+      font-weight: 600;
+    }
+
+    tr:nth-child(even) {
+      background-color: #f9f9f9;
+    }
+
+    tr.today {
+      background-color: #e8f5e9;
+      font-weight: 600;
+    }
+
+    footer {
+      text-align: center;
+      padding: 20px;
+      background-color: #2c3e50;
+      color: #fff;
+      margin-top: 40px;
+    }
+
+    footer a {
+      color: #3498db;
+      text-decoration: none;
+    }
+
+    footer a:hover {
+      text-decoration: underline;
+    }
+    
+    /* Mobile Schedule Entry */
+    .mobile-day-entry {
+      background-color: #fff;
+      margin: 10px auto;
+      width: 90%;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    
+    .mobile-day-header {
+      padding: 10px;
+      background-color: #f8f8f8;
+      border-bottom: 1px solid #eee;
+    }
+    
+    .mobile-day-today {
+      background-color: #e8f5e9;
+    }
+    
+    .mobile-day-date {
+      font-weight: 500;
+    }
+    
+    .mobile-day-hijri {
+      font-size: 0.85em;
+      color: #777;
+    }
+    
+    .mobile-day-times {
+      display: flex;
+      justify-content: space-between;
+      padding: 10px;
+    }
+    
+    .mobile-time-item {
+      text-align: center;
+      background-color: #f9f9f9;
+      border-radius: 8px;
+      padding: 8px;
+      flex: 1;
+      margin: 0 4px;
+    }
+    
+    .mobile-time-label {
+      font-size: 0.85em;
+      color: #555;
+      margin-bottom: 3px;
+    }
+    
+    .mobile-time-value {
+      font-weight: 600;
+      color: #e74c3c;
+    }
+
+    @media (max-width: 600px) {
+      h1 {
+        font-size: 20px;
+      }
+
+      h2 {
+        font-size: 16px;
+      }
+
+      .today-title,
+      .today-date {
+        font-size: 16px;
+      }
+      
+      .time-box {
+        padding: 10px;
+        min-width: 80px;
+      }
+      
+      .time-label {
+        font-size: 14px;
+      }
+      
+      .time-value {
+        font-size: 16px;
+      }
+
+      /* Simplified mobile table styles */
+      table {
+        width: 90%;
+        margin: 20px auto;
+      }
+
+      th, td {
+        padding: 8px 5px;
+        font-size: 14px;
+      }
+
+      /* Hide desktop table on mobile */
+      #desktop-schedule-table {
+        display: none;
+      }
+    }
+    
+    @media (min-width: 601px) {
+      /* Hide mobile view on desktop */
+      #mobile-schedule-table {
+        display: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <!-- Logo -->
+    <img src="https://multimedia.mamtj6.com/media/logo/mamtj6-black.webp" alt="Logo" class="logo">
+    <h1>Jadual waktu Imsak, Subuh dan Berbuka</h1>
+    <h2>Bagi Negeri Pahang Zon 3</h2>
+    <h2>Jerantut, Temerloh, Maran, Bera, Chenor & Jengka</h2>
+  </header>
+
+  <!-- Today's Data Section -->
+  <div id="today-data-section">
+    <!-- Will be populated with JS -->
+  </div>
+
+  <!-- Desktop Table View -->
+  <table id="desktop-schedule-table">
+    <thead>
+      <tr>
+        <th>Tarikh Hijri</th>
+        <th>Tarikh Miladi</th>
+        <th>Hari</th>
+        <th>Imsak</th>
+        <th>Subuh</th>
+        <th>Berbuka</th>
+      </tr>
+    </thead>
+    <tbody>
+      <!-- Data will be populated here dynamically -->
+    </tbody>
+  </table>
+
+  <!-- Mobile View -->
+  <div id="mobile-schedule-table">
+    <!-- Mobile data will be populated here -->
+  </div>
+
+  <footer>
+    <p>&copy; 2023 Jadual Waktu. <a href="#">Privacy Policy</a> | <a href="#">Contact Us</a></p>
+  </footer>
+
+  <script>
+    // Function to fetch data from Google Sheets
+    async function fetchData() {
+      const url = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQvqC-vGRofr4nazK2JBrjax9IO71YO8el29259G7ivE9Tgp36mucVVYTSguc_EMyOUrMR3cwtrqW9j/pub?gid=906572148&single=true&output=csv";
+      try {
+        const response = await fetch(url);
+        const csvData = await response.text();
+        const rows = csvData.split("\n").slice(1); // Remove header row
+        
+        // Get today's date in Malaysia time zone (UTC+8)
+        const today = new Date(new Date().toLocaleString("en-US", {timeZone: "Asia/Kuala_Lumpur"}));
+        const todayFormatted = today.toLocaleDateString('en-MY'); // Get today's date in MY format
+        
+        // Variables to store today's data
+        let todayRow = null;
+        let dataFound = false;
+
+        // Populate desktop table
+        const desktopTbody = document.querySelector("#desktop-schedule-table tbody");
+        desktopTbody.innerHTML = ""; // Clear existing rows
+
+        // Prepare mobile container
+        const mobileContainer = document.getElementById("mobile-schedule-table");
+        mobileContainer.innerHTML = ""; // Clear existing content
+
+        rows.forEach(row => {
+          const [tarikhMiladi, tarikhHijri, hari, imsak, subuh, berbuka] = row.split(",");
+          
+          // Check if this row is today
+          if (tarikhMiladi.trim() === todayFormatted) {
+            dataFound = true;
+            todayRow = { tarikhMiladi, tarikhHijri, hari, imsak, subuh, berbuka };
+          }
+
+          // Create desktop table row
+          const tr = document.createElement("tr");
+          if (tarikhMiladi.trim() === todayFormatted) {
+            tr.classList.add("today");
+          }
+
+          tr.innerHTML = `
+            <td>${tarikhHijri}</td>
+            <td>${tarikhMiladi}</td>
+            <td>${hari}</td>
+            <td>${imsak}</td>
+            <td>${subuh}</td>
+            <td>${berbuka}</td>
+          `;
+          desktopTbody.appendChild(tr);
+          
+          // Create mobile view entry
+          const mobileDay = document.createElement("div");
+          mobileDay.className = "mobile-day-entry";
+          
+          const isToday = tarikhMiladi.trim() === todayFormatted;
+          
+          // Get just the day and date part without year if possible
+          let simplifiedMiladi = tarikhMiladi;
+          if (tarikhMiladi.includes('/')) {
+            const dateParts = tarikhMiladi.split('/');
+            if (dateParts.length >= 2) {
+              simplifiedMiladi = `${dateParts[0]}/${dateParts[1]}`;
+            }
+          }
+          
+          // Get abbreviated Hijri date if possible
+          let simplifiedHijri = tarikhHijri;
+          if (tarikhHijri.includes(' ')) {
+            const hijriParts = tarikhHijri.split(' ');
+            if (hijriParts.length >= 2) {
+              simplifiedHijri = `${hijriParts[0]} ${hijriParts[1]}`;
+            }
+          }
+          
+          mobileDay.innerHTML = `
+            <div class="mobile-day-header ${isToday ? 'mobile-day-today' : ''}">
+              <div class="mobile-day-date">${hari}, ${simplifiedMiladi}</div>
+              <div class="mobile-day-hijri">${simplifiedHijri}</div>
+            </div>
+            <div class="mobile-day-times">
+              <div class="mobile-time-item">
+                <div class="mobile-time-label">Imsak</div>
+                <div class="mobile-time-value">${imsak}</div>
+              </div>
+              <div class="mobile-time-item">
+                <div class="mobile-time-label">Subuh</div>
+                <div class="mobile-time-value">${subuh}</div>
+              </div>
+              <div class="mobile-time-item">
+                <div class="mobile-time-label">Berbuka</div>
+                <div class="mobile-time-value">${berbuka}</div>
+              </div>
+            </div>
+          `;
+          
+          mobileContainer.appendChild(mobileDay);
+        });
+        
+        // Update today's data section
+        const todaySection = document.getElementById("today-data-section");
+        
+        if (dataFound && todayRow) {
+          todaySection.innerHTML = `
+            <div class="today-data">
+              <div class="today-title">Info hari ini:</div>
+              <div class="today-date">${todayRow.hari}, ${todayRow.tarikhHijri} (${todayRow.tarikhMiladi})</div>
+              <div class="time-boxes">
+                <div class="time-box">
+                  <div class="time-label">Imsak</div>
+                  <div class="time-value">${todayRow.imsak}</div>
+                </div>
+                <div class="time-box">
+                  <div class="time-label">Subuh</div>
+                  <div class="time-value">${todayRow.subuh}</div>
+                </div>
+                <div class="time-box">
+                  <div class="time-label">Berbuka</div>
+                  <div class="time-value">${todayRow.berbuka}</div>
+                </div>
+              </div>
+            </div>
+          `;
+        } else {
+          todaySection.innerHTML = `
+            <div class="no-data-message">
+              Tiada data untuk hari ini
+            </div>
+          `;
+        }
+        
+      } catch (error) {
+        console.error("Error fetching data:", error);
+        
+        // Show error message if data can't be loaded
+        const todaySection = document.getElementById("today-data-section");
+        todaySection.innerHTML = `
+          <div class="no-data-message">
+            Tiada data untuk hari ini
+          </div>
+        `;
+      }
+    }
+    
+    // Fetch data on page load and every 5 minutes
+    fetchData();
+    setInterval(fetchData, 300000); // 300000 ms = 5 minutes
+  </script>
+</body>
+</html>
