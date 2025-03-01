@@ -198,6 +198,13 @@
       color: #e74c3c;
     }
 
+    #loading-indicator {
+      text-align: center;
+      padding: 20px;
+      font-size: 16px;
+      color: #555;
+    }
+
     @media (max-width: 600px) {
       h1 {
         font-size: 20px;
@@ -259,6 +266,11 @@
     <h2>Jerantut, Temerloh, Maran, Bera, Chenor & Jengka</h2>
   </header>
 
+  <!-- Loading Indicator -->
+  <div id="loading-indicator">
+    Memuat data...
+  </div>
+
   <!-- Today's Data Section -->
   <div id="today-data-section">
     <!-- Will be populated with JS -->
@@ -287,56 +299,157 @@
   </div>
 
   <footer>
-    <p>&copy; 2023 Jadual Waktu. <a href="#">Privacy Policy</a> | <a href="#">Contact Us</a></p>
+    <p>&copy; 2025 Jadual Waktu. <a href="#">Privacy Policy</a> | <a href="#">Contact Us</a></p>
   </footer>
 
   <script>
-    // Function to fetch data from Google Sheets
+    // Function to format a timestamp to Malaysia time (12-hour format)
+    function formatTime(timestamp) {
+      const date = new Date(timestamp * 1000); // Convert from seconds to milliseconds
+      
+      let hours = date.getHours();
+      const minutes = date.getMinutes();
+      const ampm = hours >= 12 ? 'PM' : 'AM';
+      
+      // Convert to 12-hour format
+      hours = hours % 12;
+      hours = hours ? hours : 12; // the hour '0' should be '12'
+      
+      // Format minutes with leading zero if needed
+      const minutesStr = minutes < 10 ? '0' + minutes : minutes;
+      
+      return `${hours}:${minutesStr} ${ampm}`;
+    }
+    
+    // Calculate Imsak time (10 minutes before Fajr)
+    function calculateImsak(fajrTimestamp) {
+      return fajrTimestamp - 600; // Subtract 10 minutes (600 seconds)
+    }
+    
+    // Get the day of the week from a timestamp
+    function getDayOfWeek(timestamp) {
+      const date = new Date(timestamp * 1000);
+      const days = ["Ahad", "Isnin", "Selasa", "Rabu", "Khamis", "Jumaat", "Sabtu"];
+      return days[date.getDay()];
+    }
+    
+    // Format a Gregorian date in Malay format (e.g., "1 Mac")
+    function formatMalayDate(day) {
+      // Since we're only dealing with March 2025, we can just use "Mac"
+      return `${day} Mac`;
+    }
+    
+    // Check if a given date is today
+    function isToday(day) {
+      const today = new Date();
+      // March is month 2 (0-indexed)
+      return today.getDate() === day && today.getMonth() === 2 && today.getFullYear() === 2025;
+    }
+    
+    // Function to process Hijri dates for Ramadan
+    function formatHijriForRamadan(hijri) {
+      const [year, month, day] = hijri.split('-');
+      
+      // Check if it's Ramadan (month 9)
+      if (parseInt(month) === 9) {
+        return `${parseInt(day)} Ramadan`;
+      } else {
+        // For Sha'ban (month 8)
+        return `${parseInt(day)} Shaaban`;
+      }
+    }
+    
+    // Fetch data from API and populate the table
     async function fetchData() {
-      const url = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQvqC-vGRofr4nazK2JBrjax9IO71YO8el29259G7ivE9Tgp36mucVVYTSguc_EMyOUrMR3cwtrqW9j/pub?gid=906572148&single=true&output=csv";
+      const url = "https://api.waktusolat.app/v2/solat/PHG03";
+      const loadingIndicator = document.getElementById("loading-indicator");
+      
       try {
-        const response = await fetch(url);
-        const csvData = await response.text();
-        const rows = csvData.split("\n").slice(1); // Remove header row
+        loadingIndicator.style.display = "block";
         
-        // Get today's date in Malaysia time zone (UTC+8)
-        const today = new Date(new Date().toLocaleString("en-US", {timeZone: "Asia/Kuala_Lumpur"}));
-        const todayFormatted = today.toLocaleDateString('en-MY'); // Get today's date in MY format
+        const response = await fetch(url);
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+        
+        const data = await response.json();
+        
+        // Get prayers for March 2-30 (Ramadan only)
+        const marchPrayers = data.prayers.filter(prayer => {
+          // Find prayers from March 2nd (day 2) to March 30 (day 30)
+          return prayer.day >= 2 && prayer.day <= 30;
+        });
+        
+        if (marchPrayers.length === 0) {
+          throw new Error("Prayer data for Ramadan not found");
+        }
         
         // Variables to store today's data
-        let todayRow = null;
-        let dataFound = false;
-
+        let todayData = null;
+        
+        // Get current date
+        const today = new Date();
+        const currentDay = today.getDate();
+        
         // Populate desktop table
         const desktopTbody = document.querySelector("#desktop-schedule-table tbody");
         desktopTbody.innerHTML = ""; // Clear existing rows
-
+        
         // Prepare mobile container
         const mobileContainer = document.getElementById("mobile-schedule-table");
         mobileContainer.innerHTML = ""; // Clear existing content
-
-        rows.forEach(row => {
-          const [tarikhMiladi, tarikhHijri, hari, imsak, subuh, berbuka] = row.split(",");
+        
+        marchPrayers.forEach(prayer => {
+          // Format the Hijri date 
+          const hijriFormatted = formatHijriForRamadan(prayer.hijri);
           
-          // Check if this row is today
-          if (tarikhMiladi.trim() === todayFormatted) {
-            dataFound = true;
-            todayRow = { tarikhMiladi, tarikhHijri, hari, imsak, subuh, berbuka };
+          // Skip if it's not Ramadan (should be filtered out already, but double check)
+          if (!hijriFormatted.includes("Ramadan")) {
+            return;
           }
-
+          
+          // Calculate necessary timestamps
+          const fajrTimestamp = prayer.fajr;
+          const imsakTimestamp = calculateImsak(fajrTimestamp);
+          const maghribTimestamp = prayer.maghrib;
+          
+          // Format times
+          const fajrFormatted = formatTime(fajrTimestamp);
+          const imsakFormatted = formatTime(imsakTimestamp);
+          const maghribFormatted = formatTime(maghribTimestamp);
+          
+          // Get day of week
+          const dayOfWeek = getDayOfWeek(fajrTimestamp);
+          
+          // Format Gregorian date in Malay
+          const gregorianDate = formatMalayDate(prayer.day);
+          
+          // Check if this prayer time is for today
+          const isCurrentDay = isToday(prayer.day);
+          if (isCurrentDay) {
+            todayData = {
+              hijri: hijriFormatted,
+              gregorian: gregorianDate,
+              day: dayOfWeek,
+              imsak: imsakFormatted,
+              subuh: fajrFormatted,
+              berbuka: maghribFormatted
+            };
+          }
+          
           // Create desktop table row
           const tr = document.createElement("tr");
-          if (tarikhMiladi.trim() === todayFormatted) {
+          if (isCurrentDay) {
             tr.classList.add("today");
           }
-
+          
           tr.innerHTML = `
-            <td>${tarikhHijri}</td>
-            <td>${tarikhMiladi}</td>
-            <td>${hari}</td>
-            <td>${imsak}</td>
-            <td>${subuh}</td>
-            <td>${berbuka}</td>
+            <td>${hijriFormatted}</td>
+            <td>${gregorianDate}</td>
+            <td>${dayOfWeek}</td>
+            <td>${imsakFormatted}</td>
+            <td>${fajrFormatted}</td>
+            <td>${maghribFormatted}</td>
           `;
           desktopTbody.appendChild(tr);
           
@@ -344,43 +457,23 @@
           const mobileDay = document.createElement("div");
           mobileDay.className = "mobile-day-entry";
           
-          const isToday = tarikhMiladi.trim() === todayFormatted;
-          
-          // Get just the day and date part without year if possible
-          let simplifiedMiladi = tarikhMiladi;
-          if (tarikhMiladi.includes('/')) {
-            const dateParts = tarikhMiladi.split('/');
-            if (dateParts.length >= 2) {
-              simplifiedMiladi = `${dateParts[0]}/${dateParts[1]}`;
-            }
-          }
-          
-          // Get abbreviated Hijri date if possible
-          let simplifiedHijri = tarikhHijri;
-          if (tarikhHijri.includes(' ')) {
-            const hijriParts = tarikhHijri.split(' ');
-            if (hijriParts.length >= 2) {
-              simplifiedHijri = `${hijriParts[0]} ${hijriParts[1]}`;
-            }
-          }
-          
           mobileDay.innerHTML = `
-            <div class="mobile-day-header ${isToday ? 'mobile-day-today' : ''}">
-              <div class="mobile-day-date">${hari}, ${simplifiedMiladi}</div>
-              <div class="mobile-day-hijri">${simplifiedHijri}</div>
+            <div class="mobile-day-header ${isCurrentDay ? 'mobile-day-today' : ''}">
+              <div class="mobile-day-date">${dayOfWeek}, ${gregorianDate}</div>
+              <div class="mobile-day-hijri">${hijriFormatted}</div>
             </div>
             <div class="mobile-day-times">
               <div class="mobile-time-item">
                 <div class="mobile-time-label">Imsak</div>
-                <div class="mobile-time-value">${imsak}</div>
+                <div class="mobile-time-value">${imsakFormatted}</div>
               </div>
               <div class="mobile-time-item">
                 <div class="mobile-time-label">Subuh</div>
-                <div class="mobile-time-value">${subuh}</div>
+                <div class="mobile-time-value">${fajrFormatted}</div>
               </div>
               <div class="mobile-time-item">
                 <div class="mobile-time-label">Berbuka</div>
-                <div class="mobile-time-value">${berbuka}</div>
+                <div class="mobile-time-value">${maghribFormatted}</div>
               </div>
             </div>
           `;
@@ -391,23 +484,23 @@
         // Update today's data section
         const todaySection = document.getElementById("today-data-section");
         
-        if (dataFound && todayRow) {
+        if (todayData) {
           todaySection.innerHTML = `
             <div class="today-data">
               <div class="today-title">Info hari ini:</div>
-              <div class="today-date">${todayRow.hari}, ${todayRow.tarikhHijri} (${todayRow.tarikhMiladi})</div>
+              <div class="today-date">${todayData.day}, ${todayData.hijri} (${todayData.gregorian})</div>
               <div class="time-boxes">
                 <div class="time-box">
                   <div class="time-label">Imsak</div>
-                  <div class="time-value">${todayRow.imsak}</div>
+                  <div class="time-value">${todayData.imsak}</div>
                 </div>
                 <div class="time-box">
                   <div class="time-label">Subuh</div>
-                  <div class="time-value">${todayRow.subuh}</div>
+                  <div class="time-value">${todayData.subuh}</div>
                 </div>
                 <div class="time-box">
                   <div class="time-label">Berbuka</div>
-                  <div class="time-value">${todayRow.berbuka}</div>
+                  <div class="time-value">${todayData.berbuka}</div>
                 </div>
               </div>
             </div>
@@ -420,6 +513,8 @@
           `;
         }
         
+        loadingIndicator.style.display = "none";
+        
       } catch (error) {
         console.error("Error fetching data:", error);
         
@@ -427,14 +522,16 @@
         const todaySection = document.getElementById("today-data-section");
         todaySection.innerHTML = `
           <div class="no-data-message">
-            Tiada data untuk hari ini
+            Tiada data untuk hari ini. Ralat: ${error.message}
           </div>
         `;
+        
+        loadingIndicator.style.display = "none";
       }
     }
     
     // Fetch data on page load and every 5 minutes
-    fetchData();
+    document.addEventListener('DOMContentLoaded', fetchData);
     setInterval(fetchData, 300000); // 300000 ms = 5 minutes
   </script>
 </body>
