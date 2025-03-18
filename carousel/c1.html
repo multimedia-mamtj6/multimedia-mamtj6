@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Online Slideshow for Google Sites</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      html, body {
+        width: 100%;
+        background-color: transparent;
+        font-family: Arial, sans-serif;
+        overflow-x: hidden; /* Prevent horizontal scrolling */
+      }
+
+      .master-container {
+        width: 100%;
+        max-width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        position: relative;
+      }
+
+      .carousel-container {
+        width: 100%;
+        position: relative;
+      }
+
+      .carousel {
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        border-radius: 8px;
+        position: relative;
+      }
+
+      .carousel-images {
+        display: flex;
+        transition: transform 0.8s ease;
+        width: 100%;
+        height: 100%;
+      }
+
+      .carousel-images a {
+        flex-shrink: 0;
+        width: 100%;
+        height: 100%;
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+        justify-content: cover;
+      }
+
+      .carousel-images img {
+        width: 100%;
+        height: 100%;
+        display: block;
+        object-fit: cover; /* Back to cover for desktop */
+      }
+
+      /* Position dots at bottom of container */
+      .dots-container {
+        width: 100%;
+        position: absolute;
+        bottom: 10px;
+        left: 0;
+        display: flex;
+        justify-content: center;
+        z-index: 20;
+      }
+
+      .dots {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 5px 10px;
+        background-color: rgba(0, 0, 0, 0.7);
+        border-radius: 15px;
+      }
+
+      .dot {
+        width: 10px;
+        height: 10px;
+        background: #888;
+        border-radius: 50%;
+        margin: 0 5px;
+        cursor: pointer;
+        transition: all 0.3s;
+        border: 2px solid white;
+      }
+
+      .dot.active {
+        background: white;
+        transform: scale(1.2);
+      }
+
+      /* Loading indicator */
+      .loading {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        color: #333;
+        font-size: 18px;
+      }
+
+      /* Mobile optimizations ONLY WHEN DIRECTLY VIEWED (not in iframe) */
+      @media (max-width: 768px) {
+        /* Check if we're in a direct view (not in iframe) */
+        html.direct-mobile body {
+          height: auto !important;
+        }
+        
+        html.direct-mobile .carousel-container {
+          padding: 10px 13.125px; /* Added requested padding */
+          height: auto; /* Auto height to ensure content fits */
+        }
+        
+        html.direct-mobile .carousel {
+          max-height: 65vh; /* Slightly reduced to ensure rounded corners are visible */
+          border-radius: 8px; /* Ensure rounded corners are visible */
+          overflow: hidden;
+        }
+        
+        html.direct-mobile .carousel-images img {
+          max-height: 65vh;
+          object-fit: contain;
+        }
+        
+        html.direct-mobile .dots-container {
+          position: relative; /* Change from absolute to relative */
+          bottom: auto; /* Remove absolute positioning */
+          margin-top: 10px; /* Small gap between carousel and dots */
+        }
+        
+        .dot {
+          width: 8px;
+          height: 8px;
+          margin: 0 4px;
+        }
+        
+        .dots {
+          padding: 4px 8px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="master-container">
+      <div class="carousel-container">
+        <div class="carousel">
+          <div class="loading">Loading slideshow...</div>
+          <div class="carousel-images">
+            <!-- Images will be loaded dynamically from Google Sheets -->
+          </div>
+        </div>
+      </div>
+      
+      <!-- Dots positioned -->
+      <div class="dots-container">
+        <div class="dots">
+          <!-- Dots will be generated dynamically based on number of images -->
+        </div>
+      </div>
+    </div>
+
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+        // Function to check browser view context and apply appropriate styling
+        function adjustViewBasedOnContext() {
+          // Check if we're in an iframe
+          const isInIframe = window.self !== window.top;
+          const isMobile = window.innerWidth <= 768;
+          
+          // Remove all context classes first
+          document.documentElement.classList.remove('in-iframe', 'direct-mobile', 'direct-desktop');
+          
+          if (!isInIframe) {
+            // Direct browser view (not in iframe)
+            if (isMobile) {
+              // Mobile direct view
+              document.documentElement.classList.add('direct-mobile');
+              
+              // Apply mobile-specific styling
+              document.querySelector('.carousel-container').style.padding = '10px 13.125px';
+              const carousel = document.querySelector('.carousel');
+              if (carousel) {
+                carousel.style.maxHeight = '65vh';
+                carousel.style.borderRadius = '8px';
+              }
+              
+              // Fix dots positioning for mobile
+              const dotsContainer = document.querySelector('.dots-container');
+              if (dotsContainer) {
+                dotsContainer.style.position = 'relative';
+                dotsContainer.style.bottom = 'auto';
+                dotsContainer.style.marginTop = '10px';
+              }
+            } else {
+              // Desktop direct view - make it match code 2
+              document.documentElement.classList.add('direct-desktop');
+              
+              // Apply code 2's desktop styling
+              document.querySelector('.carousel-container').style.height = '95vh';
+              document.querySelector('.carousel').style.height = '100%';
+              document.querySelector('.dots-container').style.bottom = '5vh';
+            }
+          } else {
+            // In iframe view - add class for potential CSS targeting
+            document.documentElement.classList.add('in-iframe');
+          }
+        }
+        
+        // Call view adjustment initially and on resize
+        adjustViewBasedOnContext();
+        window.addEventListener('resize', adjustViewBasedOnContext);
+        
+        // Use the published spreadsheet URL
+        const publishedSheetURL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRi_7BCyk9NuxL8h_GcilLQngTnnd__fPUXdqe0QQBu6sYLtuqR7j6ZWhSTlEcvemJCXwSdNQNmHDQ5/pub?gid=0&single=true&output=csv';
+        
+        let clickData = {}; // Store click data for analytics
+        
+        // Fetch data from Google Sheets CSV format
+        fetch(publishedSheetURL)
+          .then(response => {
+            if (!response.ok) {
+              throw new Error('Network response was not ok');
+            }
+            return response.text();
+          })
+          .then(data => {
+            // Parse CSV data
+            const rows = data.split('\n').map(row => {
+              // Handle commas within quoted fields properly
+              const result = [];
+              let insideQuotes = false;
+              let currentField = '';
+              
+              for (let i = 0; i < row.length; i++) {
+                if (row[i] === '"' && (i === 0 || row[i-1] !== '\\')) {
+                  insideQuotes = !insideQuotes;
+                } else if (row[i] === ',' && !insideQuotes) {
+                  result.push(currentField);
+                  currentField = '';
+                } else {
+                  currentField += row[i];
+                }
+              }
+              
+              result.push(currentField);
+              return result;
+            });
+            
+            const headers = rows[0];
+            const dataRows = rows.slice(1).filter(row => row.length > 1 && row[0].trim() !== '');
+            
+            if (dataRows.length === 0) {
+              throw new Error('No valid data found in spreadsheet');
+            }
+            
+            const carouselImages = document.querySelector('.carousel-images');
+            const dotsContainer = document.querySelector('.dots');
+            carouselImages.innerHTML = '';
+            dotsContainer.innerHTML = '';
+            
+            // Process each row
+            dataRows.forEach((row, index) => {
+              if (row.length >= 2) {
+                // Remove quotes if present
+                const imageUrl = row[0].replace(/^"(.*)"$/, '$1');
+                const linkUrl = row[1].replace(/^"(.*)"$/, '$1');
+                const altText = row.length > 2 ? row[2].replace(/^"(.*)"$/, '$1') : `Image ${index + 1}`;
+                
+                // Create image element
+                const linkElement = document.createElement('a');
+                linkElement.href = linkUrl;
+                linkElement.target = "_blank";
+                linkElement.setAttribute('data-slide-index', index);
+                
+                const imgElement = document.createElement('img');
+                imgElement.src = imageUrl;
+                imgElement.alt = altText;
+                imgElement.loading = "lazy"; // Add lazy loading for better performance
+                
+                linkElement.appendChild(imgElement);
+                carouselImages.appendChild(linkElement);
+                
+                // Create dot for navigation
+                const dot = document.createElement('div');
+                dot.className = index === 0 ? 'dot active' : 'dot';
+                dot.setAttribute('data-index', index);
+                dotsContainer.appendChild(dot);
+                
+                // Track clicks for analytics
+                linkElement.addEventListener('click', () => {
+                  if (!clickData[index]) clickData[index] = 0;
+                  clickData[index]++;
+                  console.log(`Slide ${index} (${altText}) was clicked`);
+                });
+              }
+            });
+            
+            // Only initialize if we have images
+            if (carouselImages.children.length > 0) {
+              initSlideshow();
+              document.querySelector('.loading').style.display = 'none';
+              
+              // Apply adjustments again after images load
+              adjustViewBasedOnContext();
+            } else {
+              throw new Error('No valid images found in spreadsheet');
+            }
+          })
+          .catch(error => {
+            console.error('Error fetching data from Google Sheets:', error);
+            document.querySelector('.loading').textContent = 'Error loading slideshow. Please check your Google Sheet configuration. Detailed error: ' + error.message;
+          });
+          
+        function initSlideshow() {
+          const images = document.querySelector('.carousel-images');
+          const dots = document.querySelectorAll('.dot');
+          const totalImages = dots.length;
+          let currentIndex = 0;
+          let slideshowTimer = null;
+          let isPlaying = true;
+
+          function updateSlideshow(index) {
+            images.style.transform = `translateX(-${index * 100}%)`;
+            dots.forEach((dot, i) => {
+              dot.classList.toggle('active', i === index);
+            });
+          }
+
+          function nextSlide() {
+            if (currentIndex < totalImages - 1) {
+              currentIndex++;
+              updateSlideshow(currentIndex);
+              
+              // Check if we've reached the last slide
+              if (currentIndex === totalImages - 1) {
+                stopSlideshow();
+              }
+            }
+          }
+
+          function stopSlideshow() {
+            if (slideshowTimer) {
+              clearInterval(slideshowTimer);
+              slideshowTimer = null;
+              isPlaying = false;
+            }
+          }
+
+          // Start the slideshow
+          slideshowTimer = setInterval(nextSlide, 5000);
+
+          // Dot navigation
+          dots.forEach((dot) => {
+            dot.addEventListener('click', () => {
+              // Stop the automatic slideshow when manually navigating
+              stopSlideshow();
+              
+              // Update to selected slide
+              currentIndex = parseInt(dot.getAttribute('data-index'));
+              updateSlideshow(currentIndex);
+            });
+          });
+
+          // Touch controls for mobile
+          const carousel = document.querySelector('.carousel');
+          let touchStartX = 0;
+          let touchEndX = 0;
+          
+          carousel.addEventListener('touchstart', (e) => {
+            touchStartX = e.changedTouches[0].screenX;
+          });
+          
+          carousel.addEventListener('touchend', (e) => {
+            touchEndX = e.changedTouches[0].screenX;
+            handleSwipe();
+          });
+          
+          function handleSwipe() {
+            // Stop the automatic slideshow when manually swiping
+            stopSlideshow();
+            
+            const swipeThreshold = 50;
+            if (touchEndX < touchStartX - swipeThreshold) {
+              // Swipe left - go to next slide if not at the end
+              if (currentIndex < totalImages - 1) {
+                currentIndex++;
+                updateSlideshow(currentIndex);
+              }
+            } else if (touchEndX > touchStartX + swipeThreshold) {
+              // Swipe right - go to previous slide if not at the beginning
+              if (currentIndex > 0) {
+                currentIndex--;
+                updateSlideshow(currentIndex);
+              }
+            }
+          }
+        }
+      });
+    </script>
+  </body>
+</html>
