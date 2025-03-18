@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Online Slideshow for Google Sites</title>
+    <title>Online Slideshow for Xibo Digital Signage</title>
     <style>
       * {
         margin: 0;
@@ -13,14 +13,15 @@
 
       html, body {
         width: 100%;
+        height: 100%;
         background-color: transparent;
         font-family: Arial, sans-serif;
-        overflow-x: hidden; /* Prevent horizontal scrolling */
+        overflow: hidden; /* Prevent scrolling */
       }
 
       .master-container {
         width: 100%;
-        max-width: 100%;
+        height: 100%;
         display: flex;
         flex-direction: column;
         align-items: center;
@@ -29,6 +30,7 @@
 
       .carousel-container {
         width: 100%;
+        height: 100%;
         position: relative;
       }
 
@@ -54,14 +56,14 @@
         text-decoration: none;
         display: flex;
         align-items: center;
-        justify-content: cover;
+        justify-content: center;
       }
 
       .carousel-images img {
         width: 100%;
         height: 100%;
         display: block;
-        object-fit: cover; /* Back to cover for desktop */
+        object-fit: contain; /* Changed to contain for better display */
       }
 
       /* Position dots at bottom of container */
@@ -110,44 +112,18 @@
         font-size: 18px;
       }
 
-      /* Mobile optimizations ONLY WHEN DIRECTLY VIEWED (not in iframe) */
-      @media (max-width: 768px) {
-        /* Check if we're in a direct view (not in iframe) */
-        html.direct-mobile body {
-          height: auto !important;
-        }
-        
-        html.direct-mobile .carousel-container {
-          padding: 10px 13.125px; /* Added requested padding */
-          height: auto; /* Auto height to ensure content fits */
-        }
-        
-        html.direct-mobile .carousel {
-          max-height: 65vh; /* Slightly reduced to ensure rounded corners are visible */
-          border-radius: 8px; /* Ensure rounded corners are visible */
-          overflow: hidden;
-        }
-        
-        html.direct-mobile .carousel-images img {
-          max-height: 65vh;
-          object-fit: contain;
-        }
-        
-        html.direct-mobile .dots-container {
-          position: relative; /* Change from absolute to relative */
-          bottom: auto; /* Remove absolute positioning */
-          margin-top: 10px; /* Small gap between carousel and dots */
-        }
-        
-        .dot {
-          width: 8px;
-          height: 8px;
-          margin: 0 4px;
-        }
-        
-        .dots {
-          padding: 4px 8px;
-        }
+      /* Completion message - hidden by default */
+      .completion-message {
+        display: none;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        padding: 20px;
+        background-color: rgba(0, 0, 0, 0.7);
+        color: white;
+        border-radius: 8px;
+        text-align: center;
       }
     </style>
   </head>
@@ -159,6 +135,7 @@
           <div class="carousel-images">
             <!-- Images will be loaded dynamically from Google Sheets -->
           </div>
+          <div class="completion-message">Slideshow complete</div>
         </div>
       </div>
       
@@ -172,59 +149,11 @@
 
     <script>
       document.addEventListener('DOMContentLoaded', function() {
-        // Function to check browser view context and apply appropriate styling
-        function adjustViewBasedOnContext() {
-          // Check if we're in an iframe
-          const isInIframe = window.self !== window.top;
-          const isMobile = window.innerWidth <= 768;
-          
-          // Remove all context classes first
-          document.documentElement.classList.remove('in-iframe', 'direct-mobile', 'direct-desktop');
-          
-          if (!isInIframe) {
-            // Direct browser view (not in iframe)
-            if (isMobile) {
-              // Mobile direct view
-              document.documentElement.classList.add('direct-mobile');
-              
-              // Apply mobile-specific styling
-              document.querySelector('.carousel-container').style.padding = '10px 13.125px';
-              const carousel = document.querySelector('.carousel');
-              if (carousel) {
-                carousel.style.maxHeight = '65vh';
-                carousel.style.borderRadius = '8px';
-              }
-              
-              // Fix dots positioning for mobile
-              const dotsContainer = document.querySelector('.dots-container');
-              if (dotsContainer) {
-                dotsContainer.style.position = 'relative';
-                dotsContainer.style.bottom = 'auto';
-                dotsContainer.style.marginTop = '10px';
-              }
-            } else {
-              // Desktop direct view - make it match code 2
-              document.documentElement.classList.add('direct-desktop');
-              
-              // Apply code 2's desktop styling
-              document.querySelector('.carousel-container').style.height = '95vh';
-              document.querySelector('.carousel').style.height = '100%';
-              document.querySelector('.dots-container').style.bottom = '5vh';
-            }
-          } else {
-            // In iframe view - add class for potential CSS targeting
-            document.documentElement.classList.add('in-iframe');
-          }
-        }
-        
-        // Call view adjustment initially and on resize
-        adjustViewBasedOnContext();
-        window.addEventListener('resize', adjustViewBasedOnContext);
-        
         // Use the published spreadsheet URL
         const publishedSheetURL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRi_7BCyk9NuxL8h_GcilLQngTnnd__fPUXdqe0QQBu6sYLtuqR7j6ZWhSTlEcvemJCXwSdNQNmHDQ5/pub?gid=0&single=true&output=csv';
         
         let clickData = {}; // Store click data for analytics
+        let totalSlideshowDuration = 0; // Will be calculated based on number of slides
         
         // Fetch data from Google Sheets CSV format
         fetch(publishedSheetURL)
@@ -306,13 +235,13 @@
               }
             });
             
+            // Calculate total slideshow duration (number of slides * 5 seconds)
+            totalSlideshowDuration = dataRows.length * 5000;
+            
             // Only initialize if we have images
             if (carouselImages.children.length > 0) {
               initSlideshow();
               document.querySelector('.loading').style.display = 'none';
-              
-              // Apply adjustments again after images load
-              adjustViewBasedOnContext();
             } else {
               throw new Error('No valid images found in spreadsheet');
             }
@@ -320,6 +249,9 @@
           .catch(error => {
             console.error('Error fetching data from Google Sheets:', error);
             document.querySelector('.loading').textContent = 'Error loading slideshow. Please check your Google Sheet configuration. Detailed error: ' + error.message;
+            
+            // Signal completion to Xibo even on error
+            setTimeout(signalCompletion, 5000);
           });
           
         function initSlideshow() {
@@ -328,8 +260,7 @@
           const totalImages = dots.length;
           let currentIndex = 0;
           let slideshowTimer = null;
-          let isPlaying = true;
-
+          
           function updateSlideshow(index) {
             images.style.transform = `translateX(-${index * 100}%)`;
             dots.forEach((dot, i) => {
@@ -344,16 +275,10 @@
               
               // Check if we've reached the last slide
               if (currentIndex === totalImages - 1) {
-                stopSlideshow();
+                // Stop the slideshow and signal completion after the last slide has been shown for 5 seconds
+                clearInterval(slideshowTimer);
+                setTimeout(signalCompletion, 5000);
               }
-            }
-          }
-
-          function stopSlideshow() {
-            if (slideshowTimer) {
-              clearInterval(slideshowTimer);
-              slideshowTimer = null;
-              isPlaying = false;
             }
           }
 
@@ -364,46 +289,59 @@
           dots.forEach((dot) => {
             dot.addEventListener('click', () => {
               // Stop the automatic slideshow when manually navigating
-              stopSlideshow();
+              clearInterval(slideshowTimer);
               
               // Update to selected slide
               currentIndex = parseInt(dot.getAttribute('data-index'));
               updateSlideshow(currentIndex);
+              
+              // If selected the last slide, prepare to signal completion
+              if (currentIndex === totalImages - 1) {
+                setTimeout(signalCompletion, 5000);
+              } else {
+                // Otherwise restart the slideshow from this point
+                slideshowTimer = setInterval(nextSlide, 5000);
+              }
             });
           });
-
-          // Touch controls for mobile
-          const carousel = document.querySelector('.carousel');
-          let touchStartX = 0;
-          let touchEndX = 0;
+        }
+        
+        function signalCompletion() {
+          console.log("Slideshow complete - signaling to Xibo");
           
-          carousel.addEventListener('touchstart', (e) => {
-            touchStartX = e.changedTouches[0].screenX;
-          });
+          // Show completion message
+          document.querySelector('.completion-message').style.display = 'block';
           
-          carousel.addEventListener('touchend', (e) => {
-            touchEndX = e.changedTouches[0].screenX;
-            handleSwipe();
-          });
+          // Try multiple approaches to signal completion to Xibo
           
-          function handleSwipe() {
-            // Stop the automatic slideshow when manually swiping
-            stopSlideshow();
-            
-            const swipeThreshold = 50;
-            if (touchEndX < touchStartX - swipeThreshold) {
-              // Swipe left - go to next slide if not at the end
-              if (currentIndex < totalImages - 1) {
-                currentIndex++;
-                updateSlideshow(currentIndex);
-              }
-            } else if (touchEndX > touchStartX + swipeThreshold) {
-              // Swipe right - go to previous slide if not at the beginning
-              if (currentIndex > 0) {
-                currentIndex--;
-                updateSlideshow(currentIndex);
-              }
+          // 1. Try to call parent functions (if this is in an iframe)
+          try {
+            if (window.parent && window.parent.nextItem) {
+              window.parent.nextItem();
             }
+          } catch (e) {
+            console.log("Could not call parent.nextItem()");
+          }
+          
+          // 2. Try to dispatch a custom event that Xibo might be listening for
+          try {
+            const event = new CustomEvent('xiboSlideshowComplete', { 
+              bubbles: true,
+              detail: { message: 'Slideshow complete' } 
+            });
+            document.dispatchEvent(event);
+            window.dispatchEvent(event);
+          } catch (e) {
+            console.log("Could not dispatch xiboSlideshowComplete event");
+          }
+          
+          // 3. Try to redirect to a special URL that Xibo might intercept
+          try {
+            setTimeout(() => {
+              window.location.href = 'xibo://next';
+            }, 500);
+          } catch (e) {
+            console.log("Could not redirect to xibo://next");
           }
         }
       });
