@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Infaq Pembangunan</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-image: url('https://multimedia.mamtj6.com/media/img/Infaq-bg.png');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            color: white;
+            text-align: center;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        .container {
+            width: 95%;
+            max-width: 1900px;
+            min-height: 700px;
+            height: auto;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            box-sizing: border-box;
+        }
+
+        .logo {
+            width: 200px;
+            height: auto;
+            margin-bottom: 20px;
+        }
+
+        .frame {
+            background-color: #0c2062;
+            padding: 0px 30px;
+            border-radius: 15px;
+            max-width: 1100px;
+            width: 100%;
+        }
+
+        h1 {
+            font-size: 4em;
+            margin-bottom: 20px;
+            margin-top: 0;
+            color: white;
+        }
+
+        .progress-bar {
+            background-color: #e0e0e0;
+            border-radius: 50px;
+            overflow: hidden;
+            width: 100%;
+            margin-top: 20px;
+        }
+
+        .progress {
+            background-color: #ffd700;
+            font-weight: bold;
+            height: 40px;
+            width: 100%;
+            text-align: center;
+            line-height: 40px;
+            color: black;
+            font-size: 1.5em;
+        }
+
+        .donation-info {
+            text-align: center;
+        }
+
+        #jumlahDerma {
+            font-size: 13em;
+            color: #ffd700;
+            font-weight: bold;
+            margin: 0px 0px;
+            font-family: 'Oswald', sans-serif;
+        }
+
+        #tarikhKemaskini {
+            font-weight: bold;
+            font-size: 1em;
+            margin-top: 10px;
+            color: white;
+        }
+
+        .frame p:first-child {
+            font-size: 3em;
+            font-weight: bold;
+            margin: 30px 0px -30px 0px;
+            color: white;
+        }
+
+        .frame p:last-child {
+            font-size: 2em;
+            font-weight: bold;
+            color: white;
+        }
+
+        p:last-of-type {
+            font-size: 3em;
+            font-weight: bold;
+            color: white;
+            text-align: center;
+            margin-top: 30px;
+        }
+
+        /* Loading Animation */
+        @keyframes pulse {
+            0% { opacity: 0.5; }
+            50% { opacity: 1; }
+            100% { opacity: 0.5; }
+        }
+
+        .loading {
+            animation: pulse 1.5s infinite;
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2em;
+            }
+
+            .frame {
+                padding: 20px;
+                max-width: 95%;
+                width: 95%;
+                box-sizing: border-box;
+            }
+
+            .frame p:first-child {
+                font-size: 1.5em;
+            }
+
+            .frame p:last-child {
+                font-size: 1.5em;
+            }
+
+            #jumlahDerma {
+                font-size: 6em;
+            }
+
+            .progress {
+                height: 25px;
+                line-height: 25px;
+                font-size: 1em;
+                width: 100%;
+            }
+
+            p:last-of-type {
+                font-size: 1.4em;
+            }
+
+            #tarikhKemaskini {
+                font-size: 1.2em;
+            }
+        }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <img src="https://multimedia.mamtj6.com/media/logo/mamtj6-white.webp" alt="Logo" class="logo">
+        <h1>INFAQ TABUNG BANGUNAN TAMBAHAN MAMTJ6</h1>
+        <div class="frame">
+            <p>Jumlah derma/sumbangan terkini:</p>
+            <p><strong id="jumlahDerma" class="loading">Loading...</strong></p>
+            <div class="progress-bar">
+                <div id="progress" class="progress loading">Loading...</div>
+            </div>
+            <p>Sasaran: RM250,000</p>
+        </div>
+        <p>Kemaskini sehingga: <strong><span id="tarikhKemaskini" class="loading">Loading...</span></strong></p>
+    </div>
+    <script>
+        const csvUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSVbIu9GHCo5W8AOhvltK2FgToinsJ3wQC9KPhv9HWaN53GnsdfbhcrIptBxvV7dzTP6C2nD7Deoiw2/pub?gid=0&single=true&output=csv';
+
+        function removeLoadingAnimation() {
+            document.getElementById('jumlahDerma').classList.remove('loading');
+            document.getElementById('progress').classList.remove('loading');
+            document.getElementById('tarikhKemaskini').classList.remove('loading');
+        }
+
+        function parseCSVRow(row) {
+            const result = [];
+            let insideQuotes = false;
+            let currentField = '';
+
+            for (let i = 0; i < row.length; i++) {
+                const char = row[i];
+                if (char === '"') {
+                    insideQuotes = !insideQuotes;
+                } else if (char === ',' && !insideQuotes) {
+                    result.push(currentField.trim());
+                    currentField = '';
+                } else {
+                    currentField += char;
+                }
+            }
+            result.push(currentField.trim());
+            return result;
+        }
+
+        function adjustIframeHeight() {
+            if (window.self !== window.top) {
+                const container = document.querySelector('.container');
+                if (container) {
+                    const height = container.offsetHeight;
+                    window.parent.postMessage({ iframeHeight: height }, '*');
+                }
+            }
+        }
+
+        fetch(csvUrl)
+            .then(response => response.text())
+            .then(csvText => {
+                const rows = csvText.split('\n');
+                const headers = parseCSVRow(rows[0]);
+                const data = parseCSVRow(rows[1]);
+
+                const jumlahDermaIndex = headers.indexOf('Jumlah Derma');
+                const peratusanIndex = headers.indexOf('Peratusan');
+                const tarikhKemaskiniIndex = headers.indexOf('Tarikh Kemaskini');
+
+                if (jumlahDermaIndex !== -1 && peratusanIndex !== -1 && tarikhKemaskiniIndex !== -1) {
+                    const jumlahDerma = data[jumlahDermaIndex];
+                    const peratusan = data[peratusanIndex];
+                    const tarikhKemaskini = data[tarikhKemaskiniIndex];
+
+                    document.getElementById('jumlahDerma').textContent = `RM ${jumlahDerma}`;
+                    document.getElementById('progress').textContent = `${peratusan}%`;
+                    document.getElementById('progress').style.width = `${peratusan}%`;
+                    document.getElementById('tarikhKemaskini').textContent = tarikhKemaskini;
+
+                    removeLoadingAnimation();
+                    adjustIframeHeight();
+                } else {
+                    console.error("Column names not found in CSV.");
+                    adjustIframeHeight();
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching data:', error);
+                document.getElementById('jumlahDerma').textContent = 'Error loading data';
+                document.getElementById('progress').textContent = 'Error';
+                document.getElementById('tarikhKemaskini').textContent = 'Error';
+                adjustIframeHeight();
+            });
+
+        window.addEventListener('resize', adjustIframeHeight);
+        window.addEventListener('load', adjustIframeHeight);
+
+    </script>
+</body>
+</html>
