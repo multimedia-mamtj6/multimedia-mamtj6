@@ -1,9 +1,17 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Infaq Pembangunan</title>
+    <title>Infaq Pembangunan MAMTJ6</title>
+     <link rel="icon" type="image/svg+xml" href="media/logo/mamtj6_single.svg" />
+    <!-- Open Graph Meta Tags (for Facebook, LinkedIn, etc.) -->
+    <meta property="og:title" content="Infaq Pembangunan MAMTJ6" />
+    <meta property="og:description" content="Info tentang jumlah kutipan Infaq pembangunan ruang solat di MAMTJ6" />
+    <meta property="og:image" content="https://multimedia.mamtj6.com/media/web/linkpreview.jpg" />
+    <meta property="og:url" content="https://multimedia.mamtj6.com/tabung/infaq-pembangunan" />
+    <meta property="og:type" content="website" />
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -61,6 +69,7 @@
             overflow: hidden;
             width: 100%;
             margin-top: 20px;
+            margin-top: 0px;
         }
 
         .progress {
@@ -82,8 +91,15 @@
             font-size: 13em;
             color: #ffd700;
             font-weight: bold;
-            margin: 0px 0px;
+            margin: -10px 0px;
             font-family: 'Oswald', sans-serif;
+            min-width: 200px;
+            margin-bottom: 0px;
+        }
+
+        #jumlahDerma.loading {
+            font-size: 9em;
+            min-width: 150px;
         }
 
         #tarikhKemaskini {
@@ -131,12 +147,14 @@
             }
 
             .frame {
-                padding: 30px;
-                max-width: 90%;
+                padding: 20px;
+                max-width: 95%;
+                width: 95%;
+                box-sizing: border-box;
             }
 
             .frame p:first-child {
-                font-size: 1.5em;
+                font-size: 1em;
             }
 
             .frame p:last-child {
@@ -144,15 +162,23 @@
             }
 
             #jumlahDerma {
-                font-size: 6em;
+                font-size: 4em;
             }
-
+ 
+            .progress-bar {
+                background-color: #e0e0e0;
+                border-radius: 50px;
+                overflow: hidden;
+                 width: 100%;
+                margin-top: 0px;
+            }
             .progress {
-                height: 25px;
-                line-height: 25px;
+                height: 20px;
+                line-height: 20px;
                 font-size: 1em;
-                width: 100%; /* Fixed width for mobile */
+                width: 100%;
             }
+            
 
             p:last-of-type {
                 font-size: 1.4em;
@@ -208,6 +234,16 @@
             return result;
         }
 
+        function adjustIframeHeight() {
+            if (window.self !== window.top) {
+                const container = document.querySelector('.container');
+                if (container) {
+                    const height = container.offsetHeight;
+                    window.parent.postMessage({ iframeHeight: height }, '*');
+                }
+            }
+        }
+
         fetch(csvUrl)
             .then(response => response.text())
             .then(csvText => {
@@ -221,7 +257,7 @@
 
                 if (jumlahDermaIndex !== -1 && peratusanIndex !== -1 && tarikhKemaskiniIndex !== -1) {
                     const jumlahDerma = data[jumlahDermaIndex];
-                    const peratusan = data[peratusanIndex];
+                    const peratusan =data[peratusanIndex];
                     const tarikhKemaskini = data[tarikhKemaskiniIndex];
 
                     document.getElementById('jumlahDerma').textContent = `RM ${jumlahDerma}`;
@@ -230,8 +266,10 @@
                     document.getElementById('tarikhKemaskini').textContent = tarikhKemaskini;
 
                     removeLoadingAnimation();
+                    adjustIframeHeight();
                 } else {
                     console.error("Column names not found in CSV.");
+                    adjustIframeHeight();
                 }
             })
             .catch(error => {
@@ -239,7 +277,12 @@
                 document.getElementById('jumlahDerma').textContent = 'Error loading data';
                 document.getElementById('progress').textContent = 'Error';
                 document.getElementById('tarikhKemaskini').textContent = 'Error';
+                adjustIframeHeight();
             });
+
+        window.addEventListener('resize', adjustIframeHeight);
+        window.addEventListener('load', adjustIframeHeight);
+
     </script>
 </body>
 </html>
