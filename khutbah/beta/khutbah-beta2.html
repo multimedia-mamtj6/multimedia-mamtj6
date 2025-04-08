@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mimbar Jumaat Siri 2 | 2025</title>
+    <title>Mimbar Jumaat MAMTJ6</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap');
         
@@ -12,6 +12,12 @@
             padding: 0;
             box-sizing: border-box;
             font-family: 'Poppins', sans-serif;
+        }
+        
+        html, body {
+            overflow: hidden;
+            height: 100%;
+            width: 100%;
         }
         
         body {
@@ -28,13 +34,44 @@
             max-width: 1920px;
             padding: 20px;
             border-radius: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 95vh;
         }
         
-        .logo-small { width: 300px; margin-bottom: 10px; }
-        .logo-big { width: 600px; }
+        .content-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+        }
+        
+        .logo-small { 
+            width: 300px; 
+            margin-bottom: 10px; 
+            display: block;
+        }
+        
+        .logo-big { 
+            width: 600px; 
+            margin-bottom: 10px;
+            display: block;
+        }
         
         .title { font-size: 50px; font-weight: bold; color: black; }
         .date { font-size: 40px; font-weight: 400; color: gray; }
+        
+        .main-text-container {
+            flex-grow: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            margin: 20px 0;
+        }
         
         .main-text {
             font-weight: bold;
@@ -44,6 +81,9 @@
             display: inline-block;
             line-height: 1.2;
             font-size: 150px;
+            max-width: 100%;
+            padding: 0 10px;
+            word-break: keep-all; /* Prevents word breaking */
         }
 
         .spinner {
@@ -64,28 +104,109 @@
         
         /* MOBILE VIEW */
         @media (max-width: 768px) {
-            .logo-small { width: 200px; }
-            .logo-big { width: 300px; }
-            .title { font-size: 17px; }
-            .date { font-size: 15px; }
-            .main-text { font-size: 50px; }
+            .container {
+                padding: 10px;
+                height: 100vh;
+                justify-content: center; /* Center everything vertically */
+                gap: 5px; /* Small spacing between elements */
+            }
+            
+            .content-wrapper {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                width: 100%;
+            }
+            
+            .logo-small { 
+                width: 150px; 
+                margin-bottom: 5px;
+                display: block;
+            }
+            
+            .logo-big { 
+                width: 250px; 
+                margin-bottom: 5px;
+                display: block;
+            }
+            
+            .title { 
+                font-size: 17px; 
+                margin-bottom: 5px;
+                text-align: center;
+                width: 100%;
+            }
+            
+            .date { 
+                font-size: 15px; 
+                margin-bottom: 5px;
+                text-align: center;
+                width: 100%;
+            }
+            
+            .main-text-container {
+                margin: 10px 0;
+                flex-grow: 0; /* Don't push elements apart */
+                width: 100%;
+                text-align: center;
+            }
+            
+            .main-text { 
+                font-size: 40px; 
+                max-width: calc(100% - 30px); /* Account for padding */
+                padding: 0 15px;
+                word-break: keep-all;
+                text-align: center;
+            }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <img class="logo-small" src="https://multimedia.mamtj6.com/media/logo/mamtj6-mufti.webp" alt="Small Logo">
-        <br>
-        <img class="logo-big" src="https://multimedia.mamtj6.com/media/img/khat/mimbar-jumaat.webp" alt="Big Logo">
-        <div class="spinner" id="spinner"></div>
-        <h1 class="title" id="title">Loading...</h1>
-        <p class="date" id="date">Loading...</p>
-        <h2 class="main-text" id="main-text">Loading...</h2>
+        <div class="content-wrapper">
+            <img class="logo-small" src="https://multimedia.mamtj6.com/media/logo/mamtj6-mufti.webp" alt="Small Logo">
+            <img class="logo-big" src="https://multimedia.mamtj6.com/media/img/khat/mimbar-jumaat.webp" alt="Big Logo">
+            <div class="spinner" id="spinner"></div>
+            <h1 class="title" id="title">Loading...</h1>
+            <p class="date" id="date">Loading...</p>
+            <div class="main-text-container">
+                <h2 class="main-text" id="main-text">Loading...</h2>
+            </div>
+        </div>
     </div>
 
     <script>
         const sheetURL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQDFOdEOVKqjeS1mErtCrV-Z1-dvArp3wteWAEyRM6KKzXN90yggh0Bc7Nq3yhYKdAEo1NkAiV3lZGd/pub?gid=0&single=true&output=csv";
         let lastFetchedData = "";
+        
+        // Font size map based on content length
+        const fontSizeMap = [
+            { chars: 5, size: 250 },    // Very short phrases (1-5 chars)
+            { chars: 10, size: 220 },   // Short phrases (6-10 chars)
+            { chars: 20, size: 180 },   // Medium-short phrases (11-20 chars)
+            { chars: 30, size: 160 },   // Medium phrases (21-30 chars)
+            { chars: 50, size: 140 },   // Medium-long phrases (31-50 chars)
+            { chars: 80, size: 120 },   // Long phrases (51-80 chars)
+            { chars: 120, size: 100 },  // Very long phrases (81-120 chars)
+            { chars: 160, size: 80 },   // Extremely long (121-160 chars)
+            { chars: 200, size: 70 },   // Extra long (161-200 chars)
+            { chars: Infinity, size: 60 } // Beyond 200 characters
+        ];
+        
+        // Mobile font size map (smaller sizes for mobile)
+        const mobileFontSizeMap = [
+            { chars: 5, size: 70 },     // Very short phrases
+            { chars: 10, size: 60 },    // Short phrases
+            { chars: 20, size: 50 },    // Medium-short phrases
+            { chars: 30, size: 45 },    // Medium phrases
+            { chars: 50, size: 40 },    // Medium-long phrases
+            { chars: 80, size: 35 },    // Long phrases
+            { chars: 120, size: 30 },   // Very long phrases
+            { chars: 160, size: 25 },   // Extremely long
+            { chars: 200, size: 22 },   // Extra long
+            { chars: Infinity, size: 20 } // Beyond 200 characters
+        ];
 
         async function fetchSheetData() {
             document.getElementById("spinner").style.display = "block";
@@ -122,18 +243,86 @@
 
         function adjustFontSize() {
             const mainText = document.getElementById("main-text");
-            if (window.innerWidth <= 768) return;
-
-            mainText.style.fontSize = "150px";
+            const content = mainText.innerText;
+            const isMobile = window.innerWidth <= 768;
+            
+            // Check if content is a single word
+            const words = content.split(/\s+/).filter(word => word.length > 0);
+            const isSingleWord = words.length === 1;
+            const longestWordLength = isSingleWord ? content.length : 
+                Math.max(...words.map(word => word.length));
+            
+            // Select appropriate font size map based on device type
+            const sizeMap = isMobile ? mobileFontSizeMap : fontSizeMap;
+            
+            // Determine initial font size based on character count
+            const charCount = content.length;
+            const wordCount = words.length;
+            
+            // Get appropriate font size from the map
+            let fontSize = isMobile ? 20 : 60; // Default smallest size
+            for (const entry of sizeMap) {
+                if (charCount <= entry.chars) {
+                    fontSize = entry.size;
+                    break;
+                }
+            }
+            
+            // Special handling for single words - ensure they're not too big if very long
+            if (isSingleWord && longestWordLength > 8) {
+                fontSize = fontSize * (12 / longestWordLength);
+            } 
+            // For multiple words with long individual words
+            else if (longestWordLength > 12) {
+                fontSize = fontSize * 0.8;
+            }
+            
+            // Apply initial font size
+            mainText.style.fontSize = `${fontSize}px`;
+            
+            // Fine-tune to ensure content fits container
             setTimeout(() => {
-                const lineCount = mainText.clientHeight / parseFloat(getComputedStyle(mainText).lineHeight);
-                if (lineCount > 2.5) mainText.style.fontSize = "150px";
-                else if (lineCount > 1.5) mainText.style.fontSize = "100px";
+                const mainTextContainer = document.querySelector(".main-text-container");
+                const containerWidth = mainTextContainer.offsetWidth - (isMobile ? 30 : 20); // Account for padding
+                const containerHeight = mainTextContainer.offsetHeight;
+                
+                const textWidth = mainText.scrollWidth; // Use scrollWidth to get true content width
+                const textHeight = mainText.scrollHeight; // Use scrollHeight for true content height
+                
+                // Check for text overflow
+                if (textWidth > containerWidth || textHeight > containerHeight) {
+                    // Calculate scaling ratios
+                    const widthRatio = containerWidth / textWidth;
+                    const heightRatio = containerHeight / textHeight;
+                    
+                    // Use the smaller ratio to ensure text fits
+                    const ratio = Math.min(widthRatio, heightRatio) * 0.95; // 5% margin for safety
+                    
+                    // Apply new font size
+                    const newSize = Math.floor(fontSize * ratio);
+                    mainText.style.fontSize = `${newSize}px`;
+                    
+                    // Double-check for single word overflow after first adjustment
+                    setTimeout(() => {
+                        if (mainText.scrollWidth > containerWidth && isSingleWord) {
+                            const finalRatio = containerWidth / mainText.scrollWidth * 0.9;
+                            mainText.style.fontSize = `${Math.floor(newSize * finalRatio)}px`;
+                        }
+                    }, 50);
+                }
             }, 100);
         }
 
         fetchSheetData();
         setInterval(fetchSheetData, 60000);
+        
+        // Adjust font size on window resize
+        window.addEventListener('resize', adjustFontSize);
+        
+        // Initial check to make sure everything fits properly
+        window.addEventListener('load', function() {
+            setTimeout(adjustFontSize, 200);
+        });
     </script>
 </body>
 </html>
