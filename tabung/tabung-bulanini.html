@@ -5,30 +5,53 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Info Tabung MAMTJ6</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
+        * {
             margin: 0;
             padding: 0;
+            box-sizing: border-box;
+        }
+
+        html, body {
+            height: 100%;
+            overflow: hidden;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
             display: flex;
             justify-content: center;
             align-items: center;
-            min-height: 100vh;
-            background-color: #D8CFCC;
+            background-image: url('https://multimedia.mamtj6.com/media/img/Infaq-bg.png');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            height: 100vh;
         }
 
         .container {
-            background-color: #eae6e3;
-            padding: 2%;
-            border-radius: 20px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-            width: 90%; /* Stretch closer to edges */
-            max-width: 1400px; /* Wider for larger screens */
+            width: 96%;
+            max-width: 1800px;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
             text-align: center;
+            padding: 1vh 2vw;
+        }
+
+        .content-wrapper {
+            width: 100%;
+            max-height: 100vh;
+            display: flex;
+            flex-direction: column;
         }
 
         .logo {
-            max-width: 150px;
-            margin: 0 auto 20px;
+            max-width: 130px;
+            max-height: 10vh;
+            margin: 0.5vh auto;
         }
 
         .logo img {
@@ -38,110 +61,182 @@
         }
 
         .subheading {
-            font-size: 30px;
+            font-size: clamp(24px, 5vw, 45px);
             font-weight: bold;
-            margin-bottom: 0px;
+            margin-bottom: 0;
             text-transform: uppercase;
-            color: #333;
+            color: white;
         }
 
         h1 {
             font-weight: bold;
             text-transform: uppercase;
-            color: black;
-            margin-bottom: 20px;
-            font-size: clamp(24px, 5vw, 48px);
+            color: white;
+            margin: 0.5vh 0;
+            font-size: clamp(28px, 5.5vw, 60px);
         }
 
         .week-container {
             width: 100%;
             display: flex;
             flex-direction: column;
-            gap: 10px;
+            gap: 0.8vh;
+            flex: 1;
+            overflow: hidden;
         }
 
         .week {
-            background-color: white;
-            padding: 15px 30px;
-            border-radius: 8px;
+            padding: 0.5vh 2vw;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            font-size: clamp(16px, 4vw, 24px);
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+           font-size: clamp(18px, 4vw, 30px);
+            border-radius: 12px; /* ✅ Rounded corners */
+        }
+
+        .week:nth-child(odd) {
+            background-color: #116BBD;
+            color: white;
+        }
+
+        .week:nth-child(even) {
+            background-color: white;
+            color: #2a5db0;
         }
 
         .week span {
             font-weight: bold;
-            color: #2d7a2d;
         }
+        
+        
 
         .total {
-            background-color: white;
-            padding: 20px 30px;
-            border-radius: 8px;
+            background-color: #0c2062;
+            color: white;
+            padding: 1vh 2vw;
             font-weight: bold;
-            font-size: clamp(40px, 4vw, 32px);
-            margin-top: 20px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            font-size: clamp(35px, 6vw, 45px);
+            margin-top: 0.8vh;
+            width: 100%;
+            border-radius: 12px; /* ✅ Rounded corners */
+
         }
 
-        /* Adjustments for larger screens */
+        /* Adjustments for different screens */
+        @media (min-width: 768px) {
+            .logo {
+                max-width: 150px;
+            }
+            
+            .week {
+                padding: 1vh 3vw;
+            }
+            
+            .total {
+                padding: 1.2vh 3vw;
+            }
+        }
+
         @media (min-width: 1200px) {
             .container {
-                max-width: 1600px; /* Wider for desktop */
+                max-width: 1800px;
+                width: 98%;
+                padding: 0.5vh 2vw;
+            }
+            
+            .logo {
+                max-width: 220px;
+                max-height: 12vh;
+                margin: 0.5vh auto;
+            }
+            
+            .subheading {
+                font-size: 50px;
+                margin-bottom: 0.5vh;
             }
 
             h1 {
-                font-size: 48px;
+                font-size: 65px;
+                margin-bottom: 1vh;
+            }
+
+            .week-container {
+                gap: 1vh;
             }
 
             .week {
-                padding: 20px 40px;
-                font-size: 28px;
+                padding: 1.5vh 5vw;
+                font-size: 46px;
             }
 
             .total {
-                font-size: 36px;
-                padding: 25px 50px;
+                font-size: 60px;
+                padding: 1.8vh 5vw;
+                margin-top: 1vh;
             }
         }
 
-        @media (min-width: 1920px) {
-            .container {
-                max-width: 1800px; /* Very wide for ultra-large screens */
+        /* Extra large desktop screens */
+        @media (min-width: 1600px) {
+            .logo {
+                max-width: 250px;
+            }
+            
+            .subheading {
+                font-size: 55px;
             }
 
             h1 {
-                font-size: 56px;
+                font-size: 70px;
             }
 
             .week {
-                padding: 25px 50px;
-                font-size: 32px;
+                padding: 1.8vh 6vw;
+                font-size: 52px;
             }
 
             .total {
-                font-size: 40px;
-                padding: 30px 60px;
+                font-size: 60px;
+                padding: 2vh 6vw;
+            }
+        }
+
+        /* Adjust for shorter screens */
+        @media (max-height: 800px) {
+            .logo {
+                max-height: 8vh;
+            }
+            
+            .week {
+                padding: 1vh 5vw;
+            }
+            
+            .total {
+                padding: 1.2vh 5vw;
+            }
+            
+            .week-container {
+                gap: 0.7vh;
             }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <!-- Logo Section -->
-        <div class="logo">
-            <img src="https://multimedia.mamtj6.com/media/logo/mamtj6-black.webp" alt="Logo">
+        <div class="content-wrapper">
+            <!-- Logo Section -->
+            <div class="logo">
+                <img src="https://multimedia.mamtj6.com/media/logo/mamtj6-white.webp" alt="Logo">
+            </div>
+
+            <!-- Subheading -->
+            <div class="subheading">JUMLAH KUTIPAN TABUNG</div>
+
+            <!-- Dynamic Content -->
+            <h1 id="month">DATA SEDANG MEMUAT NAIK</h1>
+            <div class="week-container" id="weeks"></div>
+            <div class="total" id="total">SILA TUNGGU</div>
         </div>
-
-        <!-- Subheading -->
-        <div class="subheading">JUMLAH KUTIPAN TABUNG</div>
-
-        <!-- Dynamic Content -->
-        <h1 id="month">DATA SEDANG MEMUAT NAIK</h1>
-        <div class="week-container" id="weeks"></div>
-        <div class="total" id="total">SILA TUNGGU</div>
     </div>
 
     <script>
@@ -167,9 +262,6 @@
             rows.slice(1, 6).forEach((row, index) => { // Only process rows 1 to 6
                 const cols = row.split(",");
 
-                // Debugging log to check data format
-                console.log(cols);
-
                 // Checking if the donation amount is valid
                 let donationAmount = parseFloat(cols[2]);
                 if (isNaN(donationAmount)) {
@@ -193,7 +285,7 @@
             // Update the month dynamically
             monthHeader.textContent = `BULAN: ${monthName}`;
 
-            // Update total amount with 2 decimal places or "TIADA DATA" if 0
+            // Update total amount with 2 decimal places or "-" if 0
             totalSection.textContent = totalAmount > 0 ? `JUMLAH: RM ${totalAmount.toFixed(2)}` : "-";
         } catch (error) {
             console.error("Error fetching or processing CSV:", error);
@@ -205,7 +297,6 @@
 
     // Update data every 5 minutes (300,000 ms)
     setInterval(fetchDataAndUpdate, 300000);
-</script>
-
+    </script>
 </body>
 </html>
