@@ -18,8 +18,9 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
+            min-height: 100vh;
             background: url('https://multimedia.mamtj6.com/media/img/mimbar-jumaat-bg.webp') no-repeat center center/cover;
+            overflow-x: hidden;
         }
         
         .container {
@@ -28,22 +29,46 @@
             max-width: 1920px;
             padding: 20px;
             border-radius: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            max-height: 90vh;
         }
         
         .logo-small { width: 300px; margin-bottom: 10px; }
-        .logo-big { width: 600px; }
+        .logo-big { width: 600px; margin-bottom: 20px; }
         
-        .title { font-size: 50px; font-weight: bold; color: black; }
-        .date { font-size: 40px; font-weight: 400; color: gray; }
+        .title { 
+            font-size: 50px; 
+            font-weight: bold; 
+            color: black;
+            margin-bottom: 5px;
+        }
+        
+        .date { 
+            font-size: 40px; 
+            font-weight: 400; 
+            color: gray;
+            margin-bottom: 20px;
+        }
+        
+        .main-text-container {
+            width: 100%;
+            overflow: hidden;
+            text-align: center;
+            margin: 0 auto;
+        }
         
         .main-text {
             font-weight: bold;
             color: blue;
             text-align: center;
-            white-space: pre-wrap;
-            display: inline-block;
+            display: block;
             line-height: 1.2;
-            font-size: 150px;
+            font-size: 120px;
+            word-wrap: break-word;
+            margin: 0 auto;
         }
 
         .spinner {
@@ -64,23 +89,32 @@
         
         /* MOBILE VIEW */
         @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+                width: 95%;
+            }
             .logo-small { width: 200px; }
-            .logo-big { width: 300px; }
-            .title { font-size: 17px; }
-            .date { font-size: 15px; }
-            .main-text { font-size: 50px; }
+            .logo-big { width: 300px; margin-bottom: 15px; }
+            .title { font-size: 17px; margin-bottom: 5px; }
+            .date { font-size: 15px; margin-bottom: 10px; }
+            .main-text { 
+                font-size: 50px;
+                margin: 0 auto;
+                width: 100%;
+            }
         }
     </style>
 </head>
 <body>
     <div class="container">
         <img class="logo-small" src="https://multimedia.mamtj6.com/media/logo/mamtj6-mufti.webp" alt="Small Logo">
-        <br>
         <img class="logo-big" src="https://multimedia.mamtj6.com/media/img/khat/mimbar-jumaat.webp" alt="Big Logo">
         <div class="spinner" id="spinner"></div>
         <h1 class="title" id="title">Loading...</h1>
         <p class="date" id="date">Loading...</p>
-        <h2 class="main-text" id="main-text">Loading...</h2>
+        <div class="main-text-container">
+            <h2 class="main-text" id="main-text">Loading...</h2>
+        </div>
     </div>
 
     <script>
@@ -122,17 +156,48 @@
 
         function adjustFontSize() {
             const mainText = document.getElementById("main-text");
-            if (window.innerWidth <= 768) return;
-
-            mainText.style.fontSize = "150px";
-            setTimeout(() => {
-                const lineCount = mainText.clientHeight / parseFloat(getComputedStyle(mainText).lineHeight);
-                if (lineCount > 2.5) mainText.style.fontSize = "150px";
-                else if (lineCount > 1.5) mainText.style.fontSize = "100px";
-            }, 100);
+            const mainTextContainer = document.querySelector(".main-text-container");
+            const containerHeight = document.querySelector(".container").offsetHeight;
+            const containerWidth = document.querySelector(".container").offsetWidth;
+            const textLength = mainText.innerText.length;
+            
+            // Reset font size to measure
+            if (window.innerWidth <= 768) {
+                // Mobile font sizing logic
+                if (textLength > 30) {
+                    mainText.style.fontSize = "40px";
+                } else if (textLength > 20) {
+                    mainText.style.fontSize = "45px";
+                } else {
+                    mainText.style.fontSize = "50px";
+                }
+            } else {
+                // Desktop font sizing logic - adaptive to text length
+                if (textLength > 80) {
+                    mainText.style.fontSize = "70px";
+                } else if (textLength > 50) {
+                    mainText.style.fontSize = "80px";
+                } else if (textLength > 30) {
+                    mainText.style.fontSize = "90px";
+                } else if (textLength > 15) {
+                    mainText.style.fontSize = "100px";
+                } else {
+                    mainText.style.fontSize = "120px";
+                }
+                
+                // Further adjust if text still doesn't fit
+                setTimeout(() => {
+                    if (mainText.offsetHeight > containerHeight * 0.4) {
+                        const currentSize = parseInt(mainText.style.fontSize);
+                        mainText.style.fontSize = `${currentSize * 0.8}px`;
+                    }
+                }, 10);
+            }
         }
 
+        // Run on load and resize
         fetchSheetData();
+        window.addEventListener('resize', adjustFontSize);
         setInterval(fetchSheetData, 60000);
     </script>
 </body>
