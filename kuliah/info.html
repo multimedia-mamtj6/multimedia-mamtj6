@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PDF to JPEG Preview</title>
+    <style>
+        body { font-family: sans-serif; text-align: center; margin-top: 50px; }
+        #loader { font-size: 1.2em; }
+        #pdf-preview { border: 1px solid #ccc; max-width: 90%; }
+    </style>
+</head>
+<body>
+
+    <h1>PDF to JPEG Preview</h1>
+    <div id="loader">Loading and converting PDF...</div>
+    <canvas id="pdf-preview" style="display:none;"></canvas>
+
+    <!-- We will use the PDF.js library from a CDN -->
+    <script src="//mozilla.github.io/pdf.js/build/pdf.mjs" type="module"></script>
+
+    <script type="module">
+        // Import the PDF.js library
+        const pdfjsLib = window['pdfjs-dist/build/pdf'];
+
+        // Set the worker source for PDF.js
+        pdfjsLib.GlobalWorkerOptions.workerSrc = '//mozilla.github.io/pdf.js/build/pdf.worker.mjs';
+
+        // Direct download link to your Google Drive PDF
+        // IMPORTANT: The Google Drive link must be a direct download link and publicly accessible.
+        const pdfUrl = 'https://drive.google.com/uc?export=download&id=1NL-IYzZ-EGw3-DbjiMZLrntV2FRb4Yzu';
+        
+        // Asynchronous function to load and render the PDF
+        async function renderPDF() {
+            try {
+                // Because of Cross-Origin Resource Sharing (CORS) issues, we need a proxy.
+                // We'll use a public CORS proxy to fetch the PDF data.
+                const proxyUrl = 'https://cors-anywhere.herokuapp.com/';
+                const loadingTask = pdfjsLib.getDocument(proxyUrl + pdfUrl);
+
+                const pdf = await loadingTask.promise;
+
+                // Fetch the first page
+                const page = await pdf.getPage(1);
+
+                const scale = 1.5;
+                const viewport = page.getViewport({ scale: scale });
+
+                // Prepare canvas using PDF page dimensions
+                const canvas = document.getElementById('pdf-preview');
+                const context = canvas.getContext('2d');
+                canvas.height = viewport.height;
+                canvas.width = viewport.width;
+
+                // Render PDF page into canvas context
+                const renderContext = {
+                    canvasContext: context,
+                    viewport: viewport
+                };
+                await page.render(renderContext).promise;
+
+                // Hide the loader and show the canvas
+                document.getElementById('loader').style.display = 'none';
+                canvas.style.display = 'block';
+
+                // The canvas now displays the first page of the PDF as an image.
+                // The browser effectively treats it like a JPEG.
+
+            } catch (error) {
+                console.error('Error loading or rendering PDF:', error);
+                document.getElementById('loader').innerText = 'Failed to load PDF. Please ensure the link is correct and publicly accessible.';
+            }
+        }
+
+        renderPDF();
+    </script>
+
+</body>
+</html>
