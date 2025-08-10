@@ -1,12 +1,42 @@
 [
-  { "eventName": "Israk dan Mikraj", "eventDate": "2025-01-27" },
-  { "eventName": "Nisfu Sya'ban", "eventDate": "2025-02-14" },
-  { "eventName": "Awal Ramadan", "eventDate": "2025-03-01" },
-  { "eventName": "Hari Nuzul Al-Quran", "eventDate": "2025-03-17" },
-  { "eventName": "Hari Raya Aidilfitri", "eventDate": "2025-03-31" },
-  { "eventName": "Hari Arafah", "eventDate": "2025-06-06" },
-  { "eventName": "Hari Raya Aidiladha", "eventDate": "2025-06-07" },
-  { "eventName": "Awal Muharram (Maal Hijrah)", "eventDate": "2025-06-27" },
-  { "eventName": "Hari Asyura", "eventDate": "2025-07-06" },
-  { "eventName": "Maulidur Rasul", "eventDate": "2025-09-05" }
+  {
+    "eventName": "Israk dan Mikraj",
+    "eventDate": "2025-01-27"
+  },
+  {
+    "eventName": "Nisfu Sya'ban",
+    "eventDate": "2025-02-14"
+  },
+  {
+    "eventName": "Awal Ramadan",
+    "eventDate": "2025-03-01"
+  },
+  {
+    "eventName": "Hari Nuzul Al-Quran",
+    "eventDate": "2025-03-17"
+  },
+  {
+    "eventName": "Hari Raya Aidilfitri",
+    "eventDate": "2025-03-31"
+  },
+  {
+    "eventName": "Hari Arafah",
+    "eventDate": "2025-06-06"
+  },
+  {
+    "eventName": "Hari Raya Aidiladha",
+    "eventDate": "2025-06-07"
+  },
+  {
+    "eventName": "Awal Muharram (Maal Hijrah)",
+    "eventDate": "2025-06-27"
+  },
+  {
+    "eventName": "Hari Asyura",
+    "eventDate": "2025-07-06"
+  },
+  {
+    "eventName": "Maulidur Rasul",
+    "eventDate": "2025-09-05"
+  }
 ]
