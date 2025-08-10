@@ -6,142 +6,74 @@
     <title>Tarikh Penting Islam di Malaysia</title>
     <style>
         /* Gaya Asas */
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
-                Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
-            background-color: #f0f2f5;
-            color: #333;
-            margin: 0;
-            padding: 15px;
-        }
-        .container {
-            width: 100%;
-            max-width: 900px; /* Lebar dikembalikan kepada asal untuk paparan jadual */
-            margin: 20px auto;
-        }
-        h1 {
-            text-align: center;
-            color: #2c3e50;
-            margin-bottom: 25px;
-            font-size: 1.8em;
-        }
-        
-        /* --- GAYA JADUAL (UNTUK DESKTOP) --- */
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            background-color: #fff;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif; background-color: #f0f2f5; color: #333; margin: 0; padding: 15px; }
+        .container { width: 100%; max-width: 900px; margin: 20px auto; }
+        h1 { text-align: center; color: #2c3e50; margin-bottom: 15px; font-size: 1.8em; }
+
+        /* --- SEKSYEN ACARA TERHAMPIR --- */
+        .upcoming-card {
+            background: #e8f5e9; /* Latar belakang hijau lembut */
+            border-left: 5px solid #4CAF50;
             border-radius: 8px;
-            overflow: hidden; /* Untuk memastikan border-radius berfungsi pada jadual */
+            padding: 20px 25px;
+            margin-bottom: 30px;
+            display: none; /* Disembunyikan secara lalai, ditunjukkan oleh JS */
         }
-        th, td {
-            padding: 14px 18px;
-            text-align: left;
-            border-bottom: 1px solid #eef0f2;
-        }
-        thead th {
-            background-color: #4CAF50;
-            color: white;
+        .upcoming-card .label {
+            font-size: 0.9em;
             font-weight: bold;
             text-transform: uppercase;
-            font-size: 0.9em;
+            color: #1b5e20;
+            margin-bottom: 5px;
         }
-        tbody tr:nth-child(even) {
-            background-color: #f8f9fa;
-        }
-        tbody tr:hover {
-            background-color: #f1f1f1;
-        }
-        .countdown {
+        .upcoming-card .event-name {
+            font-size: 1.7em;
             font-weight: bold;
-            color: #d9534f;
+            color: #2c3e50;
+            margin: 0;
         }
-        .event-passed {
-            color: #777;
-            font-style: italic;
+        .upcoming-card .date-info {
+            font-size: 1.1em;
+            color: #333;
+            margin: 8px 0;
         }
-        .footer {
-            text-align: center;
-            margin-top: 30px;
-            font-size: 0.9em;
-            color: #666;
+        .upcoming-card .countdown {
+            font-size: 1.4em;
+            font-weight: bold;
+            color: #d84315;
+            margin-top: 10px;
         }
-        .error-message { text-align: center; color: red; background-color: #fff; padding: 20px; border-radius: 8px; }
 
+        /* --- GAYA JADUAL (UNTUK DESKTOP) --- */
+        table { width: 100%; border-collapse: collapse; background-color: #fff; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08); border-radius: 8px; overflow: hidden; }
+        th, td { padding: 14px 18px; text-align: left; border-bottom: 1px solid #eef0f2; }
+        thead th { background-color: #4CAF50; color: white; font-weight: bold; text-transform: uppercase; font-size: 0.9em; }
+        tbody tr:nth-child(even) { background-color: #f8f9fa; }
+        tbody tr:hover { background-color: #f1f1f1; }
+        td .countdown-small { font-weight: bold; color: #d9534f; }
+        td .event-passed { color: #777; font-style: italic; }
+        .footer { text-align: center; margin-top: 30px; font-size: 0.9em; color: #666; }
+        .error-message { text-align: center; color: red; background-color: #fff; padding: 20px; border-radius: 8px; }
+        
         /* --- PAPARAN KAD (UNTUK MUDAH ALIH) --- */
         @media screen and (max-width: 768px) {
             h1 { font-size: 1.5em; }
-            
-            /* Sembunyikan kepala jadual asal */
-            table thead {
-                display: none;
-            }
-            
-            /* Ubah baris (tr) menjadi kad */
-            table tbody tr {
-                display: block;
-                width: 100%;
-                margin-bottom: 15px;
-                border: 1px solid #ddd;
-                border-left: 5px solid #4CAF50;
-                border-radius: 8px;
-                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-                background-color: #fff;
-            }
+            .upcoming-card .event-name { font-size: 1.4em; }
+            .upcoming-card .date-info { font-size: 1em; }
+            .upcoming-card .countdown { font-size: 1.2em; }
 
-            /* Ubah sel (td) menjadi baris dalam kad */
-            table td {
-                display: block;
-                text-align: right; /* Letak nilai di kanan */
-                padding: 10px 15px;
-                position: relative;
-                border-bottom: 1px solid #eef0f2;
-            }
-            table td:last-child {
-                border-bottom: none;
-            }
-
-            /* Cipta label di kiri menggunakan data-label */
-            table td::before {
-                content: attr(data-label);
-                position: absolute;
-                left: 15px;
-                font-weight: 600;
-                color: #555;
-                text-align: left;
-            }
-            
-            /* Stail khas untuk nama peristiwa dalam kad */
-            table td[data-label="Peristiwa"] {
-                padding-top: 15px;
-                padding-bottom: 15px;
-                font-size: 1.2em;
-                font-weight: bold;
-                text-align: left; /* Nama peristiwa di kiri */
-                background-color: #f8f9fa;
-            }
-            table td[data-label="Peristiwa"]::before {
-                display: none; /* Jangan tunjuk label "Peristiwa" */
-            }
-            
-            /* Stail khas untuk baris kira detik */
-            table td[data-label="Kira Detik"] .countdown {
-                font-size: 1.1em;
-                background-color: #fdf2f2;
-                padding: 4px 8px;
-                border-radius: 4px;
-            }
-             .is-today td[data-label="Kira Detik"] .countdown {
-                color: #28a745;
-                background-color: #eaf6ec;
-            }
-
-            /* Pudar kad yang telah lepas */
-            tr.is-passed {
-                border-left-color: #ccc;
-                opacity: 0.8;
-            }
+            table thead { display: none; }
+            table tbody tr { display: block; width: 100%; margin-bottom: 15px; border: 1px solid #ddd; border-left: 5px solid #4CAF50; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.07); background-color: #fff; }
+            table td { display: block; text-align: right; padding: 10px 15px; position: relative; border-bottom: 1px solid #eef0f2; }
+            table td:last-child { border-bottom: none; }
+            table td::before { content: attr(data-label); position: absolute; left: 15px; font-weight: 600; color: #555; text-align: left; }
+            table td[data-label="Peristiwa"] { padding: 15px; font-size: 1.2em; font-weight: bold; text-align: left; background-color: #f8f9fa; }
+            table td[data-label="Peristiwa"]::before { display: none; }
+            /* Stail untuk sel tarikh yang digabungkan */
+            table td[data-label="Tarikh"] { font-size: 0.9em; line-height: 1.5; }
+            table td[data-label="Kira Detik"] .countdown-small { font-size: 1.1em; background-color: #fdf2f2; padding: 4px 8px; border-radius: 4px; }
+            .is-today td[data-label="Kira Detik"] .countdown-small { color: #28a745; background-color: #eaf6ec; }
+            tr.is-passed { border-left-color: #ccc; opacity: 0.8; }
         }
     </style>
 </head>
@@ -150,14 +82,14 @@
     <div class="container">
         <h1>Tarikh Penting Islam di Malaysia</h1>
 
-        <!-- Struktur HTML kekal sebagai jadual -->
+        <!-- PENAMBAHBAIKAN 1: Bekas untuk Acara Terhampir -->
+        <div id="upcoming-event-container"></div>
+
         <table id="events-table">
             <thead>
                 <tr>
                     <th>Peristiwa</th>
-                    <th>Tarikh (Masihi)</th>
-                    <th>Tarikh (Hijrah)</th>
-                    <th>Hari</th>
+                    <th>Tarikh & Hari</th>
                     <th>Kira Detik</th>
                 </tr>
             </thead>
@@ -182,8 +114,7 @@
                 const day = parts.find(p => p.type === 'day').value;
                 const monthIndex = parseInt(parts.find(p => p.type === 'month').value, 10) - 1;
                 const year = parts.find(p => p.type === 'year').value;
-                const monthName = hijriMonths[monthIndex];
-                return `${day} ${monthName} ${year} H`;
+                return `${day} ${hijriMonths[monthIndex]} ${year} H`;
             } catch (e) { return "Ralat"; }
         }
 
@@ -198,59 +129,63 @@
                 today.setHours(0, 0, 0, 0);
 
                 eventData.sort((a, b) => new Date(a.eventDate) - new Date(b.eventDate));
+                
+                // --- PENAMBAHBAIKAN 1: Logik untuk mencari & memaparkan acara terhampir ---
+                const nextEvent = eventData.find(event => new Date(event.eventDate + 'T00:00:00') >= today);
+                if (nextEvent) {
+                    const upcomingContainer = document.getElementById('upcoming-event-container');
+                    const eventDate = new Date(nextEvent.eventDate + 'T00:00:00');
+                    const timeDiff = eventDate.getTime() - today.getTime();
+                    const dayDiff = Math.ceil(timeDiff / (1000 * 60 * 60 * 24));
+                    const daysInMalay = ["Ahad", "Isnin", "Selasa", "Rabu", "Khamis", "Jumaat", "Sabtu"];
 
+                    let countdownText = `${dayDiff} hari lagi`;
+                    if (dayDiff === 0) countdownText = "Hari Ini!";
+
+                    upcomingContainer.innerHTML = `
+                        <div class="upcoming-card" style="display: block;">
+                            <div class="label">Acara Terhampir</div>
+                            <h2 class="event-name">${nextEvent.eventName}</h2>
+                            <p class="date-info">
+                                ${daysInMalay[eventDate.getDay()]}, ${eventDate.toLocaleDateString('ms-MY', { day: '2-digit', month: 'long', year: 'numeric' })}
+                            </p>
+                            <div class="countdown">${countdownText}</div>
+                        </div>
+                    `;
+                }
+
+                // --- Logik untuk memaparkan senarai penuh (Jadual & Kad) ---
                 eventData.forEach(event => {
                     const eventDate = new Date(event.eventDate + 'T00:00:00');
                     const newRow = tableBody.insertRow();
-                    
                     const timeDiff = eventDate.getTime() - today.getTime();
                     const dayDiff = Math.ceil(timeDiff / (1000 * 60 * 60 * 24));
                     
                     if (dayDiff < 0) newRow.classList.add('is-passed');
                     if (dayDiff === 0) newRow.classList.add('is-today');
 
-                    // 1. Peristiwa
+                    // Sel 1: Peristiwa
                     const cellEvent = newRow.insertCell();
                     cellEvent.textContent = event.eventName;
                     cellEvent.setAttribute('data-label', 'Peristiwa');
 
-                    // 2. Tarikh Masihi
-                    const cellMasihi = newRow.insertCell();
-                    cellMasihi.textContent = eventDate.toLocaleDateString('ms-MY', { day: '2-digit', month: 'long', year: 'numeric' });
-                    cellMasihi.setAttribute('data-label', 'Tarikh (Masihi)');
-
-                    // 3. Tarikh Hijrah
-                    const cellHijri = newRow.insertCell();
-                    cellHijri.textContent = getCorrectHijriDate(eventDate);
-                    cellHijri.setAttribute('data-label', 'Tarikh (Hijrah)');
-
-                    // 4. Hari
-                    const cellDay = newRow.insertCell();
+                    // Sel 2: Gabungan Tarikh & Hari
+                    const cellDate = newRow.insertCell();
                     const daysInMalay = ["Ahad", "Isnin", "Selasa", "Rabu", "Khamis", "Jumaat", "Sabtu"];
-                    cellDay.textContent = daysInMalay[eventDate.getDay()];
-                    cellDay.setAttribute('data-label', 'Hari');
+                    const dayStr = daysInMalay[eventDate.getDay()];
+                    const masihiStr = eventDate.toLocaleDateString('ms-MY', { day: '2-digit', month: 'long', year: 'numeric' });
+                    const hijriStr = getCorrectHijriDate(eventDate);
+                    // PENAMBAHBAIKAN 2: Gabungkan tarikh menjadi satu untuk paparan mudah alih
+                    cellDate.innerHTML = `${dayStr}<br>${masihiStr}<br>${hijriStr}`;
+                    cellDate.setAttribute('data-label', 'Tarikh');
                     
-                    // 5. Kira Detik
+                    // Sel 3: Kira Detik
                     const cellCountdown = newRow.insertCell();
                     let countdownHTML = '';
                     if (dayDiff > 0) {
-                        countdownHTML = `<span class="countdown">${dayDiff} hari lagi</span>`;
+                        countdownHTML = `<span class="countdown-small">${dayDiff} hari lagi</span>`;
                     } else if (dayDiff === 0) {
-                        countdownHTML = `<span class="countdown">Hari Ini!</span>`;
+                        countdownHTML = `<span class="countdown-small">Hari Ini!</span>`;
                     } else {
-                        countdownHTML = `<span class="event-passed">Peristiwa telah lepas</span>`;
-                    }
-                    cellCountdown.innerHTML = countdownHTML;
-                    cellCountdown.setAttribute('data-label', 'Kira Detik');
-                });
-            })
-            .catch(error => {
-                console.error('Gagal memuatkan data acara:', error);
-                const container = document.querySelector('.container');
-                container.innerHTML = `<div class="error-message"><strong>Gagal memuatkan data.</strong><br>Sila pastikan fail 'events.json' wujud di lokasi yang sama dan tidak mempunyai ralat sintaks.</div>`;
-            });
-    });
-    </script>
-
-</body>
-</html>
+                        countdownHTML = `<span class="event-passed">Telah lepas</span>`;
+                  
