@@ -3,168 +3,110 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tarikh-Tarikh Penting Islam di Malaysia</title>
+    <title>Tarikh Penting Islam di Malaysia</title>
     <style>
-        /* General Styling */
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
-                Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
-            background-color: #f4f4f9;
-            color: #333;
-            margin: 0;
-            padding: 15px;
-        }
-        .container {
-            width: 100%;
-            max-width: 900px;
-            margin: 20px auto;
-            background-color: #fff;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-        }
-        h1 {
-            text-align: center;
-            color: #2c3e50;
-            margin-bottom: 20px;
-            font-size: 1.8em;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-        }
-        th, td {
-            padding: 12px 15px;
-            text-align: left;
-            border-bottom: 1px solid #ddd;
-        }
-        th {
-            background-color: #4CAF50;
-            color: white;
-            font-weight: bold;
-        }
-        tr:nth-child(even) {
-            background-color: #f2f2f2;
-        }
-        .countdown {
-            font-weight: bold;
-            color: #d9534f;
-        }
-        .event-passed {
-            color: #777;
-            font-style: italic;
-        }
-        .footer {
-            text-align: center;
-            margin-top: 20px;
-            font-size: 0.9em;
-            color: #666;
-        }
-
-        /* MOBILE RESPONSIVE STYLES */
-        @media screen and (max-width: 768px) {
-            h1 { font-size: 1.5em; }
-            table thead { border: none; clip: rect(0 0 0 0); height: 1px; margin: -1px; overflow: hidden; padding: 0; position: absolute; width: 1px; }
-            table tr { display: block; margin-bottom: .625em; border: 1px solid #ddd; border-radius: 4px; }
-            table td { display: block; text-align: right; border-bottom: 1px dotted #ccc; font-size: .9em; }
-            table td::before { content: attr(data-label); float: left; font-weight: bold; text-transform: uppercase; color: #333; }
-            table td:last-child { border-bottom: 0; }
-            .countdown, .event-passed { font-size: 1.1em; }
-        }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif; background-color: #f0f2f5; color: #333; margin: 0; padding: 15px; }
+        .container { width: 100%; max-width: 700px; margin: 20px auto; }
+        h1 { text-align: center; color: #2c3e50; margin-bottom: 25px; font-size: 1.8em; }
+        .events-container { display: flex; flex-direction: column; gap: 15px; }
+        .event-card { background-color: #fff; border-radius: 8px; padding: 20px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08); border-left: 5px solid #4CAF50; transition: transform 0.2s ease-in-out; }
+        .event-card:hover { transform: translateY(-3px); }
+        .event-card .event-name { font-size: 1.3em; font-weight: bold; color: #2c3e50; margin: 0 0 15px 0; }
+        .card-row { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid #eef0f2; font-size: 0.95em; }
+        .card-row:last-child { border-bottom: none; }
+        .card-label { color: #555; font-weight: 600; }
+        .card-value { color: #111; text-align: right; }
+        .countdown { font-weight: bold; color: #d9534f; font-size: 1.1em; background-color: #fdf2f2; padding: 4px 8px; border-radius: 4px; }
+        .is-today .countdown { color: #28a745; background-color: #eaf6ec; }
+        .event-passed { color: #777; font-style: italic; }
+        .is-passed { background-color: #f8f9fa; border-left-color: #ccc; opacity: 0.8; }
+        .footer { text-align: center; margin-top: 30px; font-size: 0.9em; color: #666; }
+        .error-message { text-align: center; color: red; background-color: #fff; padding: 20px; border-radius: 8px; }
     </style>
 </head>
 <body>
 
     <div class="container">
-        <h1>Tarikh-Tarikh Penting Islam di Malaysia</h1>
-        <table id="events-table">
-            <thead>
-                <tr>
-                    <th>Peristiwa</th>
-                    <th>Tarikh (Masihi)</th>
-                    <th>Tarikh (Hijrah)</th>
-                    <th>Hari</th>
-                    <th>Kira Detik</th>
-                </tr>
-            </thead>
-            <tbody>
-                <!-- Baris acara akan dimasukkan di sini oleh JavaScript -->
-            </tbody>
-        </table>
+        <h1>Tarikh Penting Islam di Malaysia</h1>
+        <div id="events-container" class="events-container">
+            <!-- Kad akan dimasukkan di sini oleh JavaScript -->
+        </div>
         <div class="footer">
-            <p>Tarikh adalah berdasarkan kiraan takwim dan tertakluk kepada pengumuman rasmi.</p>
+            <p>Tarikh adalah berdasarkan takwim dan tertakluk kepada pengumuman rasmi.</p>
         </div>
     </div>
 
     <script>
     document.addEventListener('DOMContentLoaded', function() {
-        // --- KEMAS KINI DATA ANDA DI SINI SETIAP TAHUN ---
-        const eventData = [
-          { "eventName": "Israk dan Mikraj", "eventDate": "2025-01-27" },
-          { "eventName": "Nisfu Sya'ban", "eventDate": "2025-02-14" },
-          { "eventName": "Awal Ramadan", "eventDate": "2025-03-01" },
-          { "eventName": "Hari Nuzul Al-Quran", "eventDate": "2025-03-17" },
-          { "eventName": "Hari Raya Aidilfitri", "eventDate": "2025-03-31" },
-          { "eventName": "Hari Arafah", "eventDate": "2025-06-06" },
-          { "eventName": "Hari Raya Aidiladha", "eventDate": "2025-06-07" },
-          { "eventName": "Awal Muharram (Maal Hijrah)", "eventDate": "2025-06-27" },
-          { "eventName": "Hari Asyura", "eventDate": "2025-07-06" },
-          { "eventName": "Maulidur Rasul", "eventDate": "2025-09-05" }
-        ];
-        // --- TIADA LAGI KOD PERLU DIUBAH DI BAWAH ---
+        const hijriMonths = ["Muharam", "Safar", "Rabiulawal", "Rabiulakhir", "Jamadilawal", "Jamadilakhir", "Rejab", "Syaaban", "Ramadan", "Syawal", "Zulkaedah", "Zulhijah"];
 
-        const tableBody = document.getElementById('events-table').getElementsByTagName('tbody')[0];
-        const today = new Date();
-        today.setHours(0, 0, 0, 0);
-
-        eventData.sort((a, b) => new Date(a.eventDate) - new Date(b.eventDate));
-
-        eventData.forEach(event => {
-            const eventDate = new Date(event.eventDate + 'T00:00:00');
-            const newRow = tableBody.insertRow();
-
-            // 1. Peristiwa
-            const cellEventName = newRow.insertCell(0);
-            cellEventName.textContent = event.eventName;
-            cellEventName.setAttribute('data-label', 'Peristiwa');
-
-            // 2. Tarikh Masihi
-            const cellMasihiDate = newRow.insertCell(1);
-            cellMasihiDate.textContent = eventDate.toLocaleDateString('ms-MY', {
-                day: '2-digit', month: 'long', year: 'numeric'
-            });
-            cellMasihiDate.setAttribute('data-label', 'Tarikh (Masihi)');
-
-            // 3. Tarikh Hijrah
-            const cellHijriDate = newRow.insertCell(2);
-            const hijriDate = new Intl.DateTimeFormat('ms-u-ca-islamic-umalqura', {
-                day: 'numeric', month: 'long', year: 'numeric'
-            }).format(eventDate);
-            cellHijriDate.textContent = hijriDate;
-            cellHijriDate.setAttribute('data-label', 'Tarikh (Hijrah)');
-
-            // 4. Hari
-            const cellDay = newRow.insertCell(3);
-            const daysInMalay = ["Ahad", "Isnin", "Selasa", "Rabu", "Khamis", "Jumaat", "Sabtu"];
-            cellDay.textContent = daysInMalay[eventDate.getDay()];
-            cellDay.setAttribute('data-label', 'Hari');
-
-            // 5. Kira Detik
-            const cellCountdown = newRow.insertCell(4);
-            const timeDiff = eventDate.getTime() - today.getTime();
-            const dayDiff = Math.ceil(timeDiff / (1000 * 60 * 60 * 24));
-            cellCountdown.setAttribute('data-label', 'Kira Detik');
-
-            if (dayDiff > 0) {
-                cellCountdown.innerHTML = `<span class="countdown">${dayDiff} hari lagi</span>`;
-            } else if (dayDiff === 0) {
-                cellCountdown.innerHTML = `<span class="countdown">Hari Ini!</span>`;
-            } else {
-                cellCountdown.innerHTML = `<span class="event-passed">Peristiwa telah lepas</span>`;
-                newRow.style.opacity = "0.7";
+        function getCorrectHijriDate(date) {
+            try {
+                const formatter = new Intl.DateTimeFormat('en-u-ca-islamic-umalqura', { day: 'numeric', month: 'numeric', year: 'numeric' });
+                const parts = formatter.formatToParts(date);
+                const day = parts.find(p => p.type === 'day').value;
+                const monthIndex = parseInt(parts.find(p => p.type === 'month').value, 10) - 1;
+                const year = parts.find(p => p.type === 'year').value;
+                const monthName = hijriMonths[monthIndex];
+                return `${day} ${monthName} ${year} H`;
+            } catch (e) {
+                return "Ralat";
             }
-        });
+        }
+
+        function displayEvents(eventData) {
+            const container = document.getElementById('events-container');
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+
+            eventData.sort((a, b) => new Date(a.eventDate) - new Date(b.eventDate));
+
+            eventData.forEach(event => {
+                const eventDate = new Date(event.eventDate + 'T00:00:00');
+                const card = document.createElement('div');
+                card.className = 'event-card';
+
+                const timeDiff = eventDate.getTime() - today.getTime();
+                const dayDiff = Math.ceil(timeDiff / (1000 * 60 * 60 * 24));
+
+                let countdownHTML = '';
+                if (dayDiff > 0) {
+                    countdownHTML = `<span class="countdown">${dayDiff} hari lagi</span>`;
+                } else if (dayDiff === 0) {
+                    countdownHTML = `<span class="countdown">Hari Ini!</span>`;
+                    card.classList.add('is-today');
+                } else {
+                    countdownHTML = `<span class="event-passed">Peristiwa telah lepas</span>`;
+                    card.classList.add('is-passed');
+                }
+                
+                const daysInMalay = ["Ahad", "Isnin", "Selasa", "Rabu", "Khamis", "Jumaat", "Sabtu"];
+                card.innerHTML = `
+                    <h3 class="event-name">${event.eventName}</h3>
+                    <div class="card-row"><span class="card-label">Tarikh Masihi</span><span class="card-value">${eventDate.toLocaleDateString('ms-MY', { day: '2-digit', month: 'long', year: 'numeric' })}</span></div>
+                    <div class="card-row"><span class="card-label">Tarikh Hijrah</span><span class="card-value">${getCorrectHijriDate(eventDate)}</span></div>
+                    <div class="card-row"><span class="card-label">Hari</span><span class="card-value">${daysInMalay[eventDate.getDay()]}</span></div>
+                    <div class="card-row"><span class="card-label">Kira Detik</span><span class="card-value">${countdownHTML}</span></div>`;
+                container.appendChild(card);
+            });
+        }
+        
+        // --- MEMUATKAN DATA DARI FAIL events.json ---
+        fetch('events.json')
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`Ralat ${response.status}: Fail 'events.json' tidak ditemui.`);
+                }
+                return response.json();
+            })
+            .then(data => {
+                displayEvents(data); // Panggil fungsi untuk memaparkan data
+            })
+            .catch(error => {
+                console.error('Gagal memuatkan data acara:', error);
+                const container = document.getElementById('events-container');
+                container.innerHTML = `<div class="error-message"><strong>Gagal memuatkan data.</strong><br>Sila pastikan fail 'events.json' wujud di lokasi yang sama dan tidak mempunyai ralat sintaks.</div>`;
+            });
     });
     </script>
 
