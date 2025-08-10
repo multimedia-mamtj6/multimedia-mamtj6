@@ -28,11 +28,8 @@
         .footer { text-align: center; margin-top: 30px; font-size: 0.9em; color: #666; }
         .error-message { text-align: center; color: red; background-color: #fff; padding: 20px; border-radius: 8px; }
 
-        /* --- PENAMBAHBAIKAN: GAYA UNTUK SERLAHAN ACARA TERHAMPIR --- */
-        tr.is-next-event {
-            background-color: #fffde7 !important; /* Warna kuning lembut seperti penyerlah */
-            font-weight: 500; /* Jadikan teks lebih tebal sedikit */
-        }
+        /* Gaya Serlahan Acara Terhampir */
+        tr.is-next-event { background-color: #fffde7 !important; font-weight: 500; }
         
         /* PAPARAN KAD (MUDAH ALIH) */
         @media screen and (max-width: 768px) {
@@ -44,18 +41,12 @@
             table thead { display: none; }
             table tbody tr { display: block; width: 100%; margin-bottom: 15px; border: 1px solid #ddd; border-radius: 8px; background-color: #fff; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.07); }
             table td { display: block; padding: 12px 15px; border-bottom: none; }
-            td.mobile-event-name { font-size: 1.2em; font-weight: bold; background-color: #f8f9fa; }
-            td.mobile-date-info { font-size: 0.95em; line-height: 1.5; background-color: #fff; border-top: 1px solid #eee; border-bottom: 1px solid #eee; }
+            td.mobile-event-name { font-size: 1.2em; font-weight: bold; background-color: #f8f9fa; text-align: left; }
+            td.mobile-date-info { font-size: 0.95em; line-height: 1.5; background-color: #fff; border-top: 1px solid #eee; border-bottom: 1px solid #eee; text-align: left; }
             td.mobile-countdown-info { font-size: 1em; text-align: center; padding-top: 15px; padding-bottom: 15px; }
             tr.is-passed { opacity: 0.7; }
-
-            /* --- PENAMBAHBAIKAN: GAYA SERLAHAN PADA KAD --- */
-            tr.is-next-event {
-                border: 2px solid #ffc107; /* Garis sempadan kuning yang jelas */
-            }
-            tr.is-next-event td.mobile-event-name {
-                background-color: #fff9c4; /* Warna latar yang sepadan */
-            }
+            tr.is-next-event { border: 2px solid #ffc107; }
+            tr.is-next-event td.mobile-event-name { background-color: #fff9c4; }
         }
     </style>
 </head>
@@ -83,7 +74,7 @@
         const hijriMonths = ["Muharam", "Safar", "Rabiulawal", "Rabiulakhir", "Jamadilawal", "Jamadilakhir", "Rejab", "Syaaban", "Ramadan", "Syawal", "Zulkaedah", "Zulhijah"];
         const daysInMalay = ["Ahad", "Isnin", "Selasa", "Rabu", "Khamis", "Jumaat", "Sabtu"];
 
-        function getCorrectHijriDate(date) { /* ... (Fungsi ini tidak berubah) ... */
+        function getCorrectHijriDate(date) {
             try {
                 const formatter = new Intl.DateTimeFormat('en-u-ca-islamic-umalqura', { day: 'numeric', month: 'numeric', year: 'numeric' });
                 const parts = formatter.formatToParts(date);
@@ -103,14 +94,12 @@
                 const tableBody = document.getElementById('events-tbody');
                 const today = new Date();
                 today.setHours(0, 0, 0, 0);
-
                 eventData.sort((a, b) => new Date(a.eventDate) - new Date(b.eventDate));
                 
-                // 1. Cari Acara Terhampir dan simpan tarikhnya
                 const nextEvent = eventData.find(event => new Date(event.eventDate + 'T00:00:00') >= today);
-                let nextEventDateString = null;
+                let nextEventDateString = nextEvent ? nextEvent.eventDate : null;
+
                 if (nextEvent) {
-                    nextEventDateString = nextEvent.eventDate; // Simpan tarikh unik acara terhampir
                     const upcomingContainer = document.getElementById('upcoming-event-container');
                     const eventDate = new Date(nextEvent.eventDate + 'T00:00:00');
                     const timeDiff = eventDate.getTime() - today.getTime();
@@ -125,7 +114,6 @@
                         </div>`;
                 }
 
-                // 2. Paparkan Senarai Penuh dan serlahkan acara terhampir
                 eventData.forEach(event => {
                     const eventDate = new Date(event.eventDate + 'T00:00:00');
                     const newRow = tableBody.insertRow();
@@ -133,22 +121,49 @@
                     const dayDiff = Math.ceil(timeDiff / (1000 * 60 * 60 * 24));
                     
                     if (dayDiff < 0) newRow.classList.add('is-passed');
-                    if (dayDiff === 0) newRow.classList.add('is-today');
-
-                    // --- PENAMBAHBAIKAN: Tambah kelas jika ia adalah acara terhampir ---
-                    if (event.eventDate === nextEventDateString) {
-                        newRow.classList.add('is-next-event');
-                    }
+                    if (event.eventDate === nextEventDateString) newRow.classList.add('is-next-event');
 
                     const dayStr = daysInMalay[eventDate.getDay()];
                     const masihiStr = eventDate.toLocaleDateString('ms-MY', { day: '2-digit', month: 'long', year: 'numeric' });
                     const hijriStr = getCorrectHijriDate(eventDate);
                     
+                    // -- PEMBETULAN: Menggunakan insertCell() yang lebih stabil --
+
+                    // Sel 1: Peristiwa
+                    const cellEvent = newRow.insertCell();
+                    cellEvent.className = 'mobile-event-name';
+                    cellEvent.textContent = event.eventName;
+
+                    // Sel 2: Tarikh
+                    const cellDate = newRow.insertCell();
+                    cellDate.className = 'mobile-date-info';
+                    cellDate.innerHTML = `
+                        <div class="desktop-view">${dayStr}<br>${masihiStr}<br>${hijriStr}</div>
+                        <div class="mobile-view">${dayStr} - ${masihiStr} - ${hijriStr}</div>`;
+                        
+                    // Sel 3: Kira Detik
+                    const cellCountdown = newRow.insertCell();
+                    cellCountdown.className = 'mobile-countdown-info';
                     let countdownHTML = '';
                     if (dayDiff > 0) countdownHTML = `<span class="countdown-small">${dayDiff} hari lagi</span>`;
                     else if (dayDiff === 0) countdownHTML = `<span class="countdown-small">Hari Ini!</span>`;
                     else countdownHTML = `<span class="event-passed">Telah lepas</span>`;
-
-                    newRow.innerHTML = `
-                        <td class="mobile-event-name">${event.eventName}</td>
-                      
+                    cellCountdown.innerHTML = countdownHTML;
+                });
+                
+                const style = document.createElement('style');
+                style.innerHTML = `
+                    .desktop-view { display: block; } .mobile-view { display: none; }
+                    @media screen and (max-width: 768px) {
+                        .desktop-view { display: none; } .mobile-view { display: block; }
+                    }`;
+                document.head.appendChild(style);
+            })
+            .catch(error => {
+                console.error('Gagal memuatkan data acara:', error);
+                document.querySelector('.container').innerHTML = `<div class="error-message"><strong>Gagal memuatkan data.</strong><br>Sila pastikan fail 'events.json' wujud di lokasi yang sama dan tidak mempunyai ralat sintaks.</div>`;
+            });
+    });
+    </script>
+</body>
+</html>
