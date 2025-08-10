@@ -91,74 +91,65 @@
     </div>
 
     <script>
-        // --- STEP 1: UPDATE YOUR EVENT DATA HERE (ONCE A YEAR) ---
-        // Just change the dates in the eventDate field.
-        // Format: "YYYY-MM-DD"
-        const eventData = [
-            // --- 2025 Events ---
-            { eventName: "Israk dan Mikraj", eventDate: "2025-01-27" },
-            { eventName: "Nisfu Sya'ban", eventDate: "2025-02-14" },
-            { eventName: "Awal Ramadan", eventDate: "2025-03-01" },
-            { eventName: "Hari Nuzul Al-Quran", eventDate: "2025-03-17" },
-            { eventName: "Hari Raya Aidilfitri", eventDate: "2025-03-31" },
-            { eventName: "Hari Arafah", eventDate: "2025-06-06" },
-            { eventName: "Hari Raya Aidiladha", eventDate: "2025-06-07" },
-            { eventName: "Awal Muharram (Maal Hijrah)", eventDate: "2025-06-27" },
-            { eventName: "Hari Asyura", eventDate: "2025-07-06" },
-            { eventName: "Maulidur Rasul", eventDate: "2025-09-05" },
-        ];
+    // This script now loads data from an external file
+    document.addEventListener('DOMContentLoaded', function() {
+        fetch('events.json') // Fetch the data from the JSON file
+            .then(response => response.json()) // Convert the response to JSON
+            .then(eventData => { // Now we have the data, we can build the table
+                const tableBody = document.getElementById('events-table').getElementsByTagName('tbody')[0];
+                const today = new Date();
+                today.setHours(0, 0, 0, 0);
 
-        // --- STEP 2: JAVASCRIPT TO BUILD THE TABLE (NO NEED TO EDIT THIS) ---
-        document.addEventListener('DOMContentLoaded', function() {
-            const tableBody = document.getElementById('events-table').getElementsByTagName('tbody')[0];
-            const today = new Date();
-            today.setHours(0, 0, 0, 0); // Normalize today's date
+                eventData.sort((a, b) => new Date(a.eventDate) - new Date(b.eventDate));
 
-            // Sort events by date
-            eventData.sort((a, b) => new Date(a.eventDate) - new Date(b.eventDate));
+                eventData.forEach(event => {
+                    const eventDate = new Date(event.eventDate + 'T00:00:00');
+                    const newRow = tableBody.insertRow();
 
-            eventData.forEach(event => {
-                const eventDate = new Date(event.eventDate + 'T00:00:00'); // Set time to midnight
-                const newRow = tableBody.insertRow();
+                    // The rest of the code is identical...
+                    const cellEventName = newRow.insertCell(0);
+                    cellEventName.textContent = event.eventName;
 
-                // 1. Event Name
-                const cellEventName = newRow.insertCell(0);
-                cellEventName.textContent = event.eventName;
+                    const cellMasihiDate = newRow.insertCell(1);
+                    cellMasihiDate.textContent = eventDate.toLocaleDateString('en-GB', {
+                        day: '2-digit', month: 'long', year: 'numeric'
+                    });
 
-                // 2. Masihi Date
-                const cellMasihiDate = newRow.insertCell(1);
-                cellMasihiDate.textContent = eventDate.toLocaleDateString('en-GB', {
-                    day: '2-digit', month: 'long', year: 'numeric'
+                    const cellHijriDate = newRow.insertCell(2);
+                    const hijriDate = new Intl.DateTimeFormat('en-u-ca-islamic-umalqura', {
+                        day: 'numeric', month: 'long', year: 'numeric'
+                    }).format(eventDate);
+                    cellHijriDate.textContent = hijriDate;
+
+                    const cellDay = newRow.insertCell(3);
+                    const daysInMalay = ["Ahad", "Isnin", "Selasa", "Rabu", "Khamis", "Jumaat", "Sabtu"];
+                    cellDay.textContent = daysInMalay[eventDate.getDay()];
+
+                    const cellCountdown = newRow.insertCell(4);
+                    const timeDiff = eventDate.getTime() - today.getTime();
+                    const dayDiff = Math.ceil(timeDiff / (1000 * 60 * 60 * 24));
+
+                    if (dayDiff > 0) {
+                        cellCountdown.innerHTML = `<span class="countdown">${dayDiff} days</span>`;
+                    } else if (dayDiff === 0) {
+                        cellCountdown.innerHTML = `<span class="countdown">Today!</span>`;
+                    } else {
+                        cellCountdown.innerHTML = `<span class="event-passed">Event has passed</span>`;
+                        newRow.style.opacity = "0.6";
+                    }
                 });
-
-                // 3. Hijri Date (using Intl.DateTimeFormat)
-                const cellHijriDate = newRow.insertCell(2);
-                const hijriDate = new Intl.DateTimeFormat('en-u-ca-islamic-umalqura', {
-                    day: 'numeric', month: 'long', year: 'numeric'
-                }).format(eventDate);
-                cellHijriDate.textContent = hijriDate;
-
-                // 4. Day in Malay
-                const cellDay = newRow.insertCell(3);
-                const daysInMalay = ["Ahad", "Isnin", "Selasa", "Rabu", "Khamis", "Jumaat", "Sabtu"];
-                cellDay.textContent = daysInMalay[eventDate.getDay()];
-
-                // 5. Countdown
-                const cellCountdown = newRow.insertCell(4);
-                const timeDiff = eventDate.getTime() - today.getTime();
-                const dayDiff = Math.ceil(timeDiff / (1000 * 60 * 60 * 24));
-
-                if (dayDiff > 0) {
-                    cellCountdown.innerHTML = `<span class="countdown">${dayDiff} days</span>`;
-                } else if (dayDiff === 0) {
-                    cellCountdown.innerHTML = `<span class="countdown">Today!</span>`;
-                } else {
-                    cellCountdown.innerHTML = `<span class="event-passed">Event has passed</span>`;
-                    newRow.style.opacity = "0.6";
-                }
+            })
+            .catch(error => {
+                console.error('Error loading event data:', error);
+                const tableBody = document.getElementById('events-table').getElementsByTagName('tbody')[0];
+                const newRow = tableBody.insertRow();
+                const cell = newRow.insertCell(0);
+                cell.colSpan = 5; // Span across all columns
+                cell.textContent = 'Could not load event data. Please check the events.json file.';
+                cell.style.textAlign = 'center';
             });
-        });
-    </script>
+    });
+</script>
 
 </body>
 </html>
