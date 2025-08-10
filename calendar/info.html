@@ -19,14 +19,20 @@
 
         /* GAYA JADUAL (DESKTOP) */
         table { width: 100%; border-collapse: collapse; background-color: #fff; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08); border-radius: 8px; overflow: hidden; }
-        th, td { padding: 14px 18px; text-align: left; border-bottom: 1px solid #eef0f2; }
+        th, td { padding: 14px 18px; text-align: left; border-bottom: 1px solid #eef0f2; transition: background-color 0.2s; }
         thead th { background-color: #4CAF50; color: white; font-weight: bold; text-transform: uppercase; font-size: 0.9em; }
         tbody tr:nth-child(even) { background-color: #f8f9fa; }
-        tbody tr:hover { background-color: #f1f1f1; }
+        tbody tr:not(.is-next-event):hover { background-color: #f1f1f1; }
         td .countdown-small { font-weight: bold; color: #d9534f; }
         td .event-passed { color: #777; font-style: italic; }
         .footer { text-align: center; margin-top: 30px; font-size: 0.9em; color: #666; }
         .error-message { text-align: center; color: red; background-color: #fff; padding: 20px; border-radius: 8px; }
+
+        /* --- PENAMBAHBAIKAN: GAYA UNTUK SERLAHAN ACARA TERHAMPIR --- */
+        tr.is-next-event {
+            background-color: #fffde7 !important; /* Warna kuning lembut seperti penyerlah */
+            font-weight: 500; /* Jadikan teks lebih tebal sedikit */
+        }
         
         /* PAPARAN KAD (MUDAH ALIH) */
         @media screen and (max-width: 768px) {
@@ -38,23 +44,25 @@
             table thead { display: none; }
             table tbody tr { display: block; width: 100%; margin-bottom: 15px; border: 1px solid #ddd; border-radius: 8px; background-color: #fff; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.07); }
             table td { display: block; padding: 12px 15px; border-bottom: none; }
-            
-            /* Stail untuk setiap baris dalam kad */
             td.mobile-event-name { font-size: 1.2em; font-weight: bold; background-color: #f8f9fa; }
             td.mobile-date-info { font-size: 0.95em; line-height: 1.5; background-color: #fff; border-top: 1px solid #eee; border-bottom: 1px solid #eee; }
-            td.mobile-countdown-info { font-size: 1em; text-align: center; padding-top: 15px; padding-bottom: 15px;}
-            
+            td.mobile-countdown-info { font-size: 1em; text-align: center; padding-top: 15px; padding-bottom: 15px; }
             tr.is-passed { opacity: 0.7; }
+
+            /* --- PENAMBAHBAIKAN: GAYA SERLAHAN PADA KAD --- */
+            tr.is-next-event {
+                border: 2px solid #ffc107; /* Garis sempadan kuning yang jelas */
+            }
+            tr.is-next-event td.mobile-event-name {
+                background-color: #fff9c4; /* Warna latar yang sepadan */
+            }
         }
     </style>
 </head>
 <body>
-
     <div class="container">
         <h1>Tarikh Penting Islam di Malaysia</h1>
-
         <div id="upcoming-event-container"></div>
-
         <table id="events-table">
             <thead>
                 <tr>
@@ -65,7 +73,6 @@
             </thead>
             <tbody id="events-tbody"></tbody>
         </table>
-        
         <div class="footer">
             <p>Tarikh adalah berdasarkan takwim dan tertakluk kepada pengumuman rasmi.</p>
         </div>
@@ -76,7 +83,7 @@
         const hijriMonths = ["Muharam", "Safar", "Rabiulawal", "Rabiulakhir", "Jamadilawal", "Jamadilakhir", "Rejab", "Syaaban", "Ramadan", "Syawal", "Zulkaedah", "Zulhijah"];
         const daysInMalay = ["Ahad", "Isnin", "Selasa", "Rabu", "Khamis", "Jumaat", "Sabtu"];
 
-        function getCorrectHijriDate(date) {
+        function getCorrectHijriDate(date) { /* ... (Fungsi ini tidak berubah) ... */
             try {
                 const formatter = new Intl.DateTimeFormat('en-u-ca-islamic-umalqura', { day: 'numeric', month: 'numeric', year: 'numeric' });
                 const parts = formatter.formatToParts(date);
@@ -99,9 +106,11 @@
 
                 eventData.sort((a, b) => new Date(a.eventDate) - new Date(b.eventDate));
                 
-                // 1. Paparkan Acara Terhampir
+                // 1. Cari Acara Terhampir dan simpan tarikhnya
                 const nextEvent = eventData.find(event => new Date(event.eventDate + 'T00:00:00') >= today);
+                let nextEventDateString = null;
                 if (nextEvent) {
+                    nextEventDateString = nextEvent.eventDate; // Simpan tarikh unik acara terhampir
                     const upcomingContainer = document.getElementById('upcoming-event-container');
                     const eventDate = new Date(nextEvent.eventDate + 'T00:00:00');
                     const timeDiff = eventDate.getTime() - today.getTime();
@@ -116,7 +125,7 @@
                         </div>`;
                 }
 
-                // 2. Paparkan Senarai Penuh (Jadual & Kad)
+                // 2. Paparkan Senarai Penuh dan serlahkan acara terhampir
                 eventData.forEach(event => {
                     const eventDate = new Date(event.eventDate + 'T00:00:00');
                     const newRow = tableBody.insertRow();
@@ -125,6 +134,11 @@
                     
                     if (dayDiff < 0) newRow.classList.add('is-passed');
                     if (dayDiff === 0) newRow.classList.add('is-today');
+
+                    // --- PENAMBAHBAIKAN: Tambah kelas jika ia adalah acara terhampir ---
+                    if (event.eventDate === nextEventDateString) {
+                        newRow.classList.add('is-next-event');
+                    }
 
                     const dayStr = daysInMalay[eventDate.getDay()];
                     const masihiStr = eventDate.toLocaleDateString('ms-MY', { day: '2-digit', month: 'long', year: 'numeric' });
@@ -135,42 +149,6 @@
                     else if (dayDiff === 0) countdownHTML = `<span class="countdown-small">Hari Ini!</span>`;
                     else countdownHTML = `<span class="event-passed">Telah lepas</span>`;
 
-                    // Selalu bina HTML untuk paparan jadual dahulu
-                    const cellEventHTML = event.eventName;
-                    const cellDateHTML_desktop = `${dayStr}<br>${masihiStr}<br>${hijriStr}`;
-                    
-                    // PENAMBAHBAIKAN: Gabungkan HTML untuk kedua-dua paparan dalam satu baris
-                    // Paparan mudah alih akan menggunakan CSS untuk menyusun semula sel-sel ini
                     newRow.innerHTML = `
-                        <td class="mobile-event-name">${cellEventHTML}</td>
-                        <td class="mobile-date-info">
-                            <!-- Paparan Desktop -->
-                            <div class="desktop-view">${cellDateHTML_desktop}</div>
-                            <!-- Paparan Mudah Alih -->
-                            <div class="mobile-view">${dayStr} - ${masihiStr} - ${hijriStr}</div>
-                        </td>
-                        <td class="mobile-countdown-info">${countdownHTML}</td>
-                    `;
-                });
-                
-                // Tambahan CSS untuk sembunyi/papar pandangan yang betul
-                const style = document.createElement('style');
-                style.innerHTML = `
-                    .desktop-view { display: block; }
-                    .mobile-view { display: none; }
-                    @media screen and (max-width: 768px) {
-                        .desktop-view { display: none; }
-                        .mobile-view { display: block; }
-                        td.mobile-date-info { text-align: left; }
-                    }
-                `;
-                document.head.appendChild(style);
-            })
-            .catch(error => {
-                console.error('Gagal memuatkan data acara:', error);
-                document.querySelector('.container').innerHTML = `<div class="error-message"><strong>Gagal memuatkan data.</strong><br>Sila pastikan fail 'events.json' wujud di lokasi yang sama.</div>`;
-            });
-    });
-    </script>
-</body>
-</html>
+                        <td class="mobile-event-name">${event.eventName}</td>
+                      
