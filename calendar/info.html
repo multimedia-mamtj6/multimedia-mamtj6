@@ -12,12 +12,12 @@
             background-color: #f4f4f9;
             color: #333;
             margin: 0;
-            padding: 15px; /* Added padding for smaller screens */
+            padding: 15px;
         }
         .container {
             width: 100%;
             max-width: 900px;
-            margin: 20px auto; /* Centered container */
+            margin: 20px auto;
             background-color: #fff;
             padding: 20px;
             border-radius: 8px;
@@ -62,48 +62,15 @@
             color: #666;
         }
 
-        /* --- MOBILE RESPONSIVE STYLES --- */
+        /* MOBILE RESPONSIVE STYLES */
         @media screen and (max-width: 768px) {
-            h1 {
-                font-size: 1.5em;
-            }
-            /* Hide table headers (but not display: none;, for accessibility) */
-            table thead {
-                border: none;
-                clip: rect(0 0 0 0);
-                height: 1px;
-                margin: -1px;
-                overflow: hidden;
-                padding: 0;
-                position: absolute;
-                width: 1px;
-            }
-            table tr {
-                display: block;
-                margin-bottom: .625em;
-                border: 1px solid #ddd;
-                border-radius: 4px;
-            }
-            table td {
-                display: block;
-                text-align: right; /* Align content to the right */
-                border-bottom: 1px dotted #ccc;
-                font-size: .9em;
-            }
-            table td::before {
-                /* Add the "header" text before the content */
-                content: attr(data-label);
-                float: left; /* Align header to the left */
-                font-weight: bold;
-                text-transform: uppercase;
-                color: #333;
-            }
-            table td:last-child {
-                border-bottom: 0;
-            }
-            .countdown, .event-passed {
-                font-size: 1.1em;
-            }
+            h1 { font-size: 1.5em; }
+            table thead { border: none; clip: rect(0 0 0 0); height: 1px; margin: -1px; overflow: hidden; padding: 0; position: absolute; width: 1px; }
+            table tr { display: block; margin-bottom: .625em; border: 1px solid #ddd; border-radius: 4px; }
+            table td { display: block; text-align: right; border-bottom: 1px dotted #ccc; font-size: .9em; }
+            table td::before { content: attr(data-label); float: left; font-weight: bold; text-transform: uppercase; color: #333; }
+            table td:last-child { border-bottom: 0; }
+            .countdown, .event-passed { font-size: 1.1em; }
         }
     </style>
 </head>
@@ -132,16 +99,74 @@
 
     <script>
     document.addEventListener('DOMContentLoaded', function() {
-        fetch('events.json')
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Ralat rangkaian: Tidak dapat memuatkan events.json');
-                }
-                return response.json();
-            })
-            .then(eventData => {
-                const tableBody = document.getElementById('events-table').getElementsByTagName('tbody')[0];
-                const today = new Date();
-                today.setHours(0, 0, 0, 0);
+        // --- KEMAS KINI DATA ANDA DI SINI SETIAP TAHUN ---
+        const eventData = [
+          { "eventName": "Israk dan Mikraj", "eventDate": "2025-01-27" },
+          { "eventName": "Nisfu Sya'ban", "eventDate": "2025-02-14" },
+          { "eventName": "Awal Ramadan", "eventDate": "2025-03-01" },
+          { "eventName": "Hari Nuzul Al-Quran", "eventDate": "2025-03-17" },
+          { "eventName": "Hari Raya Aidilfitri", "eventDate": "2025-03-31" },
+          { "eventName": "Hari Arafah", "eventDate": "2025-06-06" },
+          { "eventName": "Hari Raya Aidiladha", "eventDate": "2025-06-07" },
+          { "eventName": "Awal Muharram (Maal Hijrah)", "eventDate": "2025-06-27" },
+          { "eventName": "Hari Asyura", "eventDate": "2025-07-06" },
+          { "eventName": "Maulidur Rasul", "eventDate": "2025-09-05" }
+        ];
+        // --- TIADA LAGI KOD PERLU DIUBAH DI BAWAH ---
 
-                eventData
+        const tableBody = document.getElementById('events-table').getElementsByTagName('tbody')[0];
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+
+        eventData.sort((a, b) => new Date(a.eventDate) - new Date(b.eventDate));
+
+        eventData.forEach(event => {
+            const eventDate = new Date(event.eventDate + 'T00:00:00');
+            const newRow = tableBody.insertRow();
+
+            // 1. Peristiwa
+            const cellEventName = newRow.insertCell(0);
+            cellEventName.textContent = event.eventName;
+            cellEventName.setAttribute('data-label', 'Peristiwa');
+
+            // 2. Tarikh Masihi
+            const cellMasihiDate = newRow.insertCell(1);
+            cellMasihiDate.textContent = eventDate.toLocaleDateString('ms-MY', {
+                day: '2-digit', month: 'long', year: 'numeric'
+            });
+            cellMasihiDate.setAttribute('data-label', 'Tarikh (Masihi)');
+
+            // 3. Tarikh Hijrah
+            const cellHijriDate = newRow.insertCell(2);
+            const hijriDate = new Intl.DateTimeFormat('ms-u-ca-islamic-umalqura', {
+                day: 'numeric', month: 'long', year: 'numeric'
+            }).format(eventDate);
+            cellHijriDate.textContent = hijriDate;
+            cellHijriDate.setAttribute('data-label', 'Tarikh (Hijrah)');
+
+            // 4. Hari
+            const cellDay = newRow.insertCell(3);
+            const daysInMalay = ["Ahad", "Isnin", "Selasa", "Rabu", "Khamis", "Jumaat", "Sabtu"];
+            cellDay.textContent = daysInMalay[eventDate.getDay()];
+            cellDay.setAttribute('data-label', 'Hari');
+
+            // 5. Kira Detik
+            const cellCountdown = newRow.insertCell(4);
+            const timeDiff = eventDate.getTime() - today.getTime();
+            const dayDiff = Math.ceil(timeDiff / (1000 * 60 * 60 * 24));
+            cellCountdown.setAttribute('data-label', 'Kira Detik');
+
+            if (dayDiff > 0) {
+                cellCountdown.innerHTML = `<span class="countdown">${dayDiff} hari lagi</span>`;
+            } else if (dayDiff === 0) {
+                cellCountdown.innerHTML = `<span class="countdown">Hari Ini!</span>`;
+            } else {
+                cellCountdown.innerHTML = `<span class="event-passed">Peristiwa telah lepas</span>`;
+                newRow.style.opacity = "0.7";
+            }
+        });
+    });
+    </script>
+
+</body>
+</html>
