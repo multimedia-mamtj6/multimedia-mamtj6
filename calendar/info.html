@@ -38,8 +38,25 @@
             .upcoming-card .date-info { font-size: 1em; }
             .upcoming-card .countdown { font-size: 1.2em; }
 
+            /* PEMBETULAN 2: Buang latar belakang putih dari bekas jadual */
+            table {
+                background-color: transparent;
+                box-shadow: none;
+                border-radius: 0;
+            }
+
             table thead { display: none; }
-            table tbody tr { display: block; width: 100%; margin-bottom: 15px; border: 1px solid #ddd; border-radius: 8px; background-color: #fff; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.07); }
+            table tbody tr {
+                display: block;
+                width: 100%;
+                margin-bottom: 15px;
+                border: 1px solid #ddd;
+                border-radius: 8px;
+                background-color: #fff;
+                overflow: hidden;
+                box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+                box-sizing: border-box; /* PEMBETULAN 1: Untuk memastikan border tidak terpotong */
+            }
             table td { display: block; padding: 12px 15px; border-bottom: none; }
             td.mobile-event-name { font-size: 1.2em; font-weight: bold; background-color: #f8f9fa; text-align: left; }
             td.mobile-date-info { font-size: 0.95em; line-height: 1.5; background-color: #fff; border-top: 1px solid #eee; border-bottom: 1px solid #eee; text-align: left; }
@@ -74,7 +91,7 @@
         const hijriMonths = ["Muharam", "Safar", "Rabiulawal", "Rabiulakhir", "Jamadilawal", "Jamadilakhir", "Rejab", "Syaaban", "Ramadan", "Syawal", "Zulkaedah", "Zulhijah"];
         const daysInMalay = ["Ahad", "Isnin", "Selasa", "Rabu", "Khamis", "Jumaat", "Sabtu"];
 
-        function getCorrectHijriDate(date) {
+        function getCorrectHijriDate(date) { /* ... (Fungsi ini tidak berubah) ... */
             try {
                 const formatter = new Intl.DateTimeFormat('en-u-ca-islamic-umalqura', { day: 'numeric', month: 'numeric', year: 'numeric' });
                 const parts = formatter.formatToParts(date);
@@ -127,21 +144,16 @@
                     const masihiStr = eventDate.toLocaleDateString('ms-MY', { day: '2-digit', month: 'long', year: 'numeric' });
                     const hijriStr = getCorrectHijriDate(eventDate);
                     
-                    // -- PEMBETULAN: Menggunakan insertCell() yang lebih stabil --
-
-                    // Sel 1: Peristiwa
                     const cellEvent = newRow.insertCell();
                     cellEvent.className = 'mobile-event-name';
                     cellEvent.textContent = event.eventName;
-
-                    // Sel 2: Tarikh
+                    
                     const cellDate = newRow.insertCell();
                     cellDate.className = 'mobile-date-info';
                     cellDate.innerHTML = `
                         <div class="desktop-view">${dayStr}<br>${masihiStr}<br>${hijriStr}</div>
                         <div class="mobile-view">${dayStr} - ${masihiStr} - ${hijriStr}</div>`;
                         
-                    // Sel 3: Kira Detik
                     const cellCountdown = newRow.insertCell();
                     cellCountdown.className = 'mobile-countdown-info';
                     let countdownHTML = '';
