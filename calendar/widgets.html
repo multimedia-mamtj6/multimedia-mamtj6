@@ -13,7 +13,7 @@
             width: 100%;
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
                 Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
-            background-color: transparent; /* Latar belakang lutsinar */
+            background-color: transparent;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -23,14 +23,14 @@
         .widget-container {
             width: 100%;
             height: 100%;
-            max-width: 300px; /* Lebar maksimum untuk reka bentuk yang kemas */
+            max-width: 300px;
             max-height: 400px;
             background-color: #ffffff;
             border-radius: 12px;
             box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
             display: flex;
             flex-direction: column;
-            justify-content: center; /* Jajarkan kandungan secara menegak */
+            justify-content: center;
             align-items: center;
             text-align: center;
             padding: 20px;
@@ -41,9 +41,9 @@
 
         /* Nama Acara */
         .event-title {
-            font-size: 1.8em; /* Saiz boleh diubahsuai */
+            font-size: 1.8em;
             font-weight: bold;
-            color: #1a237e; /* Warna biru gelap */
+            color: #1a237e;
             line-height: 1.2;
             margin: 0 0 10px 0;
         }
@@ -53,14 +53,14 @@
 
         /* Nombor Kira Detik */
         .countdown-number {
-            font-size: 7em; /* Saiz nombor yang sangat besar */
-            font-weight: 300; /* Nombor yang nipis dan moden */
+            font-size: 7em;
+            font-weight: 700; /* PEMBETULAN: Diubah kepada tebal */
             color: #212121;
             line-height: 1;
             margin: 10px 0;
         }
 
-        /* Label di bawah nombor (cth: HARI) */
+        /* Label di bawah nombor */
         .countdown-label {
             font-size: 1.5em;
             color: #424242;
@@ -69,13 +69,13 @@
             margin-bottom: 15px;
         }
 
-        /* Tarikh Hijrah (diserlahkan) dan Masihi */
+        /* Tarikh */
         .date-info {
             font-size: 1em;
             line-height: 1.5;
         }
         .hijri-date {
-            background-color: #ffeb3b; /* Warna kuning serlahan */
+            background-color: #ffeb3b;
             padding: 2px 8px;
             border-radius: 4px;
             font-weight: 600;
@@ -83,29 +83,24 @@
         }
         .gregorian-date, .day-name {
             color: #616161;
-            display: block; /* Pastikan ia berada di baris berasingan */
+            display: block;
             margin-top: 5px;
         }
         
-        /* Gaya untuk mesej khas */
+        /* Mesej khas */
         .special-message {
             font-size: 2.5em;
             font-weight: bold;
             color: #2e7d32;
+            line-height: 1.1;
         }
         
-        /* Mesej Ralat */
-        .error-message {
-            color: #d32f2f;
-            font-size: 1em;
-            padding: 10px;
-        }
+        .error-message { color: #d32f2f; font-size: 1em; padding: 10px; }
     </style>
 </head>
 <body>
 
     <div id="widget-container" class="widget-container">
-        <!-- Kandungan akan dimasukkan di sini oleh JavaScript -->
         <p>Memuatkan...</p>
     </div>
 
@@ -124,10 +119,7 @@
         }
 
         fetch('events.json')
-            .then(response => {
-                if (!response.ok) { throw new Error('Fail events.json tidak ditemui.'); }
-                return response.json();
-            })
+            .then(response => { if (!response.ok) { throw new Error('Fail events.json tidak ditemui.'); } return response.json(); })
             .then(eventData => {
                 const targetEvent = eventData.find(event => event.eventName.toLowerCase().includes(eventQuery.toLowerCase()));
 
@@ -151,7 +143,6 @@
                 }
 
                 if (dayDiff > 0) {
-                    // PEMBETULAN: Memastikan kedua-dua tarikh dipaparkan
                     countdownHTML = `
                         <div class="event-title">${eventTitleDisplay}</div>
                         <div class="countdown-number">${dayDiff}</div>
@@ -160,26 +151,25 @@
                             <span class="hijri-date">${targetEvent.hijriDate}</span>
                             <span class="gregorian-date">${eventDate.toLocaleDateString('ms-MY', { day: '2-digit', month: 'long', year: 'numeric' })}</span>
                             <span class="day-name">${daysInMalay[eventDate.getDay()]}</span>
-                        </div>
-                    `;
+                        </div>`;
                 } else if (dayDiff === 0) {
-                    // PEMBETULAN: Memastikan kedua-dua tarikh dipaparkan
                     countdownHTML = `
                         <div class="event-title">${eventTitleDisplay}</div>
                         <div class="special-message">HARI INI</div>
                         <div class="date-info">
                             <span class="hijri-date">${targetEvent.hijriDate}</span>
                             <span class="gregorian-date">${eventDate.toLocaleDateString('ms-MY', { day: '2-digit', month: 'long', year: 'numeric' })}</span>
-                        </div>
-                    `;
+                        </div>`;
                 } else {
+                    // PEMBETULAN: Struktur HTML untuk "Telah Lepas" disamakan
                     countdownHTML = `
                         <div class="event-title">${eventTitleDisplay}</div>
-                        <div class="special-message">TELAH LEPAS</div>
-                         <div class="date-info">
+                        <div class="special-message">TELAH<br>LEPAS</div>
+                        <div class="date-info">
+                            <span class="hijri-date">${targetEvent.hijriDate}</span>
                             <span class="gregorian-date">${eventDate.toLocaleDateString('ms-MY', { day: '2-digit', month: 'long', year: 'numeric' })}</span>
-                        </div>
-                    `;
+                            <span class="day-name">${daysInMalay[eventDate.getDay()]}</span>
+                        </div>`;
                 }
                 
                 widgetContainer.innerHTML = countdownHTML;
