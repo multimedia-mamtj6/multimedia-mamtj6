@@ -115,7 +115,6 @@
         const daysInMalay = ["Ahad", "Isnin", "Selasa", "Rabu", "Khamis", "Jumaat", "Sabtu"];
         const specialEvents = ['Aidiladha', 'Aidilfitri', 'Ramadan'];
 
-        // 1. Dapatkan parameter 'event' dari URL
         const params = new URLSearchParams(window.location.search);
         const eventQuery = params.get('event');
 
@@ -124,14 +123,12 @@
             return;
         }
 
-        // 2. Muat turun data dari events.json
         fetch('events.json')
             .then(response => {
                 if (!response.ok) { throw new Error('Fail events.json tidak ditemui.'); }
                 return response.json();
             })
             .then(eventData => {
-                // 3. Cari acara yang sepadan
                 const targetEvent = eventData.find(event => event.eventName.toLowerCase().includes(eventQuery.toLowerCase()));
 
                 if (!targetEvent) {
@@ -139,7 +136,6 @@
                     return;
                 }
 
-                // 4. Lakukan pengiraan dan paparan
                 const eventDate = new Date(targetEvent.eventDate + 'T00:00:00');
                 const today = new Date();
                 today.setHours(0, 0, 0, 0);
@@ -155,7 +151,7 @@
                 }
 
                 if (dayDiff > 0) {
-                    // Kira detik sedang berjalan
+                    // PEMBETULAN: Memastikan kedua-dua tarikh dipaparkan
                     countdownHTML = `
                         <div class="event-title">${eventTitleDisplay}</div>
                         <div class="countdown-number">${dayDiff}</div>
@@ -167,16 +163,16 @@
                         </div>
                     `;
                 } else if (dayDiff === 0) {
-                    // Hari ini
+                    // PEMBETULAN: Memastikan kedua-dua tarikh dipaparkan
                     countdownHTML = `
                         <div class="event-title">${eventTitleDisplay}</div>
                         <div class="special-message">HARI INI</div>
                         <div class="date-info">
                             <span class="hijri-date">${targetEvent.hijriDate}</span>
+                            <span class="gregorian-date">${eventDate.toLocaleDateString('ms-MY', { day: '2-digit', month: 'long', year: 'numeric' })}</span>
                         </div>
                     `;
                 } else {
-                    // Telah lepas
                     countdownHTML = `
                         <div class="event-title">${eventTitleDisplay}</div>
                         <div class="special-message">TELAH LEPAS</div>
