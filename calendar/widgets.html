@@ -54,7 +54,7 @@
         /* Nombor Kira Detik */
         .countdown-number {
             font-size: 7em;
-            font-weight: 700; /* PEMBETULAN: Diubah kepada tebal */
+            font-weight: 700;
             color: #212121;
             line-height: 1;
             margin: 10px 0;
@@ -87,12 +87,17 @@
             margin-top: 5px;
         }
         
-        /* Mesej khas */
+        /* Mesej khas (cth: HARI INI, TELAH LEPAS) */
         .special-message {
             font-size: 2.5em;
             font-weight: bold;
             color: #2e7d32;
             line-height: 1.1;
+            flex-grow: 1; /* Pastikan ia mengambil ruang yang cukup */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 10px 0;
         }
         
         .error-message { color: #d32f2f; font-size: 1em; padding: 10px; }
@@ -161,7 +166,7 @@
                             <span class="gregorian-date">${eventDate.toLocaleDateString('ms-MY', { day: '2-digit', month: 'long', year: 'numeric' })}</span>
                         </div>`;
                 } else {
-                    // PEMBETULAN: Struktur HTML untuk "Telah Lepas" disamakan
+                    // PEMBETULAN UTAMA: Struktur HTML untuk "Telah Lepas" kini lengkap dan konsisten
                     countdownHTML = `
                         <div class="event-title">${eventTitleDisplay}</div>
                         <div class="special-message">TELAH<br>LEPAS</div>
