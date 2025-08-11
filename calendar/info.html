@@ -5,17 +5,35 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tarikh Penting Islam di Malaysia</title>
     <style>
-        /* Semua CSS adalah sama seperti sebelum ini, tiada perubahan diperlukan */
+        /* Gaya Asas */
         body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif; background-color: #f0f2f5; color: #333; margin: 0; padding: 15px; }
         .container { width: 100%; max-width: 900px; margin: 20px auto; }
         .header-logo { text-align: center; margin-bottom: 15px; }
         .header-logo img { max-height: 80px; width: auto; }
-        h1 { text-align: center; color: #2c3e50; margin-bottom: 15px; font-size: 1.8em; }
+
+        /* PENAMBAHBAIKAN: Gaya untuk tajuk dan subtajuk */
+        .page-header { text-align: center; margin-bottom: 25px; }
+        .page-header h1 {
+            color: #2c3e50;
+            margin: 0;
+            font-size: 1.8em;
+            text-transform: uppercase;
+        }
+        .page-header .subtitle {
+            font-style: italic;
+            font-size: 1.1em;
+            color: #555;
+            margin: 5px 0 0 0;
+        }
+
+        /* SEKSYEN ACARA TERHAMPIR */
         .upcoming-card { background: #e8f5e9; border-left: 5px solid #4CAF50; border-radius: 8px; padding: 20px 25px; margin-bottom: 30px; display: none; }
         .upcoming-card .label { font-size: 0.9em; font-weight: bold; text-transform: uppercase; color: #1b5e20; margin-bottom: 5px; }
         .upcoming-card .event-name { font-size: 1.7em; font-weight: bold; color: #2c3e50; margin: 0; }
         .upcoming-card .date-info { font-size: 1.1em; color: #333; margin: 8px 0; }
         .upcoming-card .countdown { font-size: 1.4em; font-weight: bold; color: #d84315; margin-top: 10px; }
+
+        /* GAYA JADUAL (DESKTOP) */
         table { width: 100%; border-collapse: collapse; background-color: #fff; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08); border-radius: 8px; overflow: hidden; }
         th, td { padding: 14px 18px; text-align: left; border-bottom: 1px solid #eef0f2; transition: background-color 0.2s; }
         thead th { background-color: #4CAF50; color: white; font-weight: bold; text-transform: uppercase; font-size: 0.9em; }
@@ -24,14 +42,19 @@
         td .countdown-small { font-weight: bold; color: #d9534f; }
         td .event-passed { color: #777; font-style: italic; }
         tr.is-next-event { background-color: #fffde7 !important; font-weight: 500; }
-        .table-footnote { text-align: center; margin-top: 10px; font-size: 0.85em; font-style: italic; color: #555; }
+        .table-footnote { text-align: center; margin-top: 15px; padding: 0 10px; font-size: 0.85em; font-style: italic; color: #555; }
         .sighting-note { font-style: italic; font-size: 0.9em; color: #555; margin-top: 8px; }
+        
+        /* FOOTER */
         .footer { text-align: center; margin-top: 40px; padding-top: 20px; border-top: 1px solid #ddd; font-size: 0.9em; color: #666; }
-        .footer .header-logo img { max-height: 40px; margin-bottom: 10px; }
         .footer p { margin: 5px 0; }
+        #last-updated { font-size: 0.8em; color: #888; margin-top: 15px; }
         .error-message { text-align: center; color: red; background-color: #fff; padding: 20px; border-radius: 8px; }
+
+        /* PAPARAN KAD (MUDAH ALIH) */
         @media screen and (max-width: 768px) {
-            h1 { font-size: 1.5em; }
+            .page-header h1 { font-size: 1.4em; }
+            .page-header .subtitle { font-size: 1em; }
             .upcoming-card .event-name { font-size: 1.4em; } .upcoming-card .date-info { font-size: 1em; } .upcoming-card .countdown { font-size: 1.2em; }
             table { background-color: transparent; box-shadow: none; border-radius: 0; }
             table thead { display: none; }
@@ -51,7 +74,13 @@
         <div class="header-logo">
             <img src="https://multimedia.mamtj6.com/media/logo/mamtj6-black.webp" alt="Logo MAMTJ6">
         </div>
-        <h1>Tarikh Penting Islam di Malaysia</h1>
+        
+        <!-- PENAMBAHBAIKAN: Header baharu -->
+        <div class="page-header">
+            <h1>TARIKH-TARIKH PENTING DALAM ISLAM</h1>
+            <p class="subtitle">TAHUN 2025 / 1446 – 1447 H BAGI MALAYSIA</p>
+        </div>
+        
         <div id="upcoming-event-container"></div>
         <table id="events-table">
             <thead>
@@ -66,12 +95,12 @@
         <div class="table-footnote">
             <p>* Tertakluk Kepada Pengisytiharan oleh Penyimpan Mohor Besar Raja-Raja Malaysia</p>
         </div>
+        
+        <!-- PENAMBAHBAIKAN: Footer dikemaskini -->
         <div class="footer">
-            <div class="header-logo">
-                <img src="https://multimedia.mamtj6.com/media/logo/mamtj6-black.webp" alt="Logo MAMTJ6">
-            </div>
             <p id="copyright"></p>
             <p>Dibangunkan oleh admin MAMTJ6</p>
+            <p id="last-updated"></p> <!-- Bekas untuk tarikh kemaskini -->
         </div>
     </div>
 
@@ -81,11 +110,16 @@
         const specialEvents = ['Aidiladha', 'Aidilfitri', 'Ramadan'];
         document.getElementById('copyright').textContent = `© ${new Date().getFullYear()} MAMTJ6. Hak Cipta Terpelihara.`;
 
-        // --- FUNGSI getCorrectHijriDate() TELAH DIBUANG ---
-
         fetch('events.json')
             .then(response => { if (!response.ok) { throw new Error(`Ralat ${response.status}`); } return response.json(); })
-            .then(eventData => {
+            .then(jsonData => {
+                // PENAMBAHBAIKAN: Baca data dari struktur JSON baharu
+                const lastUpdated = jsonData.lastUpdated;
+                const eventData = jsonData.events;
+
+                // Paparkan tarikh kemaskini
+                document.getElementById('last-updated').textContent = `Tarikh Kemaskini: ${lastUpdated}`;
+
                 const tableBody = document.getElementById('events-tbody');
                 const today = new Date(); today.setHours(0, 0, 0, 0);
                 eventData.sort((a, b) => new Date(a.eventDate) - new Date(b.eventDate));
@@ -119,8 +153,7 @@
 
                     const dayStr = daysInMalay[eventDate.getDay()];
                     const masihiStr = eventDate.toLocaleDateString('ms-MY', { day: '2-digit', month: 'long', year: 'numeric' });
-                    // --- BACA TERUS DARI FAIL JSON ---
-                    const hijriStr = event.hijriDate; // Menggunakan data dari fail, bukan lagi pengiraan
+                    const hijriStr = event.hijriDate;
                     
                     const isSpecialEvent = specialEvents.some(keyword => event.eventName.includes(keyword));
                     let eventNameDisplay = event.eventName;
