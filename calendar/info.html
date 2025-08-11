@@ -5,21 +5,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tarikh Penting Islam di Malaysia</title>
     <style>
-        /* Gaya Asas */
+        /* Semua CSS adalah sama seperti sebelum ini, tiada perubahan diperlukan */
         body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif; background-color: #f0f2f5; color: #333; margin: 0; padding: 15px; }
         .container { width: 100%; max-width: 900px; margin: 20px auto; }
         .header-logo { text-align: center; margin-bottom: 15px; }
         .header-logo img { max-height: 80px; width: auto; }
         h1 { text-align: center; color: #2c3e50; margin-bottom: 15px; font-size: 1.8em; }
-
-        /* SEKSYEN ACARA TERHAMPIR */
         .upcoming-card { background: #e8f5e9; border-left: 5px solid #4CAF50; border-radius: 8px; padding: 20px 25px; margin-bottom: 30px; display: none; }
         .upcoming-card .label { font-size: 0.9em; font-weight: bold; text-transform: uppercase; color: #1b5e20; margin-bottom: 5px; }
         .upcoming-card .event-name { font-size: 1.7em; font-weight: bold; color: #2c3e50; margin: 0; }
         .upcoming-card .date-info { font-size: 1.1em; color: #333; margin: 8px 0; }
         .upcoming-card .countdown { font-size: 1.4em; font-weight: bold; color: #d84315; margin-top: 10px; }
-
-        /* GAYA JADUAL (DESKTOP) */
         table { width: 100%; border-collapse: collapse; background-color: #fff; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08); border-radius: 8px; overflow: hidden; }
         th, td { padding: 14px 18px; text-align: left; border-bottom: 1px solid #eef0f2; transition: background-color 0.2s; }
         thead th { background-color: #4CAF50; color: white; font-weight: bold; text-transform: uppercase; font-size: 0.9em; }
@@ -28,23 +24,15 @@
         td .countdown-small { font-weight: bold; color: #d9534f; }
         td .event-passed { color: #777; font-style: italic; }
         tr.is-next-event { background-color: #fffde7 !important; font-weight: 500; }
-        
-        /* PENAMBAHBAIKAN: Nota kaki di bawah jadual */
         .table-footnote { text-align: right; margin-top: 10px; font-size: 0.85em; font-style: italic; color: #555; }
         .sighting-note { font-style: italic; font-size: 0.9em; color: #555; margin-top: 8px; }
-        
-        /* FOOTER */
         .footer { text-align: center; margin-top: 40px; padding-top: 20px; border-top: 1px solid #ddd; font-size: 0.9em; color: #666; }
         .footer .header-logo img { max-height: 40px; margin-bottom: 10px; }
         .footer p { margin: 5px 0; }
         .error-message { text-align: center; color: red; background-color: #fff; padding: 20px; border-radius: 8px; }
-
-        /* PAPARAN KAD (MUDAH ALIH) */
         @media screen and (max-width: 768px) {
             h1 { font-size: 1.5em; }
-            .upcoming-card .event-name { font-size: 1.4em; }
-            .upcoming-card .date-info { font-size: 1em; }
-            .upcoming-card .countdown { font-size: 1.2em; }
+            .upcoming-card .event-name { font-size: 1.4em; } .upcoming-card .date-info { font-size: 1em; } .upcoming-card .countdown { font-size: 1.2em; }
             .table-footnote { text-align: left; }
             table { background-color: transparent; box-shadow: none; border-radius: 0; }
             table thead { display: none; }
@@ -64,10 +52,8 @@
         <div class="header-logo">
             <img src="URL_LOGO_ANDA_DI_SINI" alt="Logo MAMTJ6">
         </div>
-        
         <h1>Tarikh Penting Islam di Malaysia</h1>
         <div id="upcoming-event-container"></div>
-        
         <table id="events-table">
             <thead>
                 <tr>
@@ -78,12 +64,9 @@
             </thead>
             <tbody id="events-tbody"></tbody>
         </table>
-
-        <!-- PENAMBAHBAIKAN: Nota kaki dipindahkan ke sini -->
         <div class="table-footnote">
             <p>* Tertakluk Kepada Pengisytiharan oleh Penyimpan Mohor Besar Raja-Raja Malaysia</p>
         </div>
-        
         <div class="footer">
             <div class="header-logo">
                 <img src="URL_LOGO_ANDA_DI_SINI" alt="Logo MAMTJ6">
@@ -95,21 +78,11 @@
 
     <script>
     document.addEventListener('DOMContentLoaded', function() {
-        const hijriMonths = ["Muharam", "Safar", "Rabiulawal", "Rabiulakhir", "Jamadilawal", "Jamadilakhir", "Rejab", "Syaaban", "Ramadan", "Syawal", "Zulkaedah", "Zulhijah"];
         const daysInMalay = ["Ahad", "Isnin", "Selasa", "Rabu", "Khamis", "Jumaat", "Sabtu"];
         const specialEvents = ['Aidiladha', 'Aidilfitri', 'Ramadan'];
         document.getElementById('copyright').textContent = `© ${new Date().getFullYear()} MAMTJ6. Hak Cipta Terpelihara.`;
 
-        function getCorrectHijriDate(date) {
-            try {
-                const formatter = new Intl.DateTimeFormat('en-u-ca-islamic-umalqura', { day: 'numeric', month: 'numeric', year: 'numeric' });
-                const parts = formatter.formatToParts(date);
-                const day = parts.find(p => p.type === 'day').value;
-                const monthIndex = parseInt(parts.find(p => p.type === 'month').value, 10) - 1;
-                const year = parts.find(p => p.type === 'year').value;
-                return `${day} ${hijriMonths[monthIndex]} ${year} H`;
-            } catch (e) { return "Ralat"; }
-        }
+        // --- FUNGSI getCorrectHijriDate() TELAH DIBUANG ---
 
         fetch('events.json')
             .then(response => { if (!response.ok) { throw new Error(`Ralat ${response.status}`); } return response.json(); })
@@ -121,7 +94,6 @@
                 const nextEvent = eventData.find(event => new Date(event.eventDate + 'T00:00:00') >= today);
                 let nextEventDateString = nextEvent ? nextEvent.eventDate : null;
 
-                // PEMBETULAN: Logik untuk memaparkan kad acara terhampir dikembalikan
                 if (nextEvent) {
                     const upcomingContainer = document.getElementById('upcoming-event-container');
                     const eventDate = new Date(nextEvent.eventDate + 'T00:00:00');
@@ -148,7 +120,8 @@
 
                     const dayStr = daysInMalay[eventDate.getDay()];
                     const masihiStr = eventDate.toLocaleDateString('ms-MY', { day: '2-digit', month: 'long', year: 'numeric' });
-                    const hijriStr = getCorrectHijriDate(eventDate);
+                    // --- BACA TERUS DARI FAIL JSON ---
+                    const hijriStr = event.hijriDate; // Menggunakan data dari fail, bukan lagi pengiraan
                     
                     const isSpecialEvent = specialEvents.some(keyword => event.eventName.includes(keyword));
                     let eventNameDisplay = event.eventName;
@@ -159,18 +132,10 @@
                         mobileSightingNote = '<div class="sighting-note">Tertakluk Kepada Pengisytiharan</div>';
                     }
 
-                    const cellEvent = newRow.insertCell();
-                    cellEvent.className = 'mobile-event-name';
-                    cellEvent.textContent = eventNameDisplay;
-                    
-                    const cellDate = newRow.insertCell();
-                    cellDate.className = 'mobile-date-info';
-                    cellDate.innerHTML = `
-                        <div class="desktop-view">${dayStr}<br>${masihiStr}<br>${hijriStr}</div>
-                        <div class="mobile-view">${dayStr} - ${masihiStr} - ${hijriStr}${mobileSightingNote}</div>`;
-                        
-                    const cellCountdown = newRow.insertCell();
-                    cellCountdown.className = 'mobile-countdown-info';
+                    const cellEvent = newRow.insertCell(); cellEvent.className = 'mobile-event-name'; cellEvent.textContent = eventNameDisplay;
+                    const cellDate = newRow.insertCell(); cellDate.className = 'mobile-date-info';
+                    cellDate.innerHTML = `<div class="desktop-view">${dayStr}<br>${masihiStr}<br>${hijriStr}</div><div class="mobile-view">${dayStr} - ${masihiStr} - ${hijriStr}${mobileSightingNote}</div>`;
+                    const cellCountdown = newRow.insertCell(); cellCountdown.className = 'mobile-countdown-info';
                     let countdownHTML = '';
                     if (dayDiff > 0) countdownHTML = `<span class="countdown-small">${dayDiff} hari lagi</span>`;
                     else if (dayDiff === 0) countdownHTML = `<span class="countdown-small">Hari Ini!</span>`;
@@ -186,10 +151,7 @@
                     }`;
                 document.head.appendChild(style);
             })
-            .catch(error => {
-                console.error('Gagal memuatkan data acara:', error);
-                document.querySelector('.container').innerHTML = `<div class="error-message"><strong>Gagal memuatkan data.</strong><br>Sila pastikan fail 'events.json' wujud di lokasi yang sama dan tidak mempunyai ralat sintaks.</div>`;
-            });
+            .catch(error => { console.error('Gagal memuatkan data acara:', error); document.querySelector('.container').innerHTML = `<div class="error-message"><strong>Gagal memuatkan data.</strong><br>Sila pastikan fail 'events.json' wujud di lokasi yang sama dan tidak mempunyai ralat sintaks.</div>`; });
     });
     </script>
 </body>
