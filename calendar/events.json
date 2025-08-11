@@ -1,52 +1,55 @@
-[ 
-  {
-    "eventName": "Israk dan Mikraj",
-    "eventDate": "2025-01-27",
-    "hijriDate": "25 Rejab 1446 H"
-  },
-  {
-    "eventName": "Nisfu Sya'ban",
-    "eventDate": "2025-02-14",
-    "hijriDate": "14 Syaaban 1446 H"
-  },
-  {
-    "eventName": "Awal Ramadan",
-    "eventDate": "2025-03-01",
-    "hijriDate": "1 Ramadan 1446 H"
-  },
-  {
-    "eventName": "Hari Nuzul Al-Quran",
-    "eventDate": "2025-03-17",
-    "hijriDate": "17 Ramadan 1446 H"
-  },
-  {
-    "eventName": "Hari Raya Aidilfitri",
-    "eventDate": "2025-03-31",
-    "hijriDate": "1 Syawal 1446 H"
-  },
-  {
-    "eventName": "Hari Arafah",
-    "eventDate": "2025-06-06",
-    "hijriDate": "9 Zulhijah 1446 H"
-  },
-  {
-    "eventName": "Hari Raya Aidiladha",
-    "eventDate": "2025-06-07",
-    "hijriDate": "10 Zulhijah 1446 H"
-  },
-  {
-    "eventName": "Awal Muharram (Maal Hijrah)",
-    "eventDate": "2025-06-27",
-    "hijriDate": "1 Muharam 1447 H"
-  },
-  {
-    "eventName": "Hari Asyura",
-    "eventDate": "2025-07-06",
-    "hijriDate": "10 Muharam 1447 H"
-  },
-  {
-    "eventName": "Maulidur Rasul",
-    "eventDate": "2025-09-05",
-    "hijriDate": "12 Rabiulawal 1447 H"
-  }
-]
+{
+  "lastUpdated": "12 Ogos 2025, 10:00 AM",
+  "events": [
+    {
+      "eventName": "Israk dan Mikraj",
+      "eventDate": "2025-01-27",
+      "hijriDate": "25 Rejab 1446 H"
+    },
+    {
+      "eventName": "Nisfu Sya'ban",
+      "eventDate": "2025-02-14",
+      "hijriDate": "14 Syaaban 1446 H"
+    },
+    {
+      "eventName": "Awal Ramadan",
+      "eventDate": "2025-03-01",
+      "hijriDate": "1 Ramadan 1446 H"
+    },
+    {
+      "eventName": "Hari Nuzul Al-Quran",
+      "eventDate": "2025-03-17",
+      "hijriDate": "17 Ramadan 1446 H"
+    },
+    {
+      "eventName": "Hari Raya Aidilfitri",
+      "eventDate": "2025-03-31",
+      "hijriDate": "1 Syawal 1446 H"
+    },
+    {
+      "eventName": "Hari Arafah",
+      "eventDate": "2025-06-06",
+      "hijriDate": "9 Zulhijah 1446 H"
+    },
+    {
+      "eventName": "Hari Raya Aidiladha",
+      "eventDate": "2025-06-07",
+      "hijriDate": "10 Zulhijah 1446 H"
+    },
+    {
+      "eventName": "Awal Muharram (Maal Hijrah)",
+      "eventDate": "2025-06-27",
+      "hijriDate": "1 Muharam 1447 H"
+    },
+    {
+      "eventName": "Hari Asyura",
+      "eventDate": "2025-07-06",
+      "hijriDate": "10 Muharam 1447 H"
+    },
+    {
+      "eventName": "Maulidur Rasul",
+      "eventDate": "2025-09-05",
+      "hijriDate": "12 Rabiulawal 1447 H"
+    }
+  ]
+}
