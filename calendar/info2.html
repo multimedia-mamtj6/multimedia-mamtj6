@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tarikh Penting Islam di Malaysia</title>
+    <style>
+        /* Gaya Asas */
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif; background-color: #f0f2f5; color: #333; margin: 0; padding: 15px; }
+        .container { width: 100%; max-width: 900px; margin: 20px auto; }
+        .header-logo { text-align: center; margin-bottom: 15px; }
+        .header-logo img { max-height: 80px; width: auto; }
+        h1 { text-align: center; color: #2c3e50; margin-bottom: 15px; font-size: 1.8em; }
+
+        /* SEKSYEN ACARA TERHAMPIR */
+        .upcoming-card { background: #e8f5e9; border-left: 5px solid #4CAF50; border-radius: 8px; padding: 20px 25px; margin-bottom: 30px; display: none; }
+        .upcoming-card .label { font-size: 0.9em; font-weight: bold; text-transform: uppercase; color: #1b5e20; margin-bottom: 5px; }
+        .upcoming-card .event-name { font-size: 1.7em; font-weight: bold; color: #2c3e50; margin: 0; }
+        .upcoming-card .date-info { font-size: 1.1em; color: #333; margin: 8px 0; }
+        .upcoming-card .countdown { font-size: 1.4em; font-weight: bold; color: #d84315; margin-top: 10px; }
+
+        /* GAYA JADUAL (DESKTOP) */
+        table { width: 100%; border-collapse: collapse; background-color: #fff; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08); border-radius: 8px; overflow: hidden; }
+        th, td { padding: 14px 18px; text-align: left; border-bottom: 1px solid #eef0f2; transition: background-color 0.2s; }
+        thead th { background-color: #4CAF50; color: white; font-weight: bold; text-transform: uppercase; font-size: 0.9em; }
+        tbody tr:nth-child(even) { background-color: #f8f9fa; }
+        tbody tr:not(.is-next-event):hover { background-color: #f1f1f1; }
+        td .countdown-small { font-weight: bold; color: #d9534f; }
+        td .event-passed { color: #777; font-style: italic; }
+        tr.is-next-event { background-color: #fffde7 !important; font-weight: 500; }
+        
+        /* PENAMBAHBAIKAN: Nota kaki di bawah jadual */
+        .table-footnote { text-align: right; margin-top: 10px; font-size: 0.85em; font-style: italic; color: #555; }
+        .sighting-note { font-style: italic; font-size: 0.9em; color: #555; margin-top: 8px; }
+        
+        /* FOOTER */
+        .footer { text-align: center; margin-top: 40px; padding-top: 20px; border-top: 1px solid #ddd; font-size: 0.9em; color: #666; }
+        .footer .header-logo img { max-height: 40px; margin-bottom: 10px; }
+        .footer p { margin: 5px 0; }
+        .error-message { text-align: center; color: red; background-color: #fff; padding: 20px; border-radius: 8px; }
+
+        /* PAPARAN KAD (MUDAH ALIH) */
+        @media screen and (max-width: 768px) {
+            h1 { font-size: 1.5em; }
+            .upcoming-card .event-name { font-size: 1.4em; }
+            .upcoming-card .date-info { font-size: 1em; }
+            .upcoming-card .countdown { font-size: 1.2em; }
+            .table-footnote { text-align: left; }
+            table { background-color: transparent; box-shadow: none; border-radius: 0; }
+            table thead { display: none; }
+            table tbody tr { display: block; width: 100%; margin-bottom: 15px; border: 1px solid #ddd; border-radius: 8px; background-color: #fff; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.07); box-sizing: border-box; }
+            table td { display: block; padding: 12px 15px; border-bottom: none; }
+            td.mobile-event-name { font-size: 1.2em; font-weight: bold; background-color: #f8f9fa; text-align: left; }
+            td.mobile-date-info { font-size: 0.95em; line-height: 1.5; background-color: #fff; border-top: 1px solid #eee; border-bottom: 1px solid #eee; text-align: left; }
+            td.mobile-countdown-info { font-size: 1em; text-align: center; padding-top: 15px; padding-bottom: 15px; }
+            tr.is-passed { opacity: 0.7; }
+            tr.is-next-event { border: 2px solid #ffc107; }
+            tr.is-next-event td.mobile-event-name { background-color: #fff9c4; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header-logo">
+            <img src="URL_LOGO_ANDA_DI_SINI" alt="Logo MAMTJ6">
+        </div>
+        
+        <h1>Tarikh Penting Islam di Malaysia</h1>
+        <div id="upcoming-event-container"></div>
+        
+        <table id="events-table">
+            <thead>
+                <tr>
+                    <th>Peristiwa</th>
+                    <th>Tarikh & Hari</th>
+                    <th>Kira Detik</th>
+                </tr>
+            </thead>
+            <tbody id="events-tbody"></tbody>
+        </table>
+
+        <!-- PENAMBAHBAIKAN: Nota kaki dipindahkan ke sini -->
+        <div class="table-footnote">
+            <p>* Tertakluk Kepada Pengisytiharan oleh Penyimpan Mohor Besar Raja-Raja Malaysia</p>
+        </div>
+        
+        <div class="footer">
+            <div class="header-logo">
+                <img src="URL_LOGO_ANDA_DI_SINI" alt="Logo MAMTJ6">
+            </div>
+            <p id="copyright"></p>
+            <p>Dibangunkan oleh admin MAMTJ6</p>
+        </div>
+    </div>
+
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+          const hijriMonths = ["Muharam", "Safar", "Rabiulawal", "Rabiulakhir", "Jamadilawal", "Jamadilakhir", "Rejab", "Syaaban", "Ramadan", "Syawal", "Zulkaedah", "Zulhijah"];
+          const daysInMalay = ["Ahad", "Isnin", "Selasa", "Rabu", "Khamis", "Jumaat", "Sabtu"];
+          const specialEvents = ['Aidiladha', 'Aidilfitri', 'Ramadan'];
+          document.getElementById('copyright').textContent = © ${new Date().getFullYear()} MAMTJ6. Hak Cipta Terpelihara.;
+      
+          function getCorrectHijriDate(date) {
+              try {
+                  const formatter = new Intl.DateTimeFormat('en-u-ca-islamic-umalqura', { day: 'numeric', month: 'numeric', year: 'numeric' });
+                  const parts = formatter.formatToParts(date);
+                  const day = parts.find(p => p.type === 'day').value;
+                  const monthIndex = parseInt(parts.find(p => p.type === 'month').value, 10) - 1;
+                  const year = parts.find(p => p.type === 'year').value;
+                  return ${day} ${hijriMonths[monthIndex]} ${year} H;
+              } catch (e) { return "Ralat"; }
+          }
+      
+          // Tukar dari fetch('events.json') kepada API + Authorization header
+          fetch('http://update.smartsolah.com/manage/api/umum', {
+              method: 'GET',
+              headers: {
+                  "Authorization": "Basic c21hcnRzb2xhaGZlZWQ6RjMzZFBANTV3MHJk"
+              }
+          })
+          .then(response => { 
+              if (!response.ok) { 
+                  throw new Error(Ralat ${response.status}); 
+              } 
+              return response.json(); 
+          })
+          .then(apiData => {
+              // Ubah data API kepada format lama [{ eventName, eventDate }]
+              const eventData = apiData.map(item => ({
+                  eventName: item.data.val2,
+                  eventDate: item.data.val3
+              }));
+      
+              const tableBody = document.getElementById('events-tbody');
+              const today = new Date(); today.setHours(0, 0, 0, 0);
+              eventData.sort((a, b) => new Date(a.eventDate) - new Date(b.eventDate));
+              
+              const nextEvent = eventData.find(event => new Date(event.eventDate + 'T00:00:00') >= today);
+              let nextEventDateString = nextEvent ? nextEvent.eventDate : null;
+      
+              if (nextEvent) {
+                  const upcomingContainer = document.getElementById('upcoming-event-container');
+                  const eventDate = new Date(nextEvent.eventDate + 'T00:00:00');
+                  const timeDiff = eventDate.getTime() - today.getTime();
+                  const dayDiff = Math.ceil(timeDiff / (1000 * 60 * 60 * 24));
+                  let countdownText = (dayDiff === 0) ? "Hari Ini!" : ${dayDiff} hari lagi;
+                  upcomingContainer.innerHTML = `
+                      <div class="upcoming-card" style="display: block;">
+                          <div class="label">Acara Terhampir</div>
+                          <h2 class="event-name">${nextEvent.eventName}</h2>
+                          <p class="date-info">${daysInMalay[eventDate.getDay()]}, ${eventDate.toLocaleDateString('ms-MY', { day: '2-digit', month: 'long', year: 'numeric' })}</p>
+                          <div class="countdown">${countdownText}</div>
+                      </div>`;
+              }
+      
+              eventData.forEach(event => {
+                  const eventDate = new Date(event.eventDate + 'T00:00:00');
+                  const newRow = tableBody.insertRow();
+                  const timeDiff = eventDate.getTime() - today.getTime();
+                  const dayDiff = Math.ceil(timeDiff / (1000 * 60 * 60 * 24));
+                  
+                  if (dayDiff < 0) newRow.classList.add('is-passed');
+                  if (event.eventDate === nextEventDateString) newRow.classList.add('is-next-event');
+      
+                  const dayStr = daysInMalay[eventDate.getDay()];
+                  const masihiStr = eventDate.toLocaleDateString('ms-MY', { day: '2-digit', month: 'long', year: 'numeric' });
+                  const hijriStr = getCorrectHijriDate(eventDate);
+                  
+                  const isSpecialEvent = specialEvents.some(keyword => event.eventName.includes(keyword));
+                  let eventNameDisplay = event.eventName;
+                  let mobileSightingNote = '';
+      
+                  if (isSpecialEvent) {
+                      eventNameDisplay += ' *';
+                      mobileSightingNote = '<div class="sighting-note">Tertakluk Kepada Pengisytiharan</div>';
+                  }
+      
+                  const cellEvent = newRow.insertCell();
+                  cellEvent.className = 'mobile-event-name';
+                  cellEvent.textContent = eventNameDisplay;
+                  
+                  const cellDate = newRow.insertCell();
+                  cellDate.className = 'mobile-date-info';
+                  cellDate.innerHTML = `
+                      <div class="desktop-view">${dayStr}<br>${masihiStr}<br>${hijriStr}</div>
+                      <div class="mobile-view">${dayStr} - ${masihiStr} - ${hijriStr}${mobileSightingNote}</div>`;
+                      
+                  const cellCountdown = newRow.insertCell();
+                  cellCountdown.className = 'mobile-countdown-info';
+                  let countdownHTML = '';
+                  if (dayDiff > 0) countdownHTML = <span class="countdown-small">${dayDiff} hari lagi</span>;
+                  else if (dayDiff === 0) countdownHTML = <span class="countdown-small">Hari Ini!</span>;
+                  else countdownHTML = <span class="event-passed">Telah lepas</span>;
+                  cellCountdown.innerHTML = countdownHTML;
+              });
+              
+              const style = document.createElement('style');
+              style.innerHTML = `
+                  .desktop-view { display: block; } .mobile-view { display: none; }
+                  @media screen and (max-width: 768px) {
+                      .desktop-view { display: none; } .mobile-view { display: block; }
+                  }`;
+              document.head.appendChild(style);
+          })
+          .catch(error => {
+              console.error('Gagal memuatkan data acara:', error);
+              document.querySelector('.container').innerHTML = <div class="error-message"><strong>Gagal memuatkan data.</strong><br>Sila pastikan API boleh diakses dan tiada ralat sintaks.</div>;
+          });
+      });
+      </script>
+      
+</body>
+</html>
