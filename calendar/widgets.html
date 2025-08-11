@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kira Detik Acara Islam</title>
     <style>
-        /* Reset dan Gaya Asas */
+        /* Semua CSS adalah sama seperti sebelum ini, tiada perubahan diperlukan */
         html, body {
             margin: 0;
             padding: 0;
@@ -18,8 +18,6 @@
             justify-content: center;
             align-items: center;
         }
-
-        /* Bekas Utama Widget */
         .widget-container {
             width: 100%;
             height: 100%;
@@ -38,8 +36,6 @@
             overflow: hidden;
             border: 1px solid #eee;
         }
-
-        /* Nama Acara */
         .event-title {
             font-size: 1.8em;
             font-weight: bold;
@@ -50,8 +46,6 @@
         .event-title .star {
             color: #d9534f;
         }
-
-        /* Nombor Kira Detik */
         .countdown-number {
             font-size: 7em;
             font-weight: 700;
@@ -59,8 +53,6 @@
             line-height: 1;
             margin: 10px 0;
         }
-
-        /* Label di bawah nombor */
         .countdown-label {
             font-size: 1.5em;
             color: #424242;
@@ -68,8 +60,6 @@
             letter-spacing: 2px;
             margin-bottom: 15px;
         }
-
-        /* Tarikh */
         .date-info {
             font-size: 1em;
             line-height: 1.5;
@@ -86,20 +76,17 @@
             display: block;
             margin-top: 5px;
         }
-        
-        /* Mesej khas (cth: HARI INI, TELAH LEPAS) */
         .special-message {
             font-size: 2.5em;
             font-weight: bold;
             color: #2e7d32;
             line-height: 1.1;
-            flex-grow: 1; /* Pastikan ia mengambil ruang yang cukup */
+            flex-grow: 1;
             display: flex;
             align-items: center;
             justify-content: center;
             padding: 10px 0;
         }
-        
         .error-message { color: #d32f2f; font-size: 1em; padding: 10px; }
     </style>
 </head>
@@ -125,7 +112,10 @@
 
         fetch('events.json')
             .then(response => { if (!response.ok) { throw new Error('Fail events.json tidak ditemui.'); } return response.json(); })
-            .then(eventData => {
+            .then(jsonData => { // Diubah kepada jsonData untuk kejelasan
+                
+                // PEMBETULAN: Akses senarai acara melalui jsonData.events
+                const eventData = jsonData.events;
                 const targetEvent = eventData.find(event => event.eventName.toLowerCase().includes(eventQuery.toLowerCase()));
 
                 if (!targetEvent) {
@@ -166,7 +156,6 @@
                             <span class="gregorian-date">${eventDate.toLocaleDateString('ms-MY', { day: '2-digit', month: 'long', year: 'numeric' })}</span>
                         </div>`;
                 } else {
-                    // PEMBETULAN UTAMA: Struktur HTML untuk "Telah Lepas" kini lengkap dan konsisten
                     countdownHTML = `
                         <div class="event-title">${eventTitleDisplay}</div>
                         <div class="special-message">TELAH<br>LEPAS</div>
