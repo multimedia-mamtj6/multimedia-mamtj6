@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jadual Kuliah</title>
+    <style>
+        /* Make the body and html tags fill the screen and remove any default margins */
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden; /* Hide scrollbars from the body */
+        }
+
+        /* Make the iframe fill the entire viewport */
+        #pdf-viewer {
+            width: 100%;
+            height: 100%;
+            border: none; /* Remove the default border around the iframe */
+        }
+    </style>
+</head>
+<body>
+    <!-- 
+      - The src points to your PDF file.
+      - The #toolbar=0 parameter is a hint for browsers to hide the UI.
+    -->
+    <iframe id="pdf-viewer" src="./kuliah/jadual-kuliah.pdf#toolbar=0&navpanes=0">
+    </iframe>
+
+</body>
+</html>
