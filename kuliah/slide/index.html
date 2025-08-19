@@ -73,89 +73,94 @@
     <div id="message-container" style="display: none;">Tiada Kuliah Dijadualkan Hari Ini</div>
 
     <script>
-        // --- CONFIGURATION ---
-        // IMPORTANT: You MUST change these values to your own GitHub details.
-        const GITHUB_USERNAME = "YOUR_GITHUB_USERNAME";
-        const GITHUB_REPO = "YOUR_GITHUB_REPOSITORY_NAME";
-        const BACKGROUND_IMAGE_URL = "https://i.postimg.cc/9Q7HVK4C/JADUAL-KULIAH-copy.webp"; // Default background
-        // --- END CONFIGURATION ---
+    // --- CONFIGURATION ---
+    // IMPORTANT: You MUST change these values to your own GitHub details.
+    const GITHUB_USERNAME = "multimedia-mamtj6";
+    const GITHUB_REPO = "multimedia-mamtj6";
+    
+    // NEW: Define the base path to your project folder. Use "" if it's in the root.
+    const BASE_PATH = "kuliah/slide"; 
 
-        // Construct the URL for the schedule.json file
-        const scheduleUrl = `https://raw.githubusercontent.com/${GITHUB_USERNAME}/${GITHUB_REPO}/main/schedule.json`;
+    const BACKGROUND_IMAGE_URL = "https://i.postimg.cc/9Q7HVK4C/JADUAL-KULIAH-copy.webp"; // Default background
+    // --- END CONFIGURATION ---
 
-        async function fetchSchedule() {
-            // Set the background immediately
-            document.body.style.backgroundImage = `url('${BACKGROUND_IMAGE_URL}')`;
-            
-            // Set the date on the loading screen
-            const today = new Date(new Date().toLocaleString("en-US", { timeZone: "Asia/Kuala_Lumpur" }));
-            document.getElementById('loading-date').textContent = today.toLocaleDateString('ms-MY', { day: '2-digit', month: 'long', year: 'numeric' });
+    // Construct the URL for the schedule.json file using the BASE_PATH
+    const scheduleUrl = `https://raw.githubusercontent.com/${GITHUB_USERNAME}/${GITHUB_REPO}/main/${BASE_PATH}/schedule.json`;
 
-            try {
-                // Add a cache-busting parameter to the URL to always get the latest version
-                const response = await fetch(`${scheduleUrl}?t=${new Date().getTime()}`);
-                if (!response.ok) {
-                    throw new Error(`Failed to fetch schedule: ${response.statusText}`);
-                }
-                const schedule = await response.json();
-
-                // Find today's schedule
-                const todayString = today.toISOString().split("T")[0]; // Format: YYYY-MM-DD
-                const todayEntry = schedule.find(item => item.date === todayString);
-
-                if (todayEntry && todayEntry.imageName) {
-                    // An image is scheduled for today
-                    const imageUrl = `https://raw.githubusercontent.com/${GITHUB_USERNAME}/${GITHUB_REPO}/main/images/${todayEntry.imageName}`;
-                    preloadImage(imageUrl, () => showImage(imageUrl));
-                } else {
-                    // No image scheduled for today
-                    showMessage();
-                }
-
-            } catch (error) {
-                console.error("Error fetching or processing schedule:", error);
-                showMessage("Gagal memuatkan jadual."); // Show an error message
-            }
-        }
-
-        function preloadImage(src, callback) {
-            const img = new Image();
-            img.onload = callback;
-            img.onerror = () => {
-                console.error("Failed to preload image:", src);
-                showMessage("Imej tidak dapat dimuatkan.");
-            };
-            img.src = src;
-        }
+    async function fetchSchedule() {
+        // Set the background immediately
+        document.body.style.backgroundImage = `url('${BACKGROUND_IMAGE_URL}')`;
         
-        function showImage(imageUrl) {
-            const imageContainer = document.getElementById("image-container");
-            const imageElement = document.getElementById("daily-image");
-            
-            imageElement.src = imageUrl;
+        // Set the date on the loading screen
+        const today = new Date(new Date().toLocaleString("en-US", { timeZone: "Asia/Kuala_Lumpur" }));
+        document.getElementById('loading-date').textContent = today.toLocaleDateString('ms-MY', { day: '2-digit', month: 'long', year: 'numeric' });
 
-            // Wait 3 seconds before hiding loading screen and showing image
-            setTimeout(() => {
-                document.getElementById('loading-screen').classList.add('hidden');
-                imageContainer.style.opacity = 1;
-            }, 3000);
+        try {
+            // Add a cache-busting parameter to the URL to always get the latest version
+            const response = await fetch(`${scheduleUrl}?t=${new Date().getTime()}`);
+            if (!response.ok) {
+                throw new Error(`Failed to fetch schedule: ${response.statusText}`);
+            }
+            const schedule = await response.json();
+
+            // Find today's schedule
+            const todayString = today.toISOString().split("T")[0]; // Format: YYYY-MM-DD
+            const todayEntry = schedule.find(item => item.date === todayString);
+
+            if (todayEntry && todayEntry.imageName) {
+                // An image is scheduled for today
+                // Construct the image URL using the BASE_PATH
+                const imageUrl = `https://raw.githubusercontent.com/${GITHUB_USERNAME}/${GITHUB_REPO}/main/${BASE_PATH}/images/${todayEntry.imageName}`;
+                preloadImage(imageUrl, () => showImage(imageUrl));
+            } else {
+                // No image scheduled for today
+                showMessage();
+            }
+
+        } catch (error) {
+            console.error("Error fetching or processing schedule:", error);
+            showMessage("Gagal memuatkan jadual."); // Show an error message
         }
+    }
 
-        function showMessage(message = "Tiada Kuliah Dijadualkan Hari Ini") {
-            const messageContainer = document.getElementById("message-container");
-            messageContainer.textContent = message;
+    function preloadImage(src, callback) {
+        const img = new Image();
+        img.onload = callback;
+        img.onerror = () => {
+            console.error("Failed to preload image:", src);
+            showMessage("Imej tidak dapat dimuatkan.");
+        };
+        img.src = src;
+    }
+    
+    function showImage(imageUrl) {
+        const imageContainer = document.getElementById("image-container");
+        const imageElement = document.getElementById("daily-image");
+        
+        imageElement.src = imageUrl;
 
-            // Wait 3 seconds before hiding loading screen and showing the message
-            setTimeout(() => {
-                document.getElementById('loading-screen').classList.add('hidden');
-                document.getElementById("image-container").style.display = 'none'; // Hide the image container
-                messageContainer.style.display = 'block'; // Show the message container
-                messageContainer.style.opacity = 1; 
-            }, 3000);
-        }
+        // Wait 3 seconds before hiding loading screen and showing image
+        setTimeout(() => {
+            document.getElementById('loading-screen').classList.add('hidden');
+            imageContainer.style.opacity = 1;
+        }, 3000);
+    }
 
-        // Fetch the schedule when the page loads
-        fetchSchedule();
-    </script>
+    function showMessage(message = "Tiada Kuliah Dijadualkan Hari Ini") {
+        const messageContainer = document.getElementById("message-container");
+        messageContainer.textContent = message;
+
+        // Wait 3 seconds before hiding loading screen and showing the message
+        setTimeout(() => {
+            document.getElementById('loading-screen').classList.add('hidden');
+            document.getElementById("image-container").style.display = 'none'; // Hide the image container
+            messageContainer.style.display = 'block'; // Show the message container
+            messageContainer.style.opacity = 1; 
+        }, 3000);
+    }
+
+    // Fetch the schedule when the page loads
+    fetchSchedule();
+</script>
 </body>
 </html>
