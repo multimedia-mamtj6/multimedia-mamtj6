@@ -9,15 +9,23 @@ html, body {
 }
 
 /* 
-This container holds the background image. The 'background-size: cover'
-property is key to making the image responsive in all scenarios.
+This container holds the background image.
 */
 #display-container {
     height: 100%;
     width: 100%;
-    background-size: cover;
+    
+    /* --- CHANGE #1: Use 'contain' instead of 'cover' --- */
+    /* This ensures the entire image is always visible. */
+    background-size: contain;
+    
     background-position: center;
     background-repeat: no-repeat;
+    
+    /* --- CHANGE #2: Set a background color --- */
+    /* This color (white) will show in the empty bars (letterboxing). */
+    background-color: #ffffff;
+    
     display: flex;
     justify-content: center;
     align-items: center;
@@ -27,17 +35,12 @@ property is key to making the image responsive in all scenarios.
 This is the white box for text messages.
 */
 .message-box {
-    background-color: rgba(255, 255, 255, 0.95); /* Slightly transparent white */
+    background-color: rgba(255, 255, 255, 0.95);
     color: #222;
     text-align: center;
     border-radius: 12px;
     box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
-    
-    /* --- RESPONSIVE PADDING --- */
-    /* This makes the padding flexible but within a reasonable range. */
     padding: clamp(20px, 5vw, 50px);
-    
-    /* Limit the max-width to ensure readability on very wide screens */
     max-width: 90%;
 }
 
@@ -45,11 +48,6 @@ This is the white box for text messages.
 This targets the text itself inside the message box.
 */
 .message-box h1 {
-    margin: 0; /* Remove default margin from h1 */
-    
-    /* --- THE MAGIC: RESPONSIVE FONT SIZE --- */
-    /* clamp(MINIMUM, PREFERRED, MAXIMUM) */
-    /* This makes the font size fluidly adapt to the container's width,
-       perfect for both full-screen and small embedded views. */
+    margin: 0;
     font-size: clamp(1.1rem, 6vw, 2.5rem);
 }
