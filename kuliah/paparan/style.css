@@ -5,12 +5,12 @@ html, body {
     height: 100%;
     width: 100%;
     overflow: hidden;
-    font-family: sans-serif;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
 }
 
 /* 
-This is the main container. It will either have a background image
-or a solid background color. It uses flexbox to center the message box.
+This container holds the background image. The 'background-size: cover'
+property is key to making the image responsive in all scenarios.
 */
 #display-container {
     height: 100%;
@@ -24,16 +24,32 @@ or a solid background color. It uses flexbox to center the message box.
 }
 
 /* 
-This is the white box that holds the text message.
-It is hidden by default in the HTML and only shown by the JavaScript
-when there is no image to display.
+This is the white box for text messages.
 */
 .message-box {
-    background-color: #ffffff; /* White background for text */
-    color: #333333; /* Dark text color for readability */
-    padding: 40px;
-    border-radius: 10px;
+    background-color: rgba(255, 255, 255, 0.95); /* Slightly transparent white */
+    color: #222;
     text-align: center;
-    /* Add a subtle shadow to make it stand out */
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    border-radius: 12px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+    
+    /* --- RESPONSIVE PADDING --- */
+    /* This makes the padding flexible but within a reasonable range. */
+    padding: clamp(20px, 5vw, 50px);
+    
+    /* Limit the max-width to ensure readability on very wide screens */
+    max-width: 90%;
+}
+
+/* 
+This targets the text itself inside the message box.
+*/
+.message-box h1 {
+    margin: 0; /* Remove default margin from h1 */
+    
+    /* --- THE MAGIC: RESPONSIVE FONT SIZE --- */
+    /* clamp(MINIMUM, PREFERRED, MAXIMUM) */
+    /* This makes the font size fluidly adapt to the container's width,
+       perfect for both full-screen and small embedded views. */
+    font-size: clamp(1.1rem, 6vw, 2.5rem);
 }
