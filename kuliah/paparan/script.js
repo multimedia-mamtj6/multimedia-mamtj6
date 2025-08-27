@@ -1,21 +1,26 @@
 /**
- * This script is the "brain" for the digital signage pages.
- * It fetches the schedule data, determines which image to display,
- * and handles cases where there is no scheduled lecture.
- * VERSION 2.0: Displays a different message for today vs. tomorrow.
+ * Digital Signage Script v3.0
+ * Features:
+ * - Fetches schedule data from schedule.json
+ * - Displays specific "no lecture" messages for 4 scenarios.
+ * - Fully responsive for mobile and embed views.
  */
 
 const JSON_URL = 'schedule.json';
 
-// --- NEW: Define the two possible messages ---
-const MESSAGE_TODAY = 'Slot kosong, tiada kuliah hari ini';
-const MESSAGE_TOMORROW = 'Tiada kuliah pada hari esok';
-const MESSAGE_ERROR = 'Error: Could not load schedule data.';
+// Define all possible messages in one place for easy management.
+const MESSAGES = {
+    today_subuh: 'Tiada Kuliah Subuh Hari Ini',
+    today_maghrib: 'Tiada Kuliah Maghrib Hari Ini',
+    tomorrow_subuh: 'Tiada Kuliah Subuh pada Hari Esok',
+    tomorrow_maghrib: 'Tiada Kuliah Maghrib pada Hari Esok',
+    error: 'Error: Could not load schedule data'
+};
 
 /**
- * Gets a date string in the required YYYY-MM-DD format.
+ * Gets a date string in YYYY-MM-DD format.
  * @param {string} target 'today' or 'tomorrow'.
- * @returns {string} The formatted date string (e.g., "2025-08-27").
+ * @returns {string} The formatted date string.
  */
 function getTargetDate(target) {
     const date = new Date();
@@ -29,8 +34,8 @@ function getTargetDate(target) {
 }
 
 /**
- * Updates the page content. It either sets a background image or shows a message.
- * @param {string|null} imageUrl The URL of the image to display, or null if none.
+ * Updates the page content (image or message).
+ * @param {string|null} imageUrl The URL of the image, or null.
  * @param {string} message The text to display if there is no image.
  */
 function setDisplay(imageUrl, message) {
@@ -50,37 +55,33 @@ function setDisplay(imageUrl, message) {
 }
 
 /**
- * The main function that initializes the digital sign.
+ * Main function to initialize the display.
  * @param {string} day 'today' or 'tomorrow'.
- * @param {string} lectureType 'subuh_url' or 'maghrib_url'.
+ * @param {string} lectureType 'subuh' or 'maghrib'.
  */
 async function initializeDisplay(day, lectureType) {
+    // Create a unique key to find the correct message and data URL.
+    const messageKey = `${day}_${lectureType}`; // e.g., "today_subuh"
+    const dataKey = `${lectureType}_url`;      // e.g., "subuh_url"
     const targetDate = getTargetDate(day);
-
-    // --- LOGIC CHANGE IS HERE ---
-    // Determine which "no lecture" message to use based on the 'day' parameter.
-    const noLectureMessage = (day === 'today') ? MESSAGE_TODAY : MESSAGE_TOMORROW;
-
+    
     try {
         const response = await fetch(`${JSON_URL}?t=${new Date().getTime()}`);
-        if (!response.ok) {
-            throw new Error(`Could not load schedule.json. Status: ${response.status}`);
-        }
-        const schedule = await response.json();
+        if (!response.ok) throw new Error(`Fetch failed with status ${response.status}`);
         
+        const schedule = await response.json();
         const entry = schedule.find(item => item.date === targetDate);
         
         let imageUrl = null;
-        if (entry && entry[lectureType]) {
-            imageUrl = entry[lectureType];
+        if (entry && entry[dataKey]) {
+            imageUrl = entry[dataKey];
         }
 
-        // Pass the correct message to the setDisplay function.
-        setDisplay(imageUrl, noLectureMessage);
+        // Pass the specific message for this page.
+        setDisplay(imageUrl, MESSAGES[messageKey]);
 
     } catch (error) {
         console.error('Failed to initialize display:', error);
-        // If an error occurs, pass the specific error message.
-        setDisplay(null, MESSAGE_ERROR);
+        setDisplay(null, MESSAGES['error']);
     }
 }
