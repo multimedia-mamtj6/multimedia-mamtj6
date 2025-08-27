@@ -1,8 +1,10 @@
 <!DOCTYPE html>
-<html lang="en"> 
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="refresh" content="3600"> <!-- Refreshes the page every hour -->
+    <!-- This line is essential for mobile and embed responsiveness -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="refresh" content="3600">
     <title>Signage: Today's Subuh</title>
     <link rel="stylesheet" href="style.css">
 </head>
@@ -14,8 +16,7 @@
     </div>
     <script src="script.js"></script>
     <script>
-        // Initialize the display for Today's Subuh lecture
-        initializeDisplay('today', 'subuh_url');
+        initializeDisplay('today', 'subuh');
     </script>
 </body>
 </html>
