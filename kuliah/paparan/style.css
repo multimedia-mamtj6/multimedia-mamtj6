@@ -8,6 +8,10 @@ html, body {
     font-family: sans-serif;
 }
 
+/* 
+This is the main container. It will either have a background image
+or a solid background color. It uses flexbox to center the message box.
+*/
 #display-container {
     height: 100%;
     width: 100%;
@@ -19,10 +23,17 @@ html, body {
     align-items: center;
 }
 
+/* 
+This is the white box that holds the text message.
+It is hidden by default in the HTML and only shown by the JavaScript
+when there is no image to display.
+*/
 .message-box {
     background-color: #ffffff; /* White background for text */
-    color: #333333; /* Dark text color */
+    color: #333333; /* Dark text color for readability */
     padding: 40px;
     border-radius: 10px;
     text-align: center;
+    /* Add a subtle shadow to make it stand out */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
 }
