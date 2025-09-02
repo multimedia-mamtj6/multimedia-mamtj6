@@ -84,9 +84,9 @@
             <div class="date-box">
                 <div class="date-title">Tarikh Hijri</div>
                 <div id="hijriDate">
-                    <div class="date-number" id="hijriDay">25</div>
-                    <div class="date-month" id="hijriMonth">Shaaban</div>
-                    <div class="date-year" id="hijriYear">1446h</div>
+                    <div class="date-number" id="hijriDay">--</div>
+                    <div class="date-month" id="hijriMonth">Memuatkan...</div>
+                    <div class="date-year" id="hijriYear"></div>
                 </div>
             </div>
         </div>
@@ -103,7 +103,23 @@
             'AHAD', 'ISNIN', 'SELASA', 'RABU', 'KHAMIS', 'JUMAAT', 'SABTU'
         ];
 
-        function updateDate() {
+        // Hijri month names in Malay
+        const hijriMonthNames = {
+          "01": "Muharram",
+          "02": "Safar",
+          "03": "Rabi'ul Awwal",
+          "04": "Rabi'ul Akhir",
+          "05": "Jumadil Awwal",
+          "06": "Jumadil Akhir",
+          "07": "Rejab",
+          "08": "Syaaban",
+          "09": "Ramadan",
+          "10": "Syawal",
+          "11": "Zulkaedah",
+          "12": "Zulhijjah",
+        };
+
+        function updateGregorianDate() {
             const now = new Date();
             
             // Update day name
@@ -113,16 +129,45 @@
             document.getElementById('gregDay').textContent = now.getDate();
             document.getElementById('gregMonth').textContent = malayMonths[now.getMonth()];
             document.getElementById('gregYear').textContent = now.getFullYear();
-            
-            // Hijri date is static for this example
-            // In a real implementation, you would need to use a Hijri calendar conversion library
-            document.getElementById('hijriDay').textContent = '25';
-            document.getElementById('hijriMonth').textContent = 'Shaaban';
-            document.getElementById('hijriYear').textContent = '1446h';
         }
 
-        // Update date when page loads
-        updateDate();
+        async function updateHijriDate() {
+            // API URL for Kuala Lumpur (WLY01)
+            const apiUrl = "https://api.waktusolat.app/v2/solat/WLY01";
+            
+            try {
+                const response = await fetch(apiUrl);
+                const data = await response.json();
+                
+                const today = new Date();
+                const dayOfMonth = today.getDate();
+
+                // Find today's data from the API response
+                const todayPrayer = data.prayers.find((prayer) => prayer.day === dayOfMonth);
+
+                if (todayPrayer) {
+                    const hijriDateParts = todayPrayer.hijri.split("-"); // e.g., ["1446", "02", "25"]
+                    const hijriDay = hijriDateParts[2];
+                    const hijriMonth = hijriMonthNames[hijriDateParts[1]];
+                    const hijriYear = hijriDateParts[0];
+
+                    // Update the Hijri date elements
+                    document.getElementById('hijriDay').textContent = hijriDay;
+                    document.getElementById('hijriMonth').textContent = hijriMonth;
+                    document.getElementById('hijriYear').textContent = hijriYear + 'h';
+                } else {
+                    document.getElementById('hijriMonth').textContent = 'Ralat Data';
+                }
+            } catch (error) {
+                console.error("Error fetching Hijri date:", error);
+                document.getElementById('hijriMonth').textContent = 'Gagal memuatkan';
+            }
+        }
+
+
+        // Update both dates when the page loads
+        updateGregorianDate();
+        updateHijriDate();
     </script>
 </body>
 </html>
