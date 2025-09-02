@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PDF Display (Manual Zoom Tweak)</title>
+    <title>PDF Display (Responsive Zoom)</title>
     <style>
         body, html {
             margin: 0;
@@ -14,7 +14,7 @@
             display: flex;
             justify-content: center;
             align-items: center; /* Center content when smaller than the viewport */
-            overflow: auto; /* IMPORTANT: Allows scrollbars when zoomed content is larger than the window */
+            overflow: auto; /* Allows scrollbars when needed (e.g., on desktop) */
         }
         canvas {
             display: block;
@@ -27,10 +27,11 @@
 
     <script>
         // --- DEVELOPER TWEAK ---
-        // Set this value to control the zoom.
-        // Use 'auto' to fit the entire page to the screen (no scrollbars).
-        // Use a number (e.g., 1.9 for 190%) to set a specific zoom level.
-        const developerZoom = 2.0; 
+        // This zoom level will be used for desktop views.
+        const desktopZoom = 2.0; // e.g., 2.0 for 200%
+        
+        // This is the width (in pixels) where the view switches to mobile.
+        const mobileBreakpoint = 768; 
         // -------------------------
 
         const url = 'https://multimedia.mamtj6.com/kuliah/jadual-kuliah.pdf';
@@ -48,16 +49,18 @@
             const viewport = pdfPage.getViewport({ scale: 1 });
             let scale;
 
-            // Determine the scale based on the developer's setting
-            if (developerZoom === 'auto') {
-                // 'auto' mode: calculate scale to fit the whole page
+            // --- RESPONSIVE LOGIC ---
+            // Check if the current window width is less than the breakpoint.
+            if (window.innerWidth < mobileBreakpoint) {
+                // MOBILE VIEW: Calculate scale to fit the whole page.
                 const scaleX = window.innerWidth / viewport.width;
                 const scaleY = window.innerHeight / viewport.height;
                 scale = Math.min(scaleX, scaleY);
             } else {
-                // Manual mode: use the specified number
-                scale = developerZoom;
+                // DESKTOP VIEW: Use the specified desktop zoom level.
+                scale = desktopZoom;
             }
+            // -------------------------
 
             const scaledViewport = pdfPage.getViewport({ scale: scale });
             const devicePixelRatio = window.devicePixelRatio || 1;
@@ -85,12 +88,8 @@
             console.error('Error: ' + reason);
         });
 
-        // If in 'auto' mode, re-render when the window is resized
-        window.addEventListener('resize', () => {
-            if (developerZoom === 'auto') {
-                renderPage();
-            }
-        });
+        // Re-render the page whenever the window is resized to ensure it's always correct
+        window.addEventListener('resize', renderPage);
     </script>
 </body>
 </html>
