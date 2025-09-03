@@ -60,9 +60,8 @@ function setDisplay(imageUrl, message) {
  * @param {string} lectureType 'subuh' or 'maghrib'.
  */
 async function initializeDisplay(day, lectureType) {
-    // Create a unique key to find the correct message and data URL.
-    const messageKey = `${day}_${lectureType}`; // e.g., "today_subuh"
-    const dataKey = `${lectureType}_url`;      // e.g., "subuh_url"
+    const messageKey = `${day}_${lectureType}`;
+    // --- CHANGE 2: No need for dataKey, we'll access it directly ---
     const targetDate = getTargetDate(day);
     
     try {
@@ -73,11 +72,12 @@ async function initializeDisplay(day, lectureType) {
         const entry = schedule.find(item => item.date === targetDate);
         
         let imageUrl = null;
-        if (entry && entry[dataKey]) {
-            imageUrl = entry[dataKey];
+        // --- CHANGE 3: Access the poster_url from the new nested structure ---
+        // Use optional chaining (?.) to prevent errors if 'entry' or 'lectureType' is null.
+        if (entry && entry[lectureType]?.poster_url) {
+            imageUrl = entry[lectureType].poster_url;
         }
 
-        // Pass the specific message for this page.
         setDisplay(imageUrl, MESSAGES[messageKey]);
 
     } catch (error) {
