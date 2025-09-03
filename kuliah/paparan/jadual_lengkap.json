@@ -2,7 +2,11 @@
   {
     "date": "2025-09-01",
     "subuh": null,
-    "maghrib": null
+    "maghrib": {
+      "nama_penceramah": "Ustaz Hisyamuddin bin Md Yatim",
+      "tajuk_kuliah": "Nasihat Agama dan Wasiat Iman",
+      "poster_url": "https://multimedia.mamtj6.com/kuliah/assets/poster-kuliah/1920X1080/03_2.-Ustaz-Hisyamuddin.jpg"
+    }
   },
   {
     "date": "2025-09-02",
@@ -184,43 +188,20 @@
   },
   {
     "date": "2025-09-20",
-    "subuh": null,
-    "maghrib": {
-      "nama_penceramah": "Ustaz Hairul Azam bin Abdul Rahman",
-      "tajuk_kuliah": "Tadabbur - ayat-ayat Surah Al-Baqarah",
-      "poster_url": "https://multimedia.mamtj6.com/kuliah/assets/poster-kuliah/1920X1080/07_6.-Ustaz-Hairul-Azam.jpg"
-    }
-  },
-  {
-    "date": "2025-09-21",
-    "subuh": null,
-    "maghrib": {
-      "nama_penceramah": "Ustaz Muhammad Nazri bin Musa",
-      "tajuk_kuliah": "Penghayatan Al-Quran",
-      "poster_url": "https://multimedia.mamtj6.com/kuliah/assets/poster-kuliah/1920X1080/10_9.-Ustaz-Muhammad-Nazri.jpg"
-    }
-  },
-  {
-    "date": "2025-09-22",
-    "subuh": null,
+    "subuh": {
+      "nama_penceramah": "Ustaz Badrul Hisham bin Abdul Aziz",
+      "tajuk_kuliah": "Fadilat Sedekah",
+      "poster_url": "https://multimedia.mamtj6.com/kuliah/assets/poster-kuliah/1920X1080/15_14.-Ustaz-Badrul-Hisham.jpg"
+    },
     "maghrib": null
   },
   {
-    "date": "2025-09-23",
+    "date": "2025-09-21",
     "subuh": {
-      "nama_penceramah": "Ustaz Abd Maarof bin Abd Razak",
-      "tajuk_kuliah": "Tauhid",
-      "poster_url": "https://multimedia.mamtj6.com/kuliah/assets/poster-kuliah/1920X1080/14_13.-Ustaz-Abd-Maarof.jpg"
+      "nama_penceramah": "Ustaz Badrul Hisham bin Abdul Aziz",
+      "tajuk_kuliah": "Fadilat Sedekah",
+      "poster_url": "https://multimedia.mamtj6.com/kuliah/assets/poster-kuliah/1920X1080/15_14.-Ustaz-Badrul-Hisham.jpg"
     },
-    "maghrib": {
-      "nama_penceramah": "Ustaz Nawawi bin Budin",
-      "tajuk_kuliah": "Ringkasan Riyadhus Solihin",
-      "poster_url": "https://multimedia.mamtj6.com/kuliah/assets/poster-kuliah/1920X1080/16_15.-Ustaz-Nawawi.jpg"
-    }
-  },
-  {
-    "date": "2025-09-24",
-    "subuh": null,
     "maghrib": {
       "nama_penceramah": "Ustaz Amir bin Mat Jusoh",
       "tajuk_kuliah": "Syarah Safinah An-Naja",
@@ -228,7 +209,7 @@
     }
   },
   {
-    "date": "2025-09-25",
+    "date": "2025-09-22",
     "subuh": null,
     "maghrib": {
       "nama_penceramah": "Ustaz Ahmad Termizi bin Hamzah",
@@ -237,16 +218,16 @@
     }
   },
   {
-    "date": "2025-09-26",
+    "date": "2025-09-23",
     "subuh": null,
     "maghrib": {
-      "nama_penceramah": "Ustaz Abdul Aziz bin Abdul Karim",
-      "tajuk_kuliah": "Terjemahan Al-Azkar  Imam An-Nawawi",
-      "poster_url": "https://multimedia.mamtj6.com/kuliah/assets/poster-kuliah/1920X1080/05_4.-Ustaz-Abdul-Aziz.jpg"
+      "nama_penceramah": "YAA Dato' Sri Haji Abdul Rahman bin Md Yunos",
+      "tajuk_kuliah": "Fekah Kesihatan Dalam Ibadah Dan Sunnah Nabi",
+      "poster_url": "https://multimedia.mamtj6.com/kuliah/assets/poster-kuliah/1920X1080/18_17.-YAA-Dato'-Seri-Haji-Abdul-Rahman-bin-Md-Yunos.jpg"
     }
   },
   {
-    "date": "2025-09-27",
+    "date": "2025-09-24",
     "subuh": null,
     "maghrib": {
       "nama_penceramah": "Ustaz Salleh bin Talib",
@@ -255,7 +236,7 @@
     }
   },
   {
-    "date": "2025-09-28",
+    "date": "2025-09-25",
     "subuh": null,
     "maghrib": {
       "nama_penceramah": "Bacaan Yasiin & Tahlil",
@@ -264,30 +245,40 @@
     }
   },
   {
-    "date": "2025-09-29",
+    "date": "2025-09-26",
     "subuh": null,
     "maghrib": {
-      "nama_penceramah": "Ustaz Anuar Suhaimi bin Abdullah",
-      "tajuk_kuliah": "132 Langkah Penyucian Jiwa, Asy-Syahid Dr Muhammad Sa'id Ramadan Al-Buti",
-      "poster_url": "https://multimedia.mamtj6.com/kuliah/assets/poster-kuliah/1920X1080/06_5.-Ustaz-Anuar.jpg"
+      "nama_penceramah": "Ustaz Wahid Ghaffar bin Ibrahim",
+      "tajuk_kuliah": "Umum & Semasa",
+      "poster_url": "https://multimedia.mamtj6.com/kuliah/assets/poster-kuliah/1920X1080/13_12.-Ustaz-Wahid-Ghaffar.jpg"
     }
   },
   {
-    "date": "2025-09-30",
-    "subuh": {
-      "nama_penceramah": "Ustaz Badrul Hisham bin Abdul Aziz",
-      "tajuk_kuliah": "Fadilat Sedekah",
-      "poster_url": "https://multimedia.mamtj6.com/kuliah/assets/poster-kuliah/1920X1080/15_14.-Ustaz-Badrul-Hisham.jpg"
-    },
+    "date": "2025-09-27",
+    "subuh": null,
+    "maghrib": {
+      "nama_penceramah": "Ustaz Abd Maarof bin Abd Razak",
+      "tajuk_kuliah": "Tauhid",
+      "poster_url": "https://multimedia.mamtj6.com/kuliah/assets/poster-kuliah/1920X1080/14_13.-Ustaz-Abd-Maarof.jpg"
+    }
+  },
+  {
+    "date": "2025-09-28",
+    "subuh": null,
+    "maghrib": {
+      "nama_penceramah": "Ustaz Amir bin Mat Jusoh",
+      "tajuk_kuliah": "Syarah Safinah An-Naja",
+      "poster_url": "https://multimedia.mamtj6.com/kuliah/assets/poster-kuliah/1920X1080/17_16.-Ustaz-Amir.jpg"
+    }
+  },
+  {
+    "date": "2025-09-29",
+    "subuh": null,
     "maghrib": null
   },
   {
-    "date": "2025-08-31",
-    "subuh": {
-      "nama_penceramah": "Ustaz Badrul Hisham bin Abdul Aziz",
-      "tajuk_kuliah": "Fadilat Sedekah",
-      "poster_url": "https://multimedia.mamtj6.com/kuliah/assets/poster-kuliah/1920X1080/15_14.-Ustaz-Badrul-Hisham.jpg"
-    },
+    "date": "2025-09-30",
+    "subuh": null,
     "maghrib": null
   }
 ]
