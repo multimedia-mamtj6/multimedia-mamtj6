@@ -1,11 +1,17 @@
+// =================================================================
+// SCRIPT.JS UNTUK DIGITAL SIGNAGE
+// Versi 4.0 - Diperbaiki untuk membaca struktur JSON baharu
+// =================================================================
+
 /**
- * Digital Signage Script v3.0
+ * Digital Signage Script v4.0
  * Features:
- * - Fetches schedule data from schedule.json
+ * - Fetches schedule data from a structured 'jadual_lengkap.json'.
  * - Displays specific "no lecture" messages for 4 scenarios.
  * - Fully responsive for mobile and embed views.
  */
 
+// URL ini mesti menunjuk kepada fail JSON yang dijana oleh Google Apps Script anda
 const JSON_URL = 'https://multimedia.mamtj6.com/kuliah/data/jadual_lengkap.json';
 
 // Define all possible messages in one place for easy management.
@@ -61,19 +67,27 @@ function setDisplay(imageUrl, message) {
  */
 async function initializeDisplay(day, lectureType) {
     const messageKey = `${day}_${lectureType}`;
-    // --- CHANGE 2: No need for dataKey, we'll access it directly ---
     const targetDate = getTargetDate(day);
     
     try {
         const response = await fetch(`${JSON_URL}?t=${new Date().getTime()}`);
         if (!response.ok) throw new Error(`Fetch failed with status ${response.status}`);
         
-        const schedule = await response.json();
-        const entry = schedule.find(item => item.date === targetDate);
+        // --- PERUBAHAN UTAMA DI SINI ---
+        
+        // 1. Muatkan keseluruhan objek JSON
+        const jsonData = await response.json();
+        
+        // 2. Akses array 'senaraiHari' yang berada DI DALAM objek tersebut
+        const scheduleList = jsonData.senaraiHari;
+        
+        // 3. Jalankan .find() pada array yang betul
+        const entry = scheduleList.find(item => item.date === targetDate);
+        
+        // --- AKHIR PERUBAHAN ---
         
         let imageUrl = null;
-        // --- CHANGE 3: Access the poster_url from the new nested structure ---
-        // Use optional chaining (?.) to prevent errors if 'entry' or 'lectureType' is null.
+        // Gunakan optional chaining (?.) untuk mengelak ralat jika 'entry' atau 'lectureType' adalah null
         if (entry && entry[lectureType]?.poster_url) {
             imageUrl = entry[lectureType].poster_url;
         }
