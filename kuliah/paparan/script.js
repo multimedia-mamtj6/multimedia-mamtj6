@@ -6,7 +6,7 @@
  * - Fully responsive for mobile and embed views.
  */
 
-const JSON_URL = 'https://multimedia.mamtj6.com/kuliah/paparan/jadual_lengkap.json';
+const JSON_URL = 'jadual_lengkap.json';
 
 // Define all possible messages in one place for easy management.
 const MESSAGES = {
