@@ -1,12 +1,13 @@
 /**
- * Digital Signage Script v3.0
+ * Digital Signage Script v4.0 - Integrated Version
  * Features:
- * - Fetches schedule data from schedule.json
+ * - Fetches schedule data from the new structured 'jadual_lengkap.json'.
  * - Displays specific "no lecture" messages for 4 scenarios.
  * - Fully responsive for mobile and embed views.
  */
 
-const JSON_URL = 'jadual_lengkap.json';
+// URL kini merujuk kepada fail JSON yang dijana oleh Google Sheet
+const JSON_URL = 'https://multimedia.mamtj6.com/kuliah/paparan/jadual_lengkap.json';
 
 // Define all possible messages in one place for easy management.
 const MESSAGES = {
@@ -19,8 +20,6 @@ const MESSAGES = {
 
 /**
  * Gets a date string in YYYY-MM-DD format.
- * @param {string} target 'today' or 'tomorrow'.
- * @returns {string} The formatted date string.
  */
 function getTargetDate(target) {
     const date = new Date();
@@ -35,8 +34,6 @@ function getTargetDate(target) {
 
 /**
  * Updates the page content (image or message).
- * @param {string|null} imageUrl The URL of the image, or null.
- * @param {string} message The text to display if there is no image.
  */
 function setDisplay(imageUrl, message) {
     const container = document.getElementById('display-container');
@@ -56,24 +53,24 @@ function setDisplay(imageUrl, message) {
 
 /**
  * Main function to initialize the display.
- * @param {string} day 'today' or 'tomorrow'.
- * @param {string} lectureType 'subuh' or 'maghrib'.
  */
 async function initializeDisplay(day, lectureType) {
     const messageKey = `${day}_${lectureType}`;
-    // --- CHANGE 2: No need for dataKey, we'll access it directly ---
     const targetDate = getTargetDate(day);
     
     try {
         const response = await fetch(`${JSON_URL}?t=${new Date().getTime()}`);
         if (!response.ok) throw new Error(`Fetch failed with status ${response.status}`);
         
-        const schedule = await response.json();
+        // --- PERUBAHAN UTAMA DI SINI ---
+        const jsonData = await response.json();
+        
+        // Ekstrak array jadual dari 'senaraiHari'
+        const schedule = jsonData.senaraiHari; 
+        
         const entry = schedule.find(item => item.date === targetDate);
         
         let imageUrl = null;
-        // --- CHANGE 3: Access the poster_url from the new nested structure ---
-        // Use optional chaining (?.) to prevent errors if 'entry' or 'lectureType' is null.
         if (entry && entry[lectureType]?.poster_url) {
             imageUrl = entry[lectureType].poster_url;
         }
