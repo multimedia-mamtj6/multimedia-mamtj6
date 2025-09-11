@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="ms">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Jadual Kuliah & Paparan Digital - MAMTJ6</title>
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="https://multimedia.mamtj6.com/media/logo/mamtj6_single.svg" />
+    <!-- Open Graph Meta Tags -->
+    <meta property="og:title" content="Jadual Kuliah & Paparan Digital - MAMTJ6" />
+    <meta property="og:description" content="Akses jadual kuliah bulanan dan paparan digital untuk Masjid Al-Mukhlisin, Taman Jaya 6." />
+    <meta property="og:image" content="https://multimedia.mamtj6.com/media/web/linkpreview.jpg" />
+    <meta property="og:url" content="https://multimedia.mamtj6.com/kuliah/" />
+    <meta property="og:type" content="website" />
+    
+    <style>
+      body {
+        font-family: "Poppins", "Arial", sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #333;
+        color: #f4f4f4;
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+      }
+
+      header {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        height: 30vh;
+        min-height: 150px;
+        background-image: url("https://multimedia.mamtj6.com/media/img/plain-blue-bg.png");
+        background-size: cover;
+        background-position: center;
+        color: white;
+        padding: 20px 10px;
+      }
+
+      .logo {
+        max-width: 200px;
+        height: auto;
+        margin-bottom: 10px;
+      }
+
+      header h1 {
+        margin: 10px 0;
+        font-size: 2em;
+      }
+
+      .description {
+        text-align: center;
+        padding: 20px;
+        background-color: #444;
+        margin: 20px 10px;
+        border-radius: 10px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+      }
+
+      .buttons {
+        margin-top: 20px;
+      }
+
+      .button {
+        display: inline-block;
+        margin: 10px;
+        padding: 12px 24px;
+        background-color: #007bff;
+        color: white;
+        text-decoration: none;
+        border-radius: 25px;
+        transition: background-color 0.3s, transform 0.3s;
+      }
+
+      .button:hover {
+        background-color: #0056b3;
+        transform: translateY(-5px);
+      }
+
+      .popup-buttons {
+        margin: 10px auto;
+        max-width: 600px;
+        text-align: center;
+      }
+
+      .popup-button {
+        background-color: #007bff;
+        color: white;
+        cursor: pointer;
+        padding: 12px 20px;
+        width: 80%;
+        border: none;
+        text-align: center;
+        outline: none;
+        font-size: 16px;
+        margin-bottom: 10px;
+        border-radius: 10px;
+        transition: background-color 0.3s;
+      }
+
+      .popup-button:hover {
+        background-color: #0056b3;
+      }
+
+      .popup {
+        display: none;
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background-color: #555;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+        z-index: 1000;
+        width: 80%;
+        max-width: 500px;
+      }
+
+      .popup .close-button {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        background: none;
+        border: none;
+        font-size: 24px;
+        color: #f4f4f4;
+        cursor: pointer;
+      }
+      
+      .popup .title {
+        font-size: 16px;
+        font-weight: bold;
+        margin: 15px 0 10px 0;
+        color: #f4f4f4;
+        border-bottom: 1px solid #666;
+        padding-bottom: 5px;
+      }
+
+      .popup .link-button {
+        display: block;
+        margin: 5px 0;
+        padding: 8px 16px;
+        background-color: #007bff;
+        color: white;
+        text-decoration: none;
+        border-radius: 5px;
+        text-align: center;
+        font-size: 14px;
+        transition: background-color 0.3s, transform 0.3s;
+      }
+
+      .popup .link-button:hover {
+        background-color: #0056b3;
+        transform: translateY(-3px);
+      }
+
+      .overlay {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        z-index: 999;
+      }
+      
+      /* --- GAYA BAHARU DI SINI --- */
+      .popup .note {
+        font-size: 12px;
+        font-style: italic;
+        color: #ccc;
+        margin-top: 5px;
+      }
+      
+      .popup .link-button.disabled {
+        background-color: #5a5a5a;
+        color: #aaa;
+        cursor: not-allowed;
+        pointer-events: none; /* Menjadikannya tidak boleh diklik */
+      }
+      
+      .popup .disabled-wrapper {
+        display: flex;
+        align-items: center;
+        gap: 10px; /* Jarak antara butang dan nota */
+      }
+      
+      .popup .disabled-wrapper .note {
+        margin-top: 0; /* Buang margin atas untuk nota ini */
+      }
+      
+      footer {
+        background-color: #222;
+        color: #f4f4f4;
+        text-align: center;
+        padding: 20px 0;
+        border-top: 1px solid #444;
+        margin-top: auto;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <img src="https://i.postimg.cc/JnM7F2FC/mamtj6-white-text.webp" alt="Logo" class="logo" />
+      <h1>JADUAL KULIAH & PAPARAN DIGITAL</h1>
+    </header>
+
+    <section class="description">
+      <!-- DESKRIPSI BAHARU DI SINI -->
+      <p>Laman ini merupakan hab utama untuk mengakses Jadual Kuliah bulanan dan Paparan Digital Signage bagi Masjid Al-Mukhlisin, Taman Jaya 6. Semua data dikuasakan secara automatik melalui Google Sheet dan dihoskan di GitHub Pages.</p>
+      <div class="buttons">
+        <a href="https://www.mamtj6.com/pengimarahan/info-kuliah" class="button">Laman Info Kuliah</a>
+        <a href="https://github.com/multimedia-mamtj6/multimedia-mamtj6/tree/main/kuliah" class="button">Repositori Github</a>
+      </div>
+    </section>
+
+    <section class="popup-buttons">
+      <h2>Sila pilih paparan yang dikehendaki:</h2>
+      <button class="popup-button" data-popup="popup1">1. Jadual Penuh Bulanan</button>
+      <button class="popup-button" data-popup="popup2">2. Paparan Digital Signage</button>
+    </section>
+
+    <!-- Popup Menus -->
+    <div id="popup1" class="popup">
+      <button class="close-button">&times;</button>
+      <div class="title">Jadual Penuh</div>
+      
+      <!-- KANDUNGAN POPUP DIUBAH SUAI DI SINI -->
+      <div>
+        <a href="jadual/jadual.html" class="link-button">Lihat Jadual Kalendar</a>
+        <div class="note">(Dioptimumkan untuk paparan desktop)</div>
+      </div>
+      
+      <div class="disabled-wrapper" style="margin-top: 10px;">
+        <a href="#" class="link-button disabled">Jana & Muat Turun PDF</a>
+        <div class="note">(Akan Datang)</div>
+      </div>
+    </div>
+
+    <div id="popup2" class="popup">
+      <button class="close-button">&times;</button>
+      <div class="title">Paparan Hari Ini</div>
+      <a href="paparan/today_maghrib.html" class="link-button">Kuliah Maghrib Hari Ini</a>
+      <a href="paparan/today_subuh.html" class="link-button">Kuliah Subuh Hari Ini</a>
+      <div class="title">Paparan Hari Esok</div>
+      <a href="paparan/tomorrow_maghrib.html" class="link-button">Kuliah Maghrib Esok</a>
+      <a href="paparan/tomorrow_subuh.html" class="link-button">Kuliah Subuh Esok</a>
+    </div>
+
+    <!-- Overlay for Popup -->
+    <div class="overlay"></div>
+
+    <footer>
+      <p>&copy; 2025 MAMTJ6. All rights reserved. | <a href="https://mamtj6.com">mamtj6.com</a></p>
+    </footer>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const popupButtons = document.querySelectorAll(".popup-button");
+        const popups = document.querySelectorAll(".popup");
+        const overlay = document.querySelector(".overlay");
+        const closeButtons = document.querySelectorAll(".close-button");
+
+        // Buka popup
+        popupButtons.forEach((button) => {
+          button.addEventListener("click", function () {
+            const popupId = this.getAttribute("data-popup");
+            const popup = document.getElementById(popupId);
+            popup.style.display = "block";
+            overlay.style.display = "block";
+          });
+        });
+
+        // Fungsi untuk menutup semua popup
+        function closeAllPopups() {
+          popups.forEach((p) => {
+            p.style.display = "none";
+          });
+          overlay.style.display = "none";
+        }
+
+        // Tutup popup bila klik butang 'X'
+        closeButtons.forEach((button) => {
+          button.addEventListener("click", closeAllPopups);
+        });
+
+        // Tutup popup bila klik di luar (pada overlay)
+        overlay.addEventListener("click", closeAllPopups);
+      });
+    </script>
+  </body>
+</html>
