@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Masjid Al-Mukhlisin - Halaman Utama</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        /* Gaya khusus untuk halaman utama */
+        .hub-container {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            height: 100vh;
+        }
+        .hub-header {
+            margin-bottom: 3rem;
+        }
+        .nav-buttons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            width: 100%;
+            max-width: 600px;
+        }
+        .nav-button {
+            background-color: #fff;
+            color: var(--primary-color);
+            border: 2px solid var(--primary-color);
+            padding: 1.5rem;
+            border-radius: 12px;
+            text-decoration: none;
+            font-size: 1.2rem;
+            font-weight: 700;
+            transition: all 0.3s ease;
+        }
+        .nav-button:hover {
+            background-color: var(--primary-color);
+            color: #fff;
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 90, 156, 0.2);
+        }
+        .nav-button.full-width {
+            grid-column: 1 / -1; /* Span full width */
+        }
+        @media (max-width: 600px) {
+            .nav-buttons {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="hub-container">
+        <header class="header hub-header">
+            <h1>MASJID AL-MUKHLISIN, TAMAN JAYA 6</h1>
+            <p>28000 TEMERLOH, PAHANG</p>
+        </header>
+
+        <div class="nav-buttons">
+    <a href="jadual.html" class="nav-button full-width">Lihat Jadual Kuliah</a>
+    
+    <a href="./jadual-kuliah.png" download class="nav-button">Muat Turun PNG</a>
+    
+    <!-- PERUBAHAN DI SINI -->
+    <a href="jadual.html?action=download-pdf" class="nav-button">Jana & Muat Turun PDF</a>
+
+    <a href="#" class="nav-button full-width disabled">Panel Kawalan Admin</a>
+</div>
+
+        <footer class="footer">
+            <p>&copy; 2024 Masjid Al-Mukhlisin. Hak Cipta Terpelihara.</p>
+        </footer>
+    </div>
+</body>
+</html>
