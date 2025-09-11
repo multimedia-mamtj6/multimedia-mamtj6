@@ -4,7 +4,7 @@
 document.addEventListener('DOMContentLoaded', async () => {
     try {
         // Laluan fail yang betul jika script.js berada di dalam folder 'jadual/'
-        const jsonData = await fetch('../data/jadual_lengkap.json').then(res => res.json());
+        const jsonData = await fetch('../kuliah/data/jadual_lengkap.json').then(res => res.json());
         
         const titleElement = document.getElementById('schedule-title');
         if (titleElement && jsonData.infoJual.tajukBulan) {
