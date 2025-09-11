@@ -1,4 +1,4 @@
-/* --- Global & Font Styles --- */
+/* --- KOD PENUH STYLE.CSS (DENGAN PEMBETULAN HIGHLIGHT) --- */
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap');
 
 :root {
@@ -8,244 +8,111 @@
     --empty-cell-bg: #F2F2F2;
     --subuh-color: #0070C0;
     --maghrib-color: #C0504D;
-    
-    /* Warna baharu untuk jalur tarikh */
-    --date-header-bg: #FFFACD;  /* Warna kuning keemasan */
-    --date-number-color: #2E5A88; /* Warna biru gelap */
-    --holiday-label-bg: #2c3e50; /* Warna biru gelap */
-    --today-highlight-bg: #f1e42c; /* Warna biru muda (Sky Blue) */
+    --date-header-bg: #FFFACD;
+    --date-number-color: #2E5A88;
+    --holiday-label-bg: #2c3e50;
+    --today-highlight-bg: #f1e42c;
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
 
 body {
-    font-family: 'Poppins', sans-serif; /* <--- Perubahan di sini */
+    font-family: 'Poppins', sans-serif;
     background-color: #fff;
     color: #000;
     overflow: hidden; 
 }
 
-.page-container {
-    display: flex;
-    flex-direction: column;
-    height: 100vh;
-    width: 95vw; 
-    max-width: 1800px;
-    margin: 0 auto;
-    padding: 1.5vmin;
-}
-
-.page-header {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-align: left; /* <--- Tukar kepada 'left' di sini */
-    flex-shrink: 0;
-    padding-bottom: 1.5vmin;
-}
-
-.logo-container {
-    width: 20vmin; /* Saiz logo yang telah dibesarkan sedikit */
-    margin-right: 2vmin;
-    flex-shrink: 0;
-}
+.page-container { display: flex; flex-direction: column; height: 100vh; width: 95vw; max-width: 1800px; margin: 0 auto; padding: 1.5vmin; }
+.page-header { display: flex; align-items: center; justify-content: center; text-align: left; flex-shrink: 0; padding-bottom: 1.5vmin; }
+.logo-container { width: 20vmin; margin-right: 2vmin; flex-shrink: 0; }
 .logo-container img { max-width: 100%; }
-.title-container .title-main {
-    font-family: 'Poppins', sans-serif;
-    font-size: 2.2vmin;
-    font-weight: 400;
-    margin-bottom: -0.5; /* Buang ruang tambahan di bawah baris ini */
-}
+.title-container .title-main { font-family: 'Poppins', sans-serif; font-size: 2.2vmin; font-weight: 400; margin-bottom: -0.5vmin; }
+.title-container .title-month { font-family: 'Poppins', sans-serif; font-size: 5vmin; font-weight: 700; margin-top: -1vmin; }
+main { flex-grow: 1; min-height: 0; }
 
-.title-container .title-month {
-    font-family: 'Poppins', sans-serif;
-    font-size: 5vmin;
-    font-weight: 700;
-    margin-top: -1vmin; /* Tambah sedikit ruang kecil di atas baris ini */
-}
-main {
-    flex-grow: 1;
-    min-height: 0;
-}
-
-.schedule-table {
-    width: 100%;
-    height: 100%;
-    border-collapse: collapse;
-    table-layout: fixed;
-    border: 2px solid var(--border-color);
-}
-.schedule-table th, .schedule-table td {
-    border: 1px solid var(--border-color);
-    vertical-align: top;
-    padding: 0.5vmin;
-}
-.schedule-table thead th {
-    background-color: var(--week-bg);
-    font-size: 1.6vmin;
-    text-align: center;
-    vertical-align: middle;
-}
+.schedule-table { width: 100%; height: 100%; border-collapse: collapse; table-layout: fixed; border: 2px solid var(--border-color); }
+.schedule-table th, .schedule-table td { border: 1px solid var(--border-color); vertical-align: top; padding: 0.5vmin; }
+.schedule-table thead th { background-color: var(--week-bg); font-size: 1.6vmin; text-align: center; vertical-align: middle; }
 .week-header-title { background-color: var(--week-col-bg) !important; width: 2%; }
-.week-number-cell {
-    background-color: var(--week-col-bg);
-    font-weight: bold;
-    font-size: 1.6vmin;
-    text-align: center;
-    vertical-align: middle;
-    writing-mode: vertical-lr;
-    transform: rotate(180deg);
-}
+.week-number-cell { background-color: var(--week-col-bg); font-weight: bold; font-size: 1.6vmin; text-align: center; vertical-align: middle; writing-mode: vertical-lr; transform: rotate(180deg); }
 
-/* --- Perubahan untuk Latar Belakang Tarikh --- */
 .day-cell {
     position: relative;
-    /* Menetapkan warna latar belakang kuning untuk keseluruhan petak */
     background-color: var(--date-header-bg);
 }
 .day-cell.empty-cell {
-    /* Pastikan petak kosong menggunakan warna kelabu, bukan kuning */
     background-color: var(--empty-cell-bg);
+}
+/* --- PEMBETULAN UTAMA DI SINI --- */
+/* Gaya ini kini akan berfungsi kerana .is-today berada pada .day-cell */
+.day-cell.is-today {
+    background-color: var(--today-highlight-bg);
 }
 
 .date-number {
     font-weight: bold;
     position: absolute;
-    top: -0.3vmin;
+    top: -0.9vmin;
     left: 0.5vmin;
-    font-size: 2.0vmin;
+    font-size: 2.5vmin;
     color: var(--date-number-color);
 }
 
-
 .lecture-content {
     position: absolute;
-    top: 2.5vmin;      /* Ketinggian jalur kuning dikekalkan */
-    bottom: 0;       /* Rapatkan ke sempadan bawah */
-    left: 0;         /* Rapatkan ke sempadan kiri */
-    right: 0;        /* Rapatkan ke sempadan kanan */
-    
+    top: 2.5vmin;
+    bottom: 0;
+    left: 0;
+    right: 0;
     display: flex;
     flex-direction: column;
     justify-content: center;
-    
     font-size: 1.4vmin;
     text-align: center;
-    
     background-color: #fff;
-    
-    /* Menambah ruang dalaman supaya teks tidak terlekat di tepi */
     padding: 0.1vmin;
 }
 
 .lecture-block { padding-bottom: 0.5vmin; }
 .lecture-block + .lecture-block { border-top: 1px solid #ccc; padding-top: 0.5vmin; margin-top: 0.5vmin; }
+.lecture-time, .ustaz-name, .lecture-title { line-height: 1.2; }
 .lecture-time { font-weight: bold; font-size: 1.6vmin; }
 .lecture-time.subuh { color: var(--subuh-color); }
 .lecture-time.maghrib { color: var(--maghrib-color); }
 .ustaz-name { font-weight: bold; }
 .lecture-title { font-style: italic; }
-
-.yasin-cell { text-align: center; vertical-align: middle; }
 .arabic-text { font-size: 4.5vmin; font-family: 'Times New Roman', serif; }
 .yasin-title { font-weight: bold; font-size: 1.4vmin; }
 
-.page-footer {
-    padding-top: 1vmin;
-    font-size: 1.2vmin;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    flex-shrink: 0;
-}
+.page-footer { padding-top: 1vmin; font-size: 1.2vmin; display: flex; justify-content: space-between; align-items: center; flex-shrink: 0; }
 .legend { display: flex; align-items: center; gap: 1vmin; }
 .legend-box { width: 12vw; padding: 0.5vmin 0; border: 1px solid #000; text-align: center; font-weight: bold; }
 .empty-slot-legend { background-color: var(--empty-cell-bg); }
 .public-holiday-legend { background-color: #2c3e50; color: white; }
+.legend-box.today-legend { background-color: var(--today-highlight-bg); }
 .footer-link a { color: #0000FF; }
 
-/* --- PILIHAN A: UNTUK MERAPATKAN RUANG SECARA SERAGAM --- */
-
-.lecture-time,
-.ustaz-name,
-.lecture-title {
-    /* Nilai asal adalah lebih kurang 1.4 atau 1.5. */
-    /* Cuba nilai 1.2 untuk merapatkannya sedikit. */
-    /* Jika masih terlalu jauh, cuba 1.1 atau 1.0 */
-    line-height: 1.2;
-}
-
-/* --- Gaya untuk menyerlahkan jalur tarikh hari ini --- */
-.day-cell.is-today {
-    /* Mengatasi warna kuning dengan warna biru muda */
-    background-color: var(--today-highlight-bg);
-}
-
-/* --- Gaya untuk Label Cuti Umum --- */
 .date-header {
+    position: relative; /* Tambah ini untuk membolehkan z-index */
+    z-index: 1; /* Pastikan header di atas .lecture-content */
     display: flex;
-    justify-content: space-between; /* Meletakkan nombor di kiri, label di kanan */
-    align-items: center; /* Menjajarkan item secara menegak di tengah */
-    width: 100%; /* Memastikan ia mengisi ruang jalur kuning */
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
 }
 
 .holiday-label {
     background-color: var(--holiday-label-bg);
     color: white;
-    font-size: 1.1vmin; /* Saiz fon asas yang kecil */
-    font-weight: bold;
-    padding: 0.3vmin 0.8vmin; /* Ruang di dalam label */
-    border-radius: 5px; /* Menjadikannya segi empat tepat bulat */
-    white-space: nowrap; /* Memastikan teks sentiasa dalam satu baris */
-    
-    /* Pilihan C: Mengecilkan fon jika teks terlalu panjang */
-    /* Kita akan mengawal ini melalui JavaScript, tetapi CSS ini membantu */
-    max-width: 70%; /* Hadkan lebar maksimum label */
-    overflow: hidden;
-    text-overflow: ellipsis; /* Fallback jika pengecilan fon tidak cukup */
-}
-
-.date-header {
-    display: flex; /* Mengaktifkan Flexbox */
-    justify-content: space-between; /* Meletakkan item di hujung bertentangan (kiri & kanan) */
-    align-items: center; /* Menjajarkan item di tengah secara menegak */
-    width: 100%;
-}
-
-.holiday-label {
-    background-color: #2c3e50; /* Warna biru gelap */
-    color: white;
     font-size: 1.1vmin;
     font-weight: bold;
-    padding: 0.3vmin 0.8vmin;
+    padding: 0vmin 0.8vmin;
     border-radius: 5px;
-    white-space: nowrap; /* Memastikan teks tidak turun baris */
+    white-space: nowrap;
     margin-left: auto; /* Ini tolak label sampai ke kanan */
 }
 
-.lecture-content.is-empty-slot {
-    /* Menukar latar belakang putih kepada kelabu */
-    background-color: var(--empty-cell-bg);
-}
-
-.empty-slot-text {
-    /* Menggayakan teks "Slot Kosong" */
-    font-weight: bold;
-    font-size: 1.6vmin;
-    color: #888; /* Warna kelabu gelap untuk teks */
-}
-
-/* --- Gaya untuk blok slot kosong pada hujung minggu --- */
-
-/* --- KOD BAHARU YANG DIPERBAIKI --- */
-.lecture-block.is-weekend-empty {
-    background-color: var(--empty-cell-bg);
-    /* border: 1px dashed #ccc; */ /* Baris ini telah dibuang atau di 'comment out' */
-    border-radius: 5px;
-    padding-top: 2vmin;
-    padding-bottom: 1.5vmin;
-}
-
-.legend-box.today-legend {
-    background-color: #f1e42c; /* Warna latar belakang seperti yang diminta */
-}
+.lecture-content.is-empty-slot { background-color: var(--empty-cell-bg); }
+.empty-slot-text { font-weight: bold; font-size: 1.6vmin; color: #888; }
+.lecture-block.is-weekend-empty { background-color: var(--empty-cell-bg); border-radius: 5px; padding-top: 2vmin; padding-bottom: 1.5vmin; }
