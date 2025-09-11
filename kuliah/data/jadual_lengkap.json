@@ -1,7 +1,7 @@
 {
   "infoJadual": {
     "tajukBulan": "BULAN SEPTEMBER 2025",
-    "tarikhKemasKini": "*Dikemaskini oleh Biro Dakwah pada 10/9/2025"
+    "tarikhKemasKini": "*Dikemaskini oleh Biro Dakwah pada 12/9/2025"
   },
   "senaraiHari": [
     {
@@ -286,12 +286,12 @@
     },
     {
       "date": "2025-09-27",
-      "subuh": null,
-      "maghrib": {
+      "subuh": {
         "nama_penceramah": "Ustaz Abd Maarof",
         "tajuk_kuliah": "Tauhid",
         "poster_url": "https://multimedia.mamtj6.com/kuliah/assets/poster-kuliah/1920X1080/14_13.-Ustaz-Abd-Maarof.jpg"
       },
+      "maghrib": null,
       "cuti_umum": null
     },
     {
