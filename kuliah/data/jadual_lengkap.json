@@ -1,7 +1,7 @@
 {
   "infoJadual": {
     "tajukBulan": "BULAN SEPTEMBER 2025",
-    "tarikhKemasKini": "*Dikemaskini oleh Biro Dakwah pada 13/9/2025"
+    "tarikhKemasKini": "*Dikemaskini oleh Biro Dakwah pada 15/9/2025"
   },
   "senaraiHari": [
     {
@@ -160,11 +160,7 @@
     },
     {
       "date": "2025-09-16",
-      "subuh": {
-        "nama_penceramah": "Ustaz Badrul Hisham",
-        "tajuk_kuliah": "Fadilat Sedekah",
-        "poster_url": "https://multimedia.mamtj6.com/kuliah/assets/poster-kuliah/1920X1080/15_14.-Ustaz-Badrul-Hisham.jpg"
-      },
+      "subuh": null,
       "maghrib": {
         "nama_penceramah": "Ustaz Shahruwardi ",
         "tajuk_kuliah": "Tuhfah Ar-Raghibin",
