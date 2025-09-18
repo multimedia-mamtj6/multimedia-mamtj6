@@ -9,6 +9,7 @@ Projek ini bertujuan untuk memaparkan tarikh-tarikh penting dalam kalendar Islam
 *   **Laman Kalendar Utama:** [multimedia.mamtj6.com/calendar/hijri/info.html](https://multimedia.mamtj6.com/calendar/hijri/info.html)
 *   **Integrasi Penuh (bersama Widget):** [www.mamtj6.com/takwim/takwim-islam](https://www.mamtj6.com/takwim/takwim-islam)
 *   **Contoh Widget Kira Detik:** [multimedia.mamtj6.com/calendar/hijri/widgets.html](https://multimedia.mamtj6.com/calendar/hijri/widgets.html)
+*   **Info Waktu dan Tarikh Hijri Terkini** [**multimedia.mamtj6.com/calendar/hijri/hari-ini.html**](https://multimedia.mamtj6.com/calendar/hijri/hari-ini.html)
 
 ---
 
@@ -18,9 +19,11 @@ Projek ini bertujuan untuk memaparkan tarikh-tarikh penting dalam kalendar Islam
 *   **Kira Detik (Countdown):** Mengira baki hari ke setiap acara akan datang.
 *   **Reka Bentuk Responsif:** Paparan jadual yang kemas di desktop dan bertukar kepada paparan kad yang mesra pengguna di peranti mudah alih.
 *   **Pusat Data Tunggal:** Semua data acara dan tarikh kemas kini diuruskan melalui satu fail sahaja, iaitu `events.json`.
-*   **Widget Boleh Benam:** Disertakan dengan fail `widget.html` berasingan untuk menjana kad kira detik yang boleh dibenamkan di mana-mana laman web lain.
+*   **'Embeded' Widget:** Disertakan dengan fail `widget.html` berasingan untuk menjana kad kira detik yang boleh dibenamkan di mana-mana laman web lain.
+*   **`hari-ini.html`: Widget ringkas dan moden yang memaparkan dua maklumat penting: jam rasmi Waktu Standard Malaysia (MST) dari SIRIM dan tarikh Hijrah semasa yang disegerakkan dengan data e-Solat JAKIM.
 
 ---
+
 
 ### 🛠️ Teknologi yang Digunakan
 
@@ -43,7 +46,7 @@ Mengemas kini data untuk tahun baharu adalah sangat mudah dan hanya melibatkan s
 
 ---
 
-### 🧩 Widget Kira Detik Boleh Benam
+### 🧩'Embeded' Widget Countdown
 
 Projek ini juga menyertakan fail `widget.html` yang boleh digunakan untuk memaparkan kira detik bagi satu acara secara khusus. Widget ini boleh dibenamkan di mana-mana laman web menggunakan `<iframe>`.
 
