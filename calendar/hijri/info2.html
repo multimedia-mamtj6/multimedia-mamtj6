@@ -14,35 +14,18 @@
         .page-header h1 { color: #2c3e50; margin: 0; font-size: 1.8em; text-transform: uppercase; }
         .page-header .subtitle { font-style: italic; font-size: 1.1em; color: #555; margin: 5px 0 0 0; }
 
-        /* PENAMBAHBAIKAN: Seksyen Tarikh Hari Ini */
-        .today-date-card {
-            background: #e3f2fd; /* Latar belakang biru lembut */
-            border-left: 5px solid #2196F3; /* Aksen biru */
-            border-radius: 8px;
-            padding: 20px 25px;
-            margin-bottom: 30px;
+        /* PENAMBAHBAIKAN: Gaya untuk teks Tarikh Hari Ini */
+        #today-date-container {
             text-align: center;
+            margin: -10px 0 25px 0; /* Jarak atas dan bawah */
+            font-size: 1.1em;
+            font-weight: 500;
+            color: #333;
         }
-        .today-date-card .label {
-            font-size: 0.9em;
-            font-weight: bold;
-            text-transform: uppercase;
-            color: #1565c0;
-            margin-bottom: 8px;
-        }
-        .today-date-card .date-line {
-            font-size: 1.3em;
-            font-weight: 600;
-            color: #1e88e5;
-        }
-        .today-date-card .hijri-line {
-            font-size: 1.3em;
-            font-weight: 600;
-            color: #0d47a1;
-        }
-        .today-date-card .api-error {
+        #today-date-container .api-error {
             color: #d32f2f;
             font-style: italic;
+            font-size: 0.9em;
         }
 
         /* SEKSYEN ACARA TERHAMPIR */
@@ -74,7 +57,7 @@
         @media screen and (max-width: 768px) {
             .page-header h1 { font-size: 1.4em; }
             .page-header .subtitle { font-size: 1em; }
-            .today-date-card .date-line, .today-date-card .hijri-line { font-size: 1.1em; }
+            #today-date-container { font-size: 1em; } /* Kecilkan sedikit untuk mudah alih */
             .upcoming-card .event-name { font-size: 1.4em; } .upcoming-card .date-info { font-size: 1em; } .upcoming-card .countdown { font-size: 1.2em; }
             table { background-color: transparent; box-shadow: none; border-radius: 0; }
             table thead { display: none; }
@@ -100,11 +83,9 @@
             <p class="subtitle">TAHUN 2025 / 1446 – 1447 H BAGI MALAYSIA</p>
         </div>
 
-        <!-- PENAMBAHBAIKAN: Bekas untuk Tarikh Hari Ini -->
+        <!-- PENAMBAHBAIKAN: Bekas untuk teks Tarikh Hari Ini -->
         <div id="today-date-container">
-            <div class="today-date-card">
-                 <div class="label">Memuatkan Tarikh Hari Ini...</div>
-            </div>
+            <p>Memuatkan tarikh hari ini...</p>
         </div>
         
         <div id="upcoming-event-container"></div>
@@ -130,49 +111,36 @@
     </div>
 
     <script>
-    // --- Fungsi Asynchronous untuk memuatkan data dari API ---
     async function loadTodayDate() {
         const todayContainer = document.getElementById('today-date-container');
         const solatApiUrl = 'https://www.e-solat.gov.my/index.php?r=esolatApi/takwimsolat&period=today&zone=WLY01';
         
         try {
             const response = await fetch(solatApiUrl);
-            if (!response.ok) {
-                throw new Error('Gagal menghubungi pelayan e-Solat.');
-            }
+            if (!response.ok) { throw new Error('Gagal menghubungi pelayan e-Solat.'); }
             const data = await response.json();
             const todayPrayerInfo = data.prayerTime[0];
-
-            if (!todayPrayerInfo) {
-                 throw new Error('Tiada data untuk hari ini.');
-            }
+            if (!todayPrayerInfo) { throw new Error('Tiada data untuk hari ini.'); }
 
             const today = new Date();
             const daysInMalay = ["Ahad", "Isnin", "Selasa", "Rabu", "Khamis", "Jumaat", "Sabtu"];
             const masihiDateStr = `${daysInMalay[today.getDay()]}, ${today.getDate()} ${today.toLocaleString('ms-MY', { month: 'long' })} ${today.getFullYear()}`;
             
-            const hijriDateStr = todayPrayerInfo.hijri.replace(/-/g, ' '); // Cth: 13 Rejab 1446H
+            // PEMBETULAN: Memformat tarikh Hijrah dari API
+            // API mengembalikan cth: "26-Rabi'ul Awwal-1447". Kita tukar '-' kepada ' '
+            const hijriParts = todayPrayerInfo.hijri.split('-');
+            const hijriDateStr = `${hijriParts[0]} ${hijriParts[1]} ${hijriParts[2]}`;
             
-            todayContainer.innerHTML = `
-                <div class="today-date-card">
-                    <div class="label">Tarikh Hari Ini</div>
-                    <div class="date-line">${masihiDateStr}</div>
-                    <div class="hijri-line">${hijriDateStr}</div>
-                </div>`;
+            // Gabungkan menjadi satu baris teks
+            todayContainer.innerHTML = `<p>Tarikh hari ini: ${masihiDateStr} / ${hijriDateStr}</p>`;
 
         } catch (error) {
             console.error('Ralat memuatkan tarikh hari ini:', error);
-            todayContainer.innerHTML = `
-                <div class="today-date-card">
-                    <p class="api-error">Tidak dapat memuatkan tarikh hari ini.</p>
-                </div>`;
+            todayContainer.innerHTML = `<p class="api-error">Tidak dapat memuatkan tarikh hari ini.</p>`;
         }
     }
 
-    // --- Fungsi utama untuk memuatkan data acara dari fail JSON ---
     document.addEventListener('DOMContentLoaded', function() {
-        
-        // Panggil fungsi untuk memuatkan Tarikh Hari Ini sejurus selepas halaman sedia
         loadTodayDate();
 
         const daysInMalay = ["Ahad", "Isnin", "Selasa", "Rabu", "Khamis", "Jumaat", "Sabtu"];
@@ -204,7 +172,7 @@
                         <div class="upcoming-card" style="display: block;">
                             <div class="label">Acara Terhampir</div>
                             <h2 class="event-name">${nextEvent.eventName}</h2>
-                            <p class="date-info">${daysInMalay[eventDate.getDay()]}, ${eventDate.toLocaleDateString('ms-MY', { day: '2-digit', month: 'long', year: 'numeric' })}</p>
+                            <p class="date-info">${daysInMalay[eventDate.getDay()]}, ${eventDate.toLocaleString('ms-MY', { day: '2-digit', month: 'long', year: 'numeric' })}</p>
                             <div class="countdown">${countdownText}</div>
                         </div>`;
                 }
@@ -219,7 +187,7 @@
                     if (event.eventDate === nextEventDateString) newRow.classList.add('is-next-event');
 
                     const dayStr = daysInMalay[eventDate.getDay()];
-                    const masihiStr = eventDate.toLocaleDateString('ms-MY', { day: '2-digit', month: 'long', year: 'numeric' });
+                    const masihiStr = eventDate.toLocaleString('ms-MY', { day: '2-digit', month: 'long', year: 'numeric' });
                     const hijriStr = event.hijriDate;
                     
                     const isSpecialEvent = specialEvents.some(keyword => event.eventName.includes(keyword));
