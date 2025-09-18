@@ -1,3 +1,4 @@
+html
 <!DOCTYPE html>
 <html lang="ms">
 <head>
@@ -5,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tarikh Penting Islam di Malaysia</title>
     <style>
-        /* Gaya Asas */
+        /* Semua CSS adalah sama seperti sebelum ini, tiada perubahan diperlukan */
         body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif; background-color: #f0f2f5; color: #333; margin: 0; padding: 15px; }
         .container { width: 100%; max-width: 900px; margin: 20px auto; }
         .header-logo { text-align: center; margin-bottom: 15px; }
@@ -13,29 +14,13 @@
         .page-header { text-align: center; margin-bottom: 25px; }
         .page-header h1 { color: #2c3e50; margin: 0; font-size: 1.8em; text-transform: uppercase; }
         .page-header .subtitle { font-style: italic; font-size: 1.1em; color: #555; margin: 5px 0 0 0; }
-
-        /* PENAMBAHBAIKAN: Gaya untuk teks Tarikh Hari Ini */
-        #today-date-container {
-            text-align: center;
-            margin: -10px 0 25px 0; /* Jarak atas dan bawah */
-            font-size: 1.1em;
-            font-weight: 500;
-            color: #333;
-        }
-        #today-date-container .api-error {
-            color: #d32f2f;
-            font-style: italic;
-            font-size: 0.9em;
-        }
-
-        /* SEKSYEN ACARA TERHAMPIR */
+        #today-date-container { text-align: center; margin: -10px 0 25px 0; font-size: 1.1em; font-weight: 500; color: #333; }
+        #today-date-container .api-error { color: #d32f2f; font-style: italic; font-size: 0.9em; }
         .upcoming-card { background: #e8f5e9; border-left: 5px solid #4CAF50; border-radius: 8px; padding: 20px 25px; margin-bottom: 30px; display: none; }
         .upcoming-card .label { font-size: 0.9em; font-weight: bold; text-transform: uppercase; color: #1b5e20; margin-bottom: 5px; }
         .upcoming-card .event-name { font-size: 1.7em; font-weight: bold; color: #2c3e50; margin: 0; }
         .upcoming-card .date-info { font-size: 1.1em; color: #333; margin: 8px 0; }
         .upcoming-card .countdown { font-size: 1.4em; font-weight: bold; color: #d84315; margin-top: 10px; }
-
-        /* GAYA JADUAL (DESKTOP) */
         table { width: 100%; border-collapse: collapse; background-color: #fff; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08); border-radius: 8px; overflow: hidden; }
         th, td { padding: 14px 18px; text-align: left; border-bottom: 1px solid #eef0f2; transition: background-color 0.2s; }
         thead th { background-color: #4CAF50; color: white; font-weight: bold; text-transform: uppercase; font-size: 0.9em; }
@@ -46,18 +31,14 @@
         tr.is-next-event { background-color: #fffde7 !important; font-weight: 500; }
         .table-footnote { text-align: center; margin-top: 15px; padding: 0 10px; font-size: 0.85em; font-style: italic; color: #555; }
         .sighting-note { font-style: italic; font-size: 0.9em; color: #555; margin-top: 8px; }
-        
-        /* FOOTER */
         .footer { text-align: center; margin-top: 40px; padding-top: 20px; border-top: 1px solid #ddd; font-size: 0.9em; color: #666; }
         .footer p { margin: 5px 0; }
         #last-updated { font-size: 0.8em; color: #888; margin-top: 15px; }
         .error-message { text-align: center; color: red; background-color: #fff; padding: 20px; border-radius: 8px; }
-
-        /* PAPARAN KAD (MUDAH ALIH) */
         @media screen and (max-width: 768px) {
             .page-header h1 { font-size: 1.4em; }
             .page-header .subtitle { font-size: 1em; }
-            #today-date-container { font-size: 1em; } /* Kecilkan sedikit untuk mudah alih */
+            #today-date-container { font-size: 1em; }
             .upcoming-card .event-name { font-size: 1.4em; } .upcoming-card .date-info { font-size: 1em; } .upcoming-card .countdown { font-size: 1.2em; }
             table { background-color: transparent; box-shadow: none; border-radius: 0; }
             table thead { display: none; }
@@ -83,7 +64,6 @@
             <p class="subtitle">TAHUN 2025 / 1446 – 1447 H BAGI MALAYSIA</p>
         </div>
 
-        <!-- PENAMBAHBAIKAN: Bekas untuk teks Tarikh Hari Ini -->
         <div id="today-date-container">
             <p>Memuatkan tarikh hari ini...</p>
         </div>
@@ -115,6 +95,13 @@
         const todayContainer = document.getElementById('today-date-container');
         const solatApiUrl = 'https://www.e-solat.gov.my/index.php?r=esolatApi/takwimsolat&period=today&zone=WLY01';
         
+        // PEMBETULAN: "Kamus" untuk menukar nombor bulan Hijrah kepada nama
+        const hijriMonthNames = {
+            "01": "Muharam", "02": "Safar", "03": "Rabi'ul Awwal", "04": "Rabi'ul Akhir",
+            "05": "Jamadil Awal", "06": "Jamadil Akhir", "07": "Rejab", "08": "Syaaban",
+            "09": "Ramadan", "10": "Syawal", "11": "Zulkaedah", "12": "Zulhijah"
+        };
+        
         try {
             const response = await fetch(solatApiUrl);
             if (!response.ok) { throw new Error('Gagal menghubungi pelayan e-Solat.'); }
@@ -126,12 +113,17 @@
             const daysInMalay = ["Ahad", "Isnin", "Selasa", "Rabu", "Khamis", "Jumaat", "Sabtu"];
             const masihiDateStr = `${daysInMalay[today.getDay()]}, ${today.getDate()} ${today.toLocaleString('ms-MY', { month: 'long' })} ${today.getFullYear()}`;
             
-            // PEMBETULAN: Memformat tarikh Hijrah dari API
-            // API mengembalikan cth: "26-Rabi'ul Awwal-1447". Kita tukar '-' kepada ' '
-            const hijriParts = todayPrayerInfo.hijri.split('-');
-            const hijriDateStr = `${hijriParts[0]} ${hijriParts[1]} ${hijriParts[2]}`;
+            // PEMBETULAN: Logik baharu untuk memformat tarikh Hijrah
+            const hijriParts = todayPrayerInfo.hijri.split('-'); // Cth: ["1447", "03", "26"]
+            const hijriYear = hijriParts[0];
+            const hijriMonthNum = hijriParts[1];
+            const hijriDay = hijriParts[2];
             
-            // Gabungkan menjadi satu baris teks
+            // Gunakan "kamus" untuk dapatkan nama bulan
+            const hijriMonthName = hijriMonthNames[hijriMonthNum] || ''; // '||' untuk elak ralat jika tiada padanan
+            
+            const hijriDateStr = `${hijriDay} ${hijriMonthName} ${hijriYear}`;
+            
             todayContainer.innerHTML = `<p>Tarikh hari ini: ${masihiDateStr} / ${hijriDateStr}</p>`;
 
         } catch (error) {
@@ -143,25 +135,21 @@
     document.addEventListener('DOMContentLoaded', function() {
         loadTodayDate();
 
+        // ... Sisa kod JavaScript adalah sama dan tidak perlu diubah ...
         const daysInMalay = ["Ahad", "Isnin", "Selasa", "Rabu", "Khamis", "Jumaat", "Sabtu"];
         const specialEvents = ['Aidiladha', 'Aidilfitri', 'Ramadan'];
         document.getElementById('copyright').textContent = `© ${new Date().getFullYear()} MAMTJ6. Hak Cipta Terpelihara.`;
-
         fetch('events.json')
             .then(response => { if (!response.ok) { throw new Error(`Ralat ${response.status}`); } return response.json(); })
             .then(jsonData => {
                 const lastUpdated = jsonData.lastUpdated;
                 const eventData = jsonData.events;
-
                 document.getElementById('last-updated').textContent = `Tarikh Kemaskini: ${lastUpdated}`;
-
                 const tableBody = document.getElementById('events-tbody');
                 const today = new Date(); today.setHours(0, 0, 0, 0);
                 eventData.sort((a, b) => new Date(a.eventDate) - new Date(b.eventDate));
-                
                 const nextEvent = eventData.find(event => new Date(event.eventDate + 'T00:00:00') >= today);
                 let nextEventDateString = nextEvent ? nextEvent.eventDate : null;
-
                 if (nextEvent) {
                     const upcomingContainer = document.getElementById('upcoming-event-container');
                     const eventDate = new Date(nextEvent.eventDate + 'T00:00:00');
@@ -176,29 +164,23 @@
                             <div class="countdown">${countdownText}</div>
                         </div>`;
                 }
-
                 eventData.forEach(event => {
                     const eventDate = new Date(event.eventDate + 'T00:00:00');
                     const newRow = tableBody.insertRow();
                     const timeDiff = eventDate.getTime() - today.getTime();
                     const dayDiff = Math.ceil(timeDiff / (1000 * 60 * 60 * 24));
-                    
                     if (dayDiff < 0) newRow.classList.add('is-passed');
                     if (event.eventDate === nextEventDateString) newRow.classList.add('is-next-event');
-
                     const dayStr = daysInMalay[eventDate.getDay()];
                     const masihiStr = eventDate.toLocaleString('ms-MY', { day: '2-digit', month: 'long', year: 'numeric' });
                     const hijriStr = event.hijriDate;
-                    
                     const isSpecialEvent = specialEvents.some(keyword => event.eventName.includes(keyword));
                     let eventNameDisplay = event.eventName;
                     let mobileSightingNote = '';
-
                     if (isSpecialEvent) {
                         eventNameDisplay += ' *';
                         mobileSightingNote = '<div class="sighting-note">Tertakluk Kepada Pengisytiharan</div>';
                     }
-
                     const cellEvent = newRow.insertCell(); cellEvent.className = 'mobile-event-name'; cellEvent.textContent = eventNameDisplay;
                     const cellDate = newRow.insertCell(); cellDate.className = 'mobile-date-info';
                     cellDate.innerHTML = `<div class="desktop-view">${dayStr}<br>${masihiStr}<br>${hijriStr}</div><div class="mobile-view">${dayStr} - ${masihiStr} - ${hijriStr}${mobileSightingNote}</div>`;
@@ -209,7 +191,6 @@
                     else countdownHTML = `<span class="event-passed">Telah lepas</span>`;
                     cellCountdown.innerHTML = countdownHTML;
                 });
-                
                 const style = document.createElement('style');
                 style.innerHTML = `
                     .desktop-view { display: block; } .mobile-view { display: none; }
