@@ -61,7 +61,7 @@ html
         
         <div class="page-header">
             <h1>TARIKH-TARIKH PENTING DALAM ISLAM</h1>
-            <p class="subtitle">TAHUN 2025 / 1446 – 1447 H BAGI MALAYSIA</p>
+            <p class="subtitle">TAHUN 2026 / 1447 – 1448 H BAGI MALAYSIA</p>
         </div>
 
         <div id="today-date-container">
@@ -74,7 +74,7 @@ html
                 <tr>
                     <th>Peristiwa</th>
                     <th>Tarikh & Hari</th>
-                    <th>Kira Detik</th>
+                    <th>Countdown</th>
                 </tr>
             </thead>
             <tbody id="events-tbody"></tbody>
@@ -85,7 +85,7 @@ html
         
         <div class="footer">
             <p id="copyright"></p>
-            <p>Dibangunkan oleh admin MAMTJ6</p>
+            <p>Dibangunkan oleh admin <a href="https://www.mamtj6.com" target="_blank">MAMTJ6</a></p>
             <p id="last-updated"></p>
         </div>
     </div>
@@ -104,7 +104,7 @@ html
         
         try {
             const response = await fetch(solatApiUrl);
-            if (!response.ok) { throw new Error('Gagal menghubungi pelayan e-Solat.'); }
+            if (!response.ok) { throw new Error('Gagal menghubungi Server e-Solat.'); }
             const data = await response.json();
             const todayPrayerInfo = data.prayerTime[0];
             if (!todayPrayerInfo) { throw new Error('Tiada data untuk hari ini.'); }
@@ -158,7 +158,7 @@ html
                     let countdownText = (dayDiff === 0) ? "Hari Ini!" : `${dayDiff} hari lagi`;
                     upcomingContainer.innerHTML = `
                         <div class="upcoming-card" style="display: block;">
-                            <div class="label">Acara Terhampir</div>
+                            <div class="label">Peristiwa Terdekat</div>
                             <h2 class="event-name">${nextEvent.eventName}</h2>
                             <p class="date-info">${daysInMalay[eventDate.getDay()]}, ${eventDate.toLocaleString('ms-MY', { day: '2-digit', month: 'long', year: 'numeric' })}</p>
                             <div class="countdown">${countdownText}</div>
