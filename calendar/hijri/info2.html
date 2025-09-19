@@ -39,9 +39,11 @@ html
             .page-header h1 { font-size: 1.0em; }
             .page-header .subtitle { font-size: 1em; }
             .footer { font-size: 0.8em; }
-            #last-updated {font-size: 0.9em; }
+            #last-updated {font-size: 1.0em; }            
             #today-date-container { font-size: 1em; }
-            .upcoming-card .event-name { font-size: 1.4em; } .upcoming-card .date-info { font-size: 1em; } .upcoming-card .countdown { font-size: 1.2em; }
+            .upcoming-card .event-name { font-size: 1.4em; } 
+            .upcoming-card .date-info { font-size: 1em; } 
+            .upcoming-card .countdown { font-size: 1.2em; }
             table { background-color: transparent; box-shadow: none; border-radius: 0; }
             table thead { display: none; }
             table tbody tr { display: block; width: 100%; margin-bottom: 15px; border: 1px solid #ddd; border-radius: 8px; background-color: #fff; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.07); box-sizing: border-box; }
@@ -101,7 +103,6 @@ html
         const todayContainer = document.getElementById('today-date-container');
         const solatApiUrl = 'https://www.e-solat.gov.my/index.php?r=esolatApi/takwimsolat&period=today&zone=WLY01';
         
-        // PEMBETULAN: "Kamus" untuk menukar nombor bulan Hijrah kepada nama
         const hijriMonthNames = {
             "01": "Muharam", "02": "Safar", "03": "Rabi'ul Awwal", "04": "Rabi'ul Akhir",
             "05": "Jamadil Awal", "06": "Jamadil Akhir", "07": "Rejab", "08": "Syaaban",
@@ -119,14 +120,12 @@ html
             const daysInMalay = ["Ahad", "Isnin", "Selasa", "Rabu", "Khamis", "Jumaat", "Sabtu"];
             const masihiDateStr = `${daysInMalay[today.getDay()]}, ${today.getDate()} ${today.toLocaleString('ms-MY', { month: 'long' })} ${today.getFullYear()}`;
             
-            // PEMBETULAN: Logik baharu untuk memformat tarikh Hijrah
-            const hijriParts = todayPrayerInfo.hijri.split('-'); // Cth: ["1447", "03", "26"]
+            const hijriParts = todayPrayerInfo.hijri.split('-');
             const hijriYear = hijriParts[0];
             const hijriMonthNum = hijriParts[1];
             const hijriDay = hijriParts[2];
             
-            // Gunakan "kamus" untuk dapatkan nama bulan
-            const hijriMonthName = hijriMonthNames[hijriMonthNum] || ''; // '||' untuk elak ralat jika tiada padanan
+            const hijriMonthName = hijriMonthNames[hijriMonthNum] || '';
             
             const hijriDateStr = `${hijriDay} ${hijriMonthName} ${hijriYear}`;
             
@@ -141,7 +140,6 @@ html
     document.addEventListener('DOMContentLoaded', function() {
         loadTodayDate();
 
-        // ... Sisa kod JavaScript adalah sama dan tidak perlu diubah ...
         const daysInMalay = ["Ahad", "Isnin", "Selasa", "Rabu", "Khamis", "Jumaat", "Sabtu"];
         const specialEvents = ['Aidiladha', 'Aidilfitri', 'Ramadan'];
         document.getElementById('copyright').textContent = `© ${new Date().getFullYear()} MAMTJ6. Hak Cipta Terpelihara.`;
@@ -156,20 +154,33 @@ html
                 eventData.sort((a, b) => new Date(a.eventDate) - new Date(b.eventDate));
                 const nextEvent = eventData.find(event => new Date(event.eventDate + 'T00:00:00') >= today);
                 let nextEventDateString = nextEvent ? nextEvent.eventDate : null;
+
+                // --- PERUBAHAN UTAMA DI SINI ---
                 if (nextEvent) {
                     const upcomingContainer = document.getElementById('upcoming-event-container');
                     const eventDate = new Date(nextEvent.eventDate + 'T00:00:00');
                     const timeDiff = eventDate.getTime() - today.getTime();
                     const dayDiff = Math.ceil(timeDiff / (1000 * 60 * 60 * 24));
                     let countdownText = (dayDiff === 0) ? "Hari Ini!" : `${dayDiff} hari lagi`;
+                    
+                    // 1. Dapatkan Tarikh Masihi dan Hijrah
+                    const masihiInfo = `${daysInMalay[eventDate.getDay()]}, ${eventDate.toLocaleString('ms-MY', { day: '2-digit', month: 'long', year: 'numeric' })}`;
+                    const hijriInfo = nextEvent.hijriDate; // Ambil terus dari data JSON
+
+                    // 2. Masukkan kedua-dua tarikh ke dalam HTML
                     upcomingContainer.innerHTML = `
                         <div class="upcoming-card" style="display: block;">
                             <div class="label">Peristiwa Terdekat</div>
                             <h2 class="event-name">${nextEvent.eventName}</h2>
-                            <p class="date-info">${daysInMalay[eventDate.getDay()]}, ${eventDate.toLocaleString('ms-MY', { day: '2-digit', month: 'long', year: 'numeric' })}</p>
+                            <p class="date-info">
+                                ${masihiInfo}<br>
+                                <strong>${hijriInfo}</strong>
+                            </p>
                             <div class="countdown">${countdownText}</div>
                         </div>`;
                 }
+                // --- AKHIR PERUBAHAN ---
+
                 eventData.forEach(event => {
                     const eventDate = new Date(event.eventDate + 'T00:00:00');
                     const newRow = tableBody.insertRow();
@@ -197,6 +208,7 @@ html
                     else countdownHTML = `<span class="event-passed">Telah lepas</span>`;
                     cellCountdown.innerHTML = countdownHTML;
                 });
+                
                 const style = document.createElement('style');
                 style.innerHTML = `
                     .desktop-view { display: block; } .mobile-view { display: none; }
@@ -207,6 +219,6 @@ html
             })
             .catch(error => { console.error('Gagal memuatkan data acara:', error); document.querySelector('.container').innerHTML = `<div class="error-message"><strong>Gagal memuatkan data.</strong><br>Sila pastikan fail 'events.json' wujud di lokasi yang sama dan tidak mempunyai ralat sintaks.</div>`; });
     });
-    </script>
+</script>
 </body>
 </html>
