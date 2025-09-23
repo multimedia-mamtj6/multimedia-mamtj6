@@ -1,7 +1,7 @@
 {
   "infoJadual": {
     "tajukBulan": "BULAN SEPTEMBER 2025",
-    "tarikhKemasKini": "*Dikemaskini oleh Biro Dakwah pada 19/9/2025"
+    "tarikhKemasKini": "*Dikemaskini oleh Biro Dakwah pada 23/9/2025"
   },
   "senaraiHari": [
     {
@@ -227,11 +227,7 @@
     {
       "date": "2025-09-23",
       "subuh": null,
-      "maghrib": {
-        "nama_penceramah": "Ustaz Abdul Aziz",
-        "tajuk_kuliah": "Terjemahan Al-Azkar Imam An-Nawawi",
-        "poster_url": "https://multimedia.mamtj6.com/kuliah/assets/poster-kuliah/1920X1080/05_4.-Ustaz-Abdul-Aziz.jpg"
-      },
+      "maghrib": null,
       "cuti_umum": null
     },
     {
