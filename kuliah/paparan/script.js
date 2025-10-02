@@ -1,20 +1,10 @@
 // =================================================================
 // SCRIPT.JS UNTUK DIGITAL SIGNAGE
-// Versi 4.0 - Diperbaiki untuk membaca struktur JSON baharu
+// Versi 4.0 - Dengan Tambahan Console Log untuk Debugging
 // =================================================================
 
-/**
- * Digital Signage Script v4.0
- * Features:
- * - Fetches schedule data from a structured 'jadual_lengkap.json'.
- * - Displays specific "no lecture" messages for 4 scenarios.
- * - Fully responsive for mobile and embed views.
- */
-
-// URL ini mesti menunjuk kepada fail JSON yang dijana oleh Google Apps Script anda
 const JSON_URL = 'https://multimedia.mamtj6.com/kuliah/data/jadual_lengkap.json';
 
-// Define all possible messages in one place for easy management.
 const MESSAGES = {
     today_subuh: 'Tiada Kuliah Subuh Hari Ini',
     today_maghrib: 'Tiada Kuliah Maghrib Hari Ini',
@@ -23,11 +13,6 @@ const MESSAGES = {
     error: 'Error: Could not load schedule data'
 };
 
-/**
- * Gets a date string in YYYY-MM-DD format.
- * @param {string} target 'today' or 'tomorrow'.
- * @returns {string} The formatted date string.
- */
 function getTargetDate(target) {
     const date = new Date();
     if (target === 'tomorrow') {
@@ -39,11 +24,6 @@ function getTargetDate(target) {
     return `${year}-${month}-${day}`;
 }
 
-/**
- * Updates the page content (image or message).
- * @param {string|null} imageUrl The URL of the image, or null.
- * @param {string} message The text to display if there is no image.
- */
 function setDisplay(imageUrl, message) {
     const container = document.getElementById('display-container');
     const messageBox = document.getElementById('message');
@@ -60,15 +40,13 @@ function setDisplay(imageUrl, message) {
     }
 }
 
-/**
- * Main function to initialize the display.
- * @param {string} day 'today' or 'tomorrow'.
- * @param {string} lectureType 'subuh' or 'maghrib'.
- */
 async function initializeDisplay(day, lectureType) {
     const messageKey = `${day}_${lectureType}`;
     const targetDate = getTargetDate(day);
     
+    // Log tarikh yang sedang dicari
+    console.log(`Mencari jadual untuk: ${day} (${targetDate}), Slot: ${lectureType}`);
+
     try {
         const response = await fetch(`${JSON_URL}?t=${new Date().getTime()}`);
         if (!response.ok) throw new Error(`Fetch failed with status ${response.status}`);
@@ -77,17 +55,23 @@ async function initializeDisplay(day, lectureType) {
         const scheduleList = jsonData.senaraiHari;
         const entry = scheduleList.find(item => item.date === targetDate);
         
+        // Log entri yang ditemui (jika ada)
+        console.log("Entri data yang ditemui:", entry);
+        
         let imageUrl = null;
         if (entry && entry[lectureType]?.poster_url) {
             imageUrl = entry[lectureType].poster_url;
         }
 
-        // Logik untuk memaparkan mesej jika tiada imej
+        // --- TAMBAHAN CONSOLE LOG DI SINI ---
         if (imageUrl) {
+            console.log("URL Imej untuk dipaparkan:", imageUrl);
             setDisplay(imageUrl, '');
         } else {
+            console.log("Tiada URL imej ditemui. Memaparkan mesej.");
             setDisplay(null, MESSAGES[messageKey]);
         }
+        // --- AKHIR TAMBAHAN ---
 
     } catch (error) {
         console.error('Failed to initialize display:', error);
