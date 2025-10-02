@@ -3,7 +3,7 @@
 // =================================================================
 document.addEventListener('DOMContentLoaded', async () => {
     try {
-        const jsonData = await fetch('../data/jadual_lengkap.json').then(res => res.json());
+        const jsonData = await fetch('https://multimedia.mamtj6.com/kuliah/data/jadual_lengkap.json').then(res => res.json());
         
         const titleElement = document.getElementById('schedule-title');
         if (titleElement && jsonData.infoJadual.tajukBulan) {
