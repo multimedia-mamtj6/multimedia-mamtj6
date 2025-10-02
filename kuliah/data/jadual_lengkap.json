@@ -1,7 +1,7 @@
 {
   "infoJadual": {
     "tajukBulan": "BULAN OKTOBER 2025",
-    "tarikhKemasKini": "*Dikemaskini oleh Biro Dakwah pada 2/10/2025"
+    "tarikhKemasKini": "*Dikemaskini oleh Biro Dakwah pada 30/9/2025"
   },
   "senaraiHari": [
     {
@@ -9,7 +9,7 @@
       "subuh": null,
       "maghrib": {
         "nama_penceramah": "Ustaz Hairul Azam",
-        "tajuk_kuliah": "Tadabbur ayat-ayat Surah Al-Baqarah",
+        "tajuk_kuliah": "Tadabbur - ayat-ayat Surah Al-Baqarah",
         "poster_url": "https://multimedia.mamtj6.com/kuliah/assets/poster-kuliah/1920X1080/07_6.-Ustaz-Hairul-Azam.jpg"
       },
       "cuti_umum": null
@@ -19,7 +19,7 @@
       "subuh": null,
       "maghrib": {
         "nama_penceramah": "Ustaz Mohd Firdaus Azmy",
-        "tajuk_kuliah": "Tadabbur ayat-ayat Surah As-Sajdah",
+        "tajuk_kuliah": "Tadabbur - ayat-ayat Surah As-Sajdah",
         "poster_url": "https://multimedia.mamtj6.com/kuliah/assets/poster-kuliah/1920X1080/09_8.-Ustaz-Mohd-Firdaus-Azmy.jpg"
       },
       "cuti_umum": null
@@ -161,7 +161,7 @@
       "subuh": null,
       "maghrib": {
         "nama_penceramah": "Ustaz Hairul Azam",
-        "tajuk_kuliah": "Tadabbur ayat-ayat Surah Al-Baqarah",
+        "tajuk_kuliah": "Tadabbur - ayat-ayat Surah Al-Baqarah",
         "poster_url": "https://multimedia.mamtj6.com/kuliah/assets/poster-kuliah/1920X1080/07_6.-Ustaz-Hairul-Azam.jpg"
       },
       "cuti_umum": null
@@ -260,7 +260,7 @@
       "date": "2025-10-25",
       "subuh": {
         "nama_penceramah": "Ustaz Abd Maarof",
-        "tajuk_kuliah": "Tauhid",
+        "tajuk_kuliah": "Penawar Hati",
         "poster_url": "https://multimedia.mamtj6.com/kuliah/assets/poster-kuliah/1920X1080/14_13.-Ustaz-Abd-Maarof.jpg"
       },
       "maghrib": {
@@ -297,7 +297,7 @@
       "subuh": null,
       "maghrib": {
         "nama_penceramah": "Ustaz Hairul Azam",
-        "tajuk_kuliah": "Tadabbur ayat-ayat Surah Al-Baqarah",
+        "tajuk_kuliah": "Tadabbur - ayat-ayat Surah Al-Baqarah",
         "poster_url": "https://multimedia.mamtj6.com/kuliah/assets/poster-kuliah/1920X1080/07_6.-Ustaz-Hairul-Azam.jpg"
       },
       "cuti_umum": null
