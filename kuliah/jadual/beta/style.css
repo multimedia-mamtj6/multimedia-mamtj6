@@ -1,5 +1,6 @@
 /* --- KOD PENUH STYLE.CSS (MUKTAMAD DENGAN HIGHLIGHT YANG BETUL) --- */
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap');
+/* --- KOD BAHARU DENGAN FON YANG BETUL --- */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,400;0,600;0,700;1,400;1,600&display=swap');
 
 :root {
     --week-bg: #EAF1DD;
@@ -51,8 +52,8 @@ main { flex-grow: 1; min-height: 0; }
     background-color: var(--today-highlight-bg);
 }
 
-.date-number { font-weight: bold; position: absolute; top: -0.9vmin; left: 0.5vmin; font-size: 2.5vmin; color: var(--date-number-color); }
-.lecture-content { position: absolute; top: 2.5vmin; bottom: 0; left: 0; right: 0; display: flex; flex-direction: column; justify-content: center; font-size: 1.4vmin; text-align: center; background-color: #fff; padding: 0.1vmin; }
+.date-number { font-weight: bold; position: absolute; top: -0.6vmin; left: 0.5vmin; font-size: 2.5vmin; color: var(--date-number-color); }
+.lecture-content { position: absolute; top: 2.5vmin; bottom: 0; left: 0; right: 0; display: flex; flex-direction: column; justify-content: center; font-size: 1.2vmin; text-align: center; background-color: #fff; padding: 0.1vmin; }
 .lecture-block { padding-bottom: 0.5vmin; }
 .lecture-block + .lecture-block { border-top: 1px solid #ccc; padding-top: 0.5vmin; margin-top: 0.5vmin; }
 .lecture-time, .ustaz-name, .lecture-title { line-height: 1.2; }
@@ -60,7 +61,7 @@ main { flex-grow: 1; min-height: 0; }
 .lecture-time.subuh { color: var(--subuh-color); }
 .lecture-time.maghrib { color: var(--maghrib-color); }
 .ustaz-name { font-weight: bold; }
-.lecture-title { font-style: italic; }
+.lecture-title {  font-style: italic; font-weight: 400 !important; }
 .arabic-text { font-size: 4.5vmin; font-family: 'Times New Roman', serif; }
 .yasin-title { font-weight: bold; font-size: 1.4vmin; }
 .page-footer { padding-top: 1vmin; font-size: 1.2vmin; display: flex; justify-content: space-between; align-items: center; flex-shrink: 0; }
@@ -92,7 +93,7 @@ main { flex-grow: 1; min-height: 0; }
     #today-kuliah-card { border: 1px solid #ddd; border-radius: 8px; padding: 15px; margin: 25px 0; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
     .today-card-header { text-align: center; margin-bottom: 15px; }
     .today-card-header .label { font-size: 2em; font-weight: bold; text-transform: uppercase; color: #2c3e50; }
-    .today-card-header .date-string { font-size: 1.2em; font-weight: 500; }
+    .today-card-header .date-string { font-size: 1.2em; font-weight: 600; }
     .today-card-header .hijri-date-string { font-size: 1em; color: #555; margin-top: -5px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; }
     .today-card-header .holiday-label { margin-top: 10px; display: inline-block; font-size: 1em; padding: 5px 12px; }
     .today-card-body .lecture-block { font-size: 1.1em; border-bottom: 1px solid #eee; padding-bottom: 15px; }
@@ -100,10 +101,10 @@ main { flex-grow: 1; min-height: 0; }
     .today-card-body .ustaz-name { font-size: 1.2em; text-align: center;}
     .today-card-body .lecture-title { font-size: 1em; text-align: center;}
     .no-kuliah-today { text-align: center; font-size: 1.1em; font-weight: 500; padding: 20px 0; }
-    .poster-wrapper { width: 100%; aspect-ratio: 16 / 9; margin-top: 15px; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+    .poster-wrapper { width: 100%; aspect-ratio: 16 / 9; margin-top: 15px; margin-bottom: 20px; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
     .poster-iframe { width: 100%; height: 100%; border: none; pointer-events: none; }
     #mobile-card-list .mobile-card { background: #fff; border: 1px solid #ddd; border-radius: 8px; margin-bottom: 15px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.07); }
-    .card-header { background-color: #fffde7; padding: 12px 15px; display: flex; justify-content: space-between; align-items: center; font-weight: bold; font-size: 1.1em; }
+    .card-header { background-color: #fffde7; padding: 12px 15px; display: flex; justify-content: space-between; align-items: center; font-weight: 600; font-style: italic; font-size: 1.1em; }
     .card-header .holiday-label { font-size: 0.95em; padding: 4px 10px; }
     .card-body { padding: 15px; }
     .card-body.is-empty-slot { background-color: var(--empty-cell-bg); text-align: center; }
@@ -113,6 +114,6 @@ main { flex-grow: 1; min-height: 0; }
     .card-body .ustaz-name { font-size: 1.1em; }
     .page-footer { flex-direction: column; gap: 20px; text-align: center; }
     .page-footer .update-info, .page-footer .legend, .page-footer .footer-link { font-size: 0.8rem; }
-    .legend { flex-wrap: wrap; justify-content: center; }
+    .legend { flex-wrap: wrap; justify-content: center; display: none;}
     .legend-box { width: auto; flex-grow: 1; padding: 8px 12px; font-size: 0.9em; }
 }
