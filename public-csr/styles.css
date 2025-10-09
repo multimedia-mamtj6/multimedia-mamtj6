@@ -1,0 +1,253 @@
+/* --- Basic Setup & Variables --- */
+:root {
+    --primary-blue: #007bff;
+    --light-blue: #e7f5ff;
+    --success-green: #28a745;
+    --text-color: #333;
+    --label-color: #555;
+    --border-color: #ccc;
+    --background-gradient: linear-gradient(135deg, #46aef6, #1b6ff0);
+    --white: #ffffff;
+    --light-gray: #f8f9fa;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+    font-family: 'Inter', sans-serif;
+    display: flex;
+    flex-direction: column; /* Susun kandungan secara menegak */
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background: var(--background-gradient);
+    padding: 20px;
+    color: var(--text-color);
+}
+
+/* --- [BARU] Header Styles --- */
+.page-header {
+    padding: 20px;
+    width: 100%;
+    max-width: 700px;
+    margin-bottom: 20px;
+}
+.header-logos {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 40px; /* Jarak antara logo */
+    background: rgba(255, 255, 255, 0.2); /* Latar belakang separa lutsinar */
+    padding: 15px;
+    border-radius: 16px;
+}
+.logo {
+    max-height: 50px; /* Kawal saiz logo */
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
+}
+
+main {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.calculator-container {
+    background-color: var(--white);
+    padding: 30px 40px 40px 40px;
+    border-radius: 24px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 700px;
+}
+
+/* --- Tab Navigation --- */
+.tab-nav { display: flex; border-bottom: 2px solid #e0e0e0; margin-bottom: 30px; }
+.tab-btn {
+    padding: 12px 20px; cursor: pointer; border: none; background: none;
+    font-size: 16px; font-weight: 600; color: var(--label-color);
+    position: relative; bottom: -2px; border-bottom: 2px solid transparent;
+}
+.tab-btn.active { color: var(--primary-blue); border-bottom-color: var(--primary-blue); }
+.tab-content { display: none; }
+.tab-content.active { display: block; }
+
+/* --- General Components --- */
+.calculator-header { text-align: center; margin-bottom: 30px; }
+.calculator-header h1 { font-size: 28px; font-weight: 700; }
+.calculator-header p { font-size: 16px; color: var(--label-color); margin-top: 8px; }
+
+.mode-toggle { display: flex; border: 1px solid var(--border-color); border-radius: 8px; overflow: hidden; width: 100%; }
+.toggle-btn {
+    flex: 1; padding: 12px; border: none; background-color: var(--white); cursor: pointer;
+    font-size: 14px; font-weight: 500; transition: background-color 0.3s, color 0.3s;
+}
+.toggle-btn.active { background-color: var(--primary-blue); color: var(--white); }
+
+.form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-bottom: 20px; }
+.form-group { display: flex; flex-direction: column; }
+.form-group.full-width { grid-column: 1 / -1; }
+.form-group label { font-size: 14px; color: var(--label-color); margin-bottom: 8px; }
+.form-group input { padding: 12px; border: 1px solid var(--border-color); border-radius: 8px; font-size: 16px; width: 100%; }
+.form-group input:focus { outline: none; border-color: var(--primary-blue); box-shadow: 0 0 0 3px var(--light-blue); }
+
+.action-buttons { display: flex; gap: 15px; margin-top: 20px; grid-column: 1 / -1; }
+.btn {
+    flex: 1; padding: 14px; border-radius: 8px; border: none; font-size: 16px; font-weight: 700;
+    cursor: pointer; transition: background-color 0.3s, opacity 0.3s;
+}
+.btn-primary { background-color: var(--primary-blue); color: var(--white); }
+.btn-primary:hover { opacity: 0.9; }
+.btn-secondary { background-color: transparent; color: var(--primary-blue); border: 1px solid var(--primary-blue); }
+.btn-secondary:hover { background-color: var(--light-blue); }
+
+.results-section, .visual-section { background-color: var(--light-gray); border-radius: 16px; padding: 25px; margin-top: 30px; }
+.results-section h2, .section-title { font-size: 20px; margin-bottom: 20px; text-align: center; }
+.results-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; align-items: center; }
+.result-item { background-color: var(--white); padding: 20px; border-radius: 12px; text-align: center; border: 1px solid #e0e0e0; }
+.result-item .label { font-size: 14px; color: var(--label-color); }
+.result-item .value { font-size: 28px; font-weight: 700; margin-top: 8px; word-wrap: break-word; }
+.result-item .value.total { color: var(--success-green); }
+.result-item .unit { font-size: 16px; font-weight: 400; color: var(--label-color); }
+.result-explanation { text-align: center; margin-top: 20px; font-size: 14px; color: var(--label-color); }
+
+.price-info { text-align: center; margin-bottom: 25px; padding: 15px; background-color: var(--light-blue); border-radius: 12px; font-size: 14px; }
+    
+#fuel-gauge-visual {
+    display: flex; flex-wrap: nowrap; overflow-x: auto; gap: 10px;
+    padding: 10px 10px 15px 10px; border-radius: 12px; min-height: 80px;
+    -webkit-overflow-scrolling: touch; scrollbar-width: thin;
+}
+#fuel-gauge-visual::-webkit-scrollbar { height: 8px; }
+#fuel-gauge-visual::-webkit-scrollbar-thumb { background: #ccc; border-radius: 4px; }
+#fuel-gauge-visual::-webkit-scrollbar-track { background: transparent; }
+
+.bar-wrapper { flex: 1 0 85px; min-width: 85px; text-align: center; }
+.bar-label { font-size: 12px; font-weight: 500; color: var(--label-color); margin-bottom: 4px; }
+.gauge-bar {
+    padding: 10px 5px; border-radius: 6px; font-weight: 600; font-size: 12px; color: var(--text-color);
+    transition: all 0.3s ease; border: 1px solid transparent;
+}
+.gauge-bar span { display: block; line-height: 1.4; }
+.gauge-bar.current { background-color: var(--primary-blue); color: var(--white); border-color: #0056b3; }
+.gauge-bar.needed { background-color: #e9ecef; border: 1px dashed var(--border-color); color: var(--label-color); }
+
+.results-grid-topup { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+.results-grid-topup .result-item:first-child { grid-column: 1 / -1; }
+
+/* --- [BARU] Footer Styles --- */
+.page-footer {
+    width: 100%;
+    max-width: 700px;
+    margin-top: 30px;
+    padding: 20px;
+    text-align: center;
+    color: rgba(255, 255, 255, 0.9);
+}
+.page-footer p {
+    margin-bottom: 10px;
+    font-size: 14px;
+}
+.page-footer a {
+    color: var(--white);
+    font-weight: bold;
+    text-decoration: underline;
+}
+.page-footer a:hover {
+    text-decoration: none;
+}
+.disclaimer {
+    margin-top: 20px;
+    padding: 15px;
+    background: rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    font-size: 12px;
+    line-height: 1.6;
+}
+.disclaimer p {
+    margin: 0;
+}
+.copyright {
+    margin-top: 20px;
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.7);
+}
+
+
+/* --- Responsive Media Queries --- */
+@media (max-width: 640px) {
+    body { padding: 10px; }
+    .calculator-container { padding: 20px; }
+    .calculator-header h1 { font-size: 24px; }
+    .toggle-btn { font-size: 12px; }
+    .results-grid-topup { grid-template-columns: 1fr; }
+    .results-grid-topup .result-item:first-child { grid-column: auto; }
+}
+
+/* --- [BARU] Styles for source.html --- */
+
+/* [DIPERBAIKI] Kurangkan ruang bawah pada tajuk utama H1 */
+.source-content .calculator-header h1 {
+    margin-bottom: 8px;
+}
+
+.source-content .subtitle {
+    font-size: 16px;
+    color: var(--label-color);
+    /* [DIBUANG] margin-top: -20px; */
+    margin-top: 0; /* Pastikan tiada margin atas */
+    margin-bottom: 30px;
+    max-width: 60ch; /* Hadkan lebar teks untuk mudah dibaca */
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.reference-list {
+    margin-top: 20px;
+}
+
+.reference-item {
+    padding: 20px 0;
+    border-bottom: 1px solid #eee; /* Garisan pemisah */
+}
+
+.reference-item:first-of-type {
+    padding-top: 0;
+}
+
+.reference-item:last-of-type {
+    border-bottom: none;
+    padding-bottom: 0;
+}
+
+.reference-item h3 {
+    margin-bottom: 15px;
+    color: var(--primary-blue);
+    font-size: 1.2em;
+}
+
+.reference-item p {
+    margin-bottom: 10px;
+    line-height: 1.6;
+    font-size: 16px;
+}
+
+.reference-item a {
+    color: var(--primary-blue);
+    text-decoration: none;
+    word-break: break-all; /* Pastikan pautan panjang tidak merosakkan layout */
+}
+
+.reference-item a:hover {
+    text-decoration: underline;
+}
+
+.reference-note {
+    font-style: italic;
+    font-size: 14px;
+    color: #555;
+    background-color: #f8f9fa;
+    padding: 10px;
+    border-radius: 6px;
+    margin-top: 15px;
+}
