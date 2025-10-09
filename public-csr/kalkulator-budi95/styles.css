@@ -1,7 +1,7 @@
 /* --- Basic Setup & Variables --- */
 :root {
     --primary-blue: #007bff;
-    --light-blue: #e7f5ff;
+    --light-blue: #e7f5ff; 
     --success-green: #28a745;
     --text-color: #333;
     --label-color: #555;
@@ -251,3 +251,4 @@ main {
     border-radius: 6px;
     margin-top: 15px;
 }
+
