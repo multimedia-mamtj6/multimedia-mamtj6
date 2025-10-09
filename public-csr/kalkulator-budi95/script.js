@@ -4,7 +4,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const tabContents = document.querySelectorAll('.tab-content');
     tabs.forEach(tab => {
         tab.addEventListener('click', () => {
-            tabs.forEach(item => item.classList.remove('active'));
+            tabs.forEach(item => item.classList.remove('active')); 
             tabContents.forEach(content => content.classList.remove('active'));
             tab.classList.add('active');
             document.getElementById(tab.dataset.tab).classList.add('active');
@@ -144,3 +144,4 @@ document.addEventListener('DOMContentLoaded', () => {
     petrolFormTopUp.addEventListener('submit', calculateTopUp);
     resetBtnTopUp.addEventListener('click', resetCalculatorTopUp);
 });
+
