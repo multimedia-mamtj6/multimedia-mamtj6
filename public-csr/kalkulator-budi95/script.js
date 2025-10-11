@@ -1,17 +1,17 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // --- Logik Tab ---
+    // --- Tab Logic ---
     const tabs = document.querySelectorAll('.tab-btn');
     const tabContents = document.querySelectorAll('.tab-content');
     tabs.forEach(tab => {
         tab.addEventListener('click', () => {
-            tabs.forEach(item => item.classList.remove('active')); 
+            tabs.forEach(item => item.classList.remove('active'));
             tabContents.forEach(content => content.classList.remove('active'));
             tab.classList.add('active');
             document.getElementById(tab.dataset.tab).classList.add('active');
         });
     });
 
-    // --- KALKULATOR 1: KIRAAN PENUH ---
+    // --- CALCULATOR 1: KALKULATOR PETROL ---
     const petrolFormFull = document.getElementById('petrol-form-full');
     const modeRmBtn = document.getElementById('mode-rm');
     const modeLiterBtn = document.getElementById('mode-liter');
@@ -19,48 +19,56 @@ document.addEventListener('DOMContentLoaded', () => {
     const userInput = document.getElementById('user-input');
     const resetBtnFull = document.getElementById('reset-btn-full');
     const oldPriceInput = document.getElementById('old-price');
-    const newPriceInput = document.getElementById('new-price');
-    const resultCapacity = document.getElementById('result-capacity');
+    const subsidyPriceInput = document.getElementById('subsidy-price');
+    const noSubsidyPriceInput = document.getElementById('nosubsidy-price');
+    const fullCalcResults = document.getElementById('full-calc-results');
+    const resultLiters = document.getElementById('result-liters');
     const resultTotal = document.getElementById('result-total');
-    const resultExplanation = document.getElementById('result-explanation-text');
+    const savingVsOld = document.getElementById('saving-vs-old');
+    const savingVsNoSubsidy = document.getElementById('saving-vs-nosubsidy');
     let currentMode = 'RM';
 
     const switchModeFull = (newMode) => {
         currentMode = newMode;
         userInput.value = '';
-        if (newMode === 'RM') {
-            modeRmBtn.classList.add('active');
-            modeLiterBtn.classList.remove('active');
-            userInputLabel.textContent = 'Jumlah anda bayar sebelum ini (RM)';
-        } else {
-            modeLiterBtn.classList.add('active');
-            modeRmBtn.classList.remove('active');
-            userInputLabel.textContent = 'Kapasiti tangki anda (Liter)';
-        }
+        userInputLabel.textContent = (newMode === 'RM') ? 'Jumlah bayaran (RM)' : 'Jumlah liter (L)';
+        if (newMode === 'RM') { modeRmBtn.classList.add('active'); modeLiterBtn.classList.remove('active'); } 
+        else { modeLiterBtn.classList.add('active'); modeRmBtn.classList.remove('active'); }
     };
     const resetCalculatorFull = () => {
         petrolFormFull.reset();
-        oldPriceInput.value = '2.05'; newPriceInput.value = '1.99'; userInput.value = '36';
+        userInput.value = '36'; oldPriceInput.value = '2.05'; subsidyPriceInput.value = '1.99'; noSubsidyPriceInput.value = '2.60';
         switchModeFull('RM');
-        resultCapacity.innerHTML = '0.00 <span class="unit">liter</span>';
-        resultTotal.textContent = 'RM0.00'; resultExplanation.textContent = '';
+        fullCalcResults.classList.add('hidden');
+        fullCalcResults.classList.remove('fade-in');
     };
     const calculateFull = (event) => {
         event.preventDefault();
-        const oldPrice = parseFloat(oldPriceInput.value); const newPrice = parseFloat(newPriceInput.value); const userValue = parseFloat(userInput.value);
-        if (isNaN(oldPrice) || isNaN(newPrice) || isNaN(userValue) || userValue <= 0) return;
-        let tankLiters = (currentMode === 'RM') ? userValue / oldPrice : userValue;
-        let newTotalCost = tankLiters * newPrice;
-        resultCapacity.innerHTML = `${tankLiters.toFixed(2)} <span class="unit">liter</span>`;
-        resultTotal.textContent = `RM${newTotalCost.toFixed(2)}`;
-        resultExplanation.textContent = `Berdasarkan kapasiti ${tankLiters.toFixed(2)} liter dan harga baru RM${newPrice.toFixed(2)}, jumlah yang perlu dibayar = RM${newTotalCost.toFixed(2)}.`;
+        const oldPrice = parseFloat(oldPriceInput.value);
+        const subsidyPrice = parseFloat(subsidyPriceInput.value);
+        const noSubsidyPrice = parseFloat(noSubsidyPriceInput.value);
+        const userValue = parseFloat(userInput.value);
+        if ([oldPrice, subsidyPrice, noSubsidyPrice, userValue].some(isNaN) || userValue <= 0) { alert('Sila masukkan semua nilai yang sah.'); return; }
+        
+        let totalLiters = (currentMode === 'RM') ? userValue / subsidyPrice : userValue;
+        let totalCost = totalLiters * subsidyPrice;
+        let savingOld = (oldPrice - subsidyPrice) * totalLiters;
+        let savingNoSubsidy = (noSubsidyPrice - subsidyPrice) * totalLiters;
+
+        resultLiters.innerHTML = `${totalLiters.toFixed(2)} <span class="unit">L</span>`;
+        resultTotal.textContent = `RM${totalCost.toFixed(2)}`;
+        savingVsOld.textContent = `RM${savingOld.toFixed(2)}`;
+        savingVsNoSubsidy.textContent = `RM${savingNoSubsidy.toFixed(2)}`;
+        
+        fullCalcResults.classList.remove('hidden');
+        fullCalcResults.classList.add('fade-in');
     };
     modeRmBtn.addEventListener('click', () => switchModeFull('RM'));
     modeLiterBtn.addEventListener('click', () => switchModeFull('Liter'));
     petrolFormFull.addEventListener('submit', calculateFull);
     resetBtnFull.addEventListener('click', resetCalculatorFull);
 
-    // --- KALKULATOR 2: ISI MINYAK ---
+    // --- CALCULATOR 2: ISI 'FULL TANK' ---
     const petrolFormTopUp = document.getElementById('petrol-form-topup');
     const modeSubsidiBtn = document.getElementById('mode-subsidi');
     const modeTanpaSubsidiBtn = document.getElementById('mode-tanpa-subsidi');
@@ -70,70 +78,102 @@ document.addEventListener('DOMContentLoaded', () => {
     const currentBarsInput = document.getElementById('current-bars');
     const fuelGaugeContainer = document.getElementById('fuel-gauge-container');
     const gaugeVisual = document.getElementById('fuel-gauge-visual');
-    const topupLitersResult = document.getElementById('topup-liters');
-    const topupCostLabel = document.getElementById('topup-cost-label');
-    const topupCostResult = document.getElementById('topup-cost');
+    const scrollInstruction = document.getElementById('scroll-instruction');
+    const topupCalcResults = document.getElementById('topup-calc-results');
+    // Result Items
+    const topupCostItem = document.getElementById('topup-cost-item');
+    const topupLitersItem = document.getElementById('topup-liters-item');
     const topupPumpCostItem = document.getElementById('topup-pump-cost-item');
-    const topupPumpCostResult = document.getElementById('topup-pump-cost');
-    const SUBSIDI_PRICE = 1.99;
+    const topupSavingVsOldItem = document.getElementById('topup-saving-vs-old-item');
+    const topupSavingVsNoSubsidyItem = document.getElementById('topup-saving-vs-nosubsidy-item');
+    // Result Values
+    const topupCostLabel = document.getElementById('topup-cost-label');
+    const topupCostValue = document.getElementById('topup-cost');
+    const topupLitersValue = document.getElementById('topup-liters');
+    const topupPumpCostValue = document.getElementById('topup-pump-cost');
+    const topupSavingOldValue = document.getElementById('topup-saving-old-value');
+    const topupSavingNosubsidyValue = document.getElementById('topup-saving-nosubsidy-value');
+    
+    const OLD_PRICE_REF = 2.05;
+    const SUBSIDY_PRICE = 1.99;
     const PUMP_PRICE = 2.60;
     let topUpMode = 'subsidi';
 
     const switchModeTopUp = (newMode) => {
         topUpMode = newMode;
         if (newMode === 'subsidi') {
-            modeSubsidiBtn.classList.add('active');
-            modeTanpaSubsidiBtn.classList.remove('active');
-            topupCostLabel.textContent = 'Harga Subsidi (Bayar)';
-            topupPumpCostItem.style.display = 'block';
+            modeSubsidiBtn.classList.add('active'); modeTanpaSubsidiBtn.classList.remove('active');
         } else {
-            modeTanpaSubsidiBtn.classList.add('active');
-            modeSubsidiBtn.classList.remove('active');
-            topupCostLabel.textContent = 'Jumlah Perlu Dibayar';
-            topupPumpCostItem.style.display = 'none';
+            modeTanpaSubsidiBtn.classList.add('active'); modeSubsidiBtn.classList.remove('active');
         }
-        // Kosongkan keputusan tapi kekalkan input
-        gaugeVisual.innerHTML = '';
-        fuelGaugeContainer.style.display = 'none';
+        [fuelGaugeContainer, topupCalcResults].forEach(el => el.classList.add('hidden'));
     };
 
     const resetCalculatorTopUp = () => {
         petrolFormTopUp.reset();
-        switchModeTopUp('subsidi'); // Set semula ke mod subsidi
-        topupLitersResult.innerHTML = '0.00 <span class="unit">L</span>';
-        topupCostResult.textContent = 'RM0.00';
-        topupPumpCostResult.textContent = 'RM0.00';
+        switchModeTopUp('subsidi');
+        [fuelGaugeContainer, topupCalcResults].forEach(el => {
+            el.classList.add('hidden');
+            el.classList.remove('fade-in');
+        });
     };
     
     const calculateTopUp = (event) => {
         event.preventDefault();
         const tankCapacity = parseFloat(tankCapacityInput.value); const totalBars = parseInt(totalBarsInput.value); const currentBars = parseInt(currentBarsInput.value);
         if (isNaN(tankCapacity) || isNaN(totalBars) || isNaN(currentBars) || tankCapacity <= 0 || totalBars <= 0) { alert('Sila masukkan semua nilai yang sah.'); return; }
-        if (currentBars > totalBars) { alert('Baki bar semasa tidak boleh melebihi jumlah bar penuh.'); return; }
+        if (currentBars >= totalBars) { alert('Baki bar semasa mesti kurang daripada jumlah bar penuh untuk pengiraan.'); return; }
 
-        const basePrice = (topUpMode === 'subsidi') ? SUBSIDI_PRICE : PUMP_PRICE;
-        const litersPerBar = tankCapacity / totalBars;
-        const costPerBar = litersPerBar * basePrice;
-        const barsNeeded = totalBars - currentBars;
-        const totalLitersNeeded = barsNeeded * litersPerBar;
+        const basePrice = (topUpMode === 'subsidi') ? SUBSIDY_PRICE : PUMP_PRICE;
+        const totalLitersNeeded = (tankCapacity / totalBars) * (totalBars - currentBars);
         const totalCost = totalLitersNeeded * basePrice;
 
-        topupLitersResult.innerHTML = `${totalLitersNeeded.toFixed(2)} <span class="unit">L</span>`;
-        topupCostResult.textContent = `RM${totalCost.toFixed(2)}`;
-        if(topUpMode === 'subsidi'){
-            const totalPumpCost = totalLitersNeeded * PUMP_PRICE;
-            topupPumpCostResult.textContent = `RM${totalPumpCost.toFixed(2)}`;
-        }
+        // Update values
+        topupLitersValue.innerHTML = `${totalLitersNeeded.toFixed(2)} <span class="unit">L</span>`;
+        topupCostValue.textContent = `RM${totalCost.toFixed(2)}`;
 
-        fuelGaugeContainer.style.display = 'block';
+        // Update layout and values based on mode
+        [topupCostItem, topupLitersItem, topupPumpCostItem, topupSavingVsOldItem, topupSavingVsNoSubsidyItem].forEach(el => el.classList.remove('hidden', 'full-width', 'result-item-primary'));
+        
+        if (topUpMode === 'subsidi') {
+            topupCostLabel.textContent = 'Harga Subsidi (Bayar)';
+            topupCostItem.classList.add('full-width', 'result-item-primary');
+            topupCostItem.style.order = 1;
+            topupLitersItem.style.order = 2;
+            topupPumpCostItem.style.order = 3;
+            topupSavingVsOldItem.style.order = 4;
+            topupSavingVsNoSubsidyItem.style.order = 5;
+
+            const totalPumpCost = totalLitersNeeded * PUMP_PRICE;
+            const savingOld = (OLD_PRICE_REF - SUBSIDY_PRICE) * totalLitersNeeded;
+            const savingNoSubsidy = (PUMP_PRICE - SUBSIDY_PRICE) * totalLitersNeeded;
+            topupPumpCostValue.textContent = `RM${totalPumpCost.toFixed(2)}`;
+            topupSavingOldValue.textContent = `RM${savingOld.toFixed(2)}`;
+            topupSavingNosubsidyValue.textContent = `RM${savingNoSubsidy.toFixed(2)}`;
+        } else { // Tanpa Subsidi
+            topupCostLabel.textContent = 'Harga (Perlu Bayar)';
+            topupCostItem.classList.add('full-width', 'result-item-primary');
+            topupLitersItem.classList.add('full-width');
+            topupCostItem.style.order = 1;
+            topupLitersItem.style.order = 2;
+            [topupPumpCostItem, topupSavingVsOldItem, topupSavingVsNoSubsidyItem].forEach(el => el.classList.add('hidden'));
+        }
+        
+        // Animate and show results
+        [fuelGaugeContainer, topupCalcResults, scrollInstruction].forEach(el => {
+            el.classList.remove('hidden');
+            el.classList.add('fade-in');
+        });
+
         gaugeVisual.innerHTML = '';
         for (let i = 1; i <= totalBars; i++) {
             const wrapper = document.createElement('div'); wrapper.className = 'bar-wrapper';
+            wrapper.style.animationDelay = `${i * 0.05}s`;
             const label = document.createElement('div'); label.className = 'bar-label'; label.textContent = `Bar ${i}`;
             const barDiv = document.createElement('div'); barDiv.classList.add('gauge-bar');
             if (i <= currentBars) { barDiv.classList.add('current'); } else { barDiv.classList.add('needed'); }
-            const cumulativeLiters = litersPerBar * i;
-            const cumulativeCost = litersPerBar * basePrice * i; // Guna basePrice untuk kiraan kumulatif juga
+            const cumulativeLiters = (tankCapacity / totalBars) * i;
+            const cumulativeCost = cumulativeLiters * basePrice;
             barDiv.innerHTML = `<span>${cumulativeLiters.toFixed(2)} L</span><span>RM${cumulativeCost.toFixed(2)}</span>`;
             wrapper.appendChild(label); wrapper.appendChild(barDiv); gaugeVisual.appendChild(wrapper);
         }
@@ -144,4 +184,3 @@ document.addEventListener('DOMContentLoaded', () => {
     petrolFormTopUp.addEventListener('submit', calculateTopUp);
     resetBtnTopUp.addEventListener('click', resetCalculatorTopUp);
 });
-
