@@ -1,0 +1,119 @@
+{
+  "ringkasan": {
+    "kutipan": {
+      "tahunIni": {
+        "tahun": 2025,
+        "jumlah": 85443
+      },
+      "tahunLepas": {
+        "tahun": 2024,
+        "jumlah": 113416
+      },
+      "bulanIni": {
+        "bulan": "OKTOBER",
+        "jumlah": 3618
+      },
+      "bulanLepas": {
+        "bulan": "SEPTEMBER",
+        "jumlah": 6761
+      }
+    },
+    "projek": {
+      "NamaProjek": "Infaq Tabung Bangunan Tambahan MAMTJ6",
+      "SasaranKutipan": 250000,
+      "JumlahTerkumpul": 131735,
+      "TarikhKemaskini": "2025-10-05T16:00:00.000Z",
+      "Peratusan": 52.7
+    }
+  },
+  "projek": {
+    "NamaProjek": "Infaq Tabung Bangunan Tambahan MAMTJ6",
+    "SasaranKutipan": 250000,
+    "JumlahTerkumpul": 131735,
+    "TarikhKemaskini": "2025-10-05T16:00:00.000Z",
+    "Peratusan": 52.7
+  },
+  "paparanBulanIni": {
+    "Tahun": 2025,
+    "Bulan": "OKTOBER",
+    "Minggu1": 1900,
+    "Minggu2": 1718,
+    "Minggu3": 0,
+    "Minggu4": 0,
+    "Minggu5": 0,
+    "JumlahBulanan": 3618
+  },
+  "paparanBulanLepas": {
+    "Tahun": 2025,
+    "Bulan": "SEPTEMBER",
+    "Minggu1": 1630,
+    "Minggu2": 1752,
+    "Minggu3": 1577,
+    "Minggu4": 1802,
+    "Minggu5": 0,
+    "JumlahBulanan": 6761
+  },
+  "graf": {
+    "2024": {
+      "tahun": "2024",
+      "labels": [
+        "FEB",
+        "MAC",
+        "APR",
+        "MEI",
+        "JUN",
+        "JUL",
+        "OGO",
+        "SEP",
+        "OKT",
+        "NOV",
+        "DIS"
+      ],
+      "data": [
+        14531,
+        17798,
+        10404,
+        10532,
+        8983,
+        8228,
+        10192,
+        7700,
+        8339,
+        9642,
+        7067
+      ]
+    },
+    "2025": {
+      "tahun": "2025",
+      "labels": [
+        "JAN",
+        "FEB",
+        "MAC",
+        "APR",
+        "MEI",
+        "JUN",
+        "JUL",
+        "OGO",
+        "SEP",
+        "OKT",
+        "NOV",
+        "DIS"
+      ],
+      "data": [
+        9623,
+        7372,
+        14834,
+        7965,
+        10073,
+        8699,
+        7161,
+        9337,
+        6761,
+        3618,
+        0,
+        0
+      ]
+    }
+  },
+  "tarikhKemaskini": "2025-10-13T15:16:44.868Z"
+}
