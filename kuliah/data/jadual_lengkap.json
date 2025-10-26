@@ -1,7 +1,7 @@
 {
   "infoJadual": {
     "tajukBulan": "BULAN OKTOBER 2025",
-    "tarikhKemasKini": "*Dikemaskini oleh Biro Dakwah pada 25/10/2025"
+    "tarikhKemasKini": "*Dikemaskini oleh Biro Dakwah pada 26/10/2025"
   },
   "senaraiHari": [
     {
@@ -57,7 +57,7 @@
       },
       "maghrib": {
         "nama_penceramah": "Ustaz Amir",
-        "tajuk_kuliah": "Syarah Safinah An-Naja",
+        "tajuk_kuliah": "a. Kitab Fekah : Syarah Safinah An-Naja; b. Kitab Tasawuf",
         "poster_url": "https://multimedia.mamtj6.com/kuliah/assets/poster-kuliah/1920X1080/17_16.-Ustaz-Amir.jpg"
       },
       "cuti_umum": null
@@ -131,7 +131,7 @@
       },
       "maghrib": {
         "nama_penceramah": "Ustaz Amir",
-        "tajuk_kuliah": "Syarah Safinah An-Naja",
+        "tajuk_kuliah": "a. Kitab Fekah : Syarah Safinah An-Naja; b. Kitab Tasawuf",
         "poster_url": "https://multimedia.mamtj6.com/kuliah/assets/poster-kuliah/1920X1080/17_16.-Ustaz-Amir.jpg"
       },
       "cuti_umum": null
@@ -205,7 +205,7 @@
       },
       "maghrib": {
         "nama_penceramah": "Ustaz Amir",
-        "tajuk_kuliah": "Syarah Safinah An-Naja",
+        "tajuk_kuliah": "a. Kitab Fekah : Syarah Safinah An-Naja; b. Kitab Tasawuf",
         "poster_url": "https://multimedia.mamtj6.com/kuliah/assets/poster-kuliah/1920X1080/17_16.-Ustaz-Amir.jpg"
       },
       "cuti_umum": null
@@ -281,7 +281,11 @@
         "tajuk_kuliah": "Fadilat Sedekah",
         "poster_url": "https://multimedia.mamtj6.com/kuliah/assets/poster-kuliah/1920X1080/15_14.-Ustaz-Badrul-Hisham.jpg"
       },
-      "maghrib": null,
+      "maghrib": {
+        "nama_penceramah": "Ustaz Amir",
+        "tajuk_kuliah": "a. Kitab Fekah : Syarah Safinah An-Naja; b. Kitab Tasawuf",
+        "poster_url": "https://multimedia.mamtj6.com/kuliah/assets/poster-kuliah/1920X1080/17_16.-Ustaz-Amir.jpg"
+      },
       "cuti_umum": null
     },
     {
@@ -353,7 +357,7 @@
       },
       "maghrib": {
         "nama_penceramah": "Ustaz Amir",
-        "tajuk_kuliah": "Syarah Safinah An-Naja",
+        "tajuk_kuliah": "a. Kitab Fekah : Syarah Safinah An-Naja; b. Kitab Tasawuf",
         "poster_url": "https://multimedia.mamtj6.com/kuliah/assets/poster-kuliah/1920X1080/17_16.-Ustaz-Amir.jpg"
       },
       "cuti_umum": null
@@ -423,7 +427,7 @@
       },
       "maghrib": {
         "nama_penceramah": "Ustaz Amir",
-        "tajuk_kuliah": "Syarah Safinah An-Naja",
+        "tajuk_kuliah": "a. Kitab Fekah : Syarah Safinah An-Naja; b. Kitab Tasawuf",
         "poster_url": "https://multimedia.mamtj6.com/kuliah/assets/poster-kuliah/1920X1080/17_16.-Ustaz-Amir.jpg"
       },
       "cuti_umum": null
@@ -501,7 +505,7 @@
       },
       "maghrib": {
         "nama_penceramah": "Ustaz Amir",
-        "tajuk_kuliah": "Syarah Safinah An-Naja",
+        "tajuk_kuliah": "a. Kitab Fekah : Syarah Safinah An-Naja; b. Kitab Tasawuf",
         "poster_url": "https://multimedia.mamtj6.com/kuliah/assets/poster-kuliah/1920X1080/17_16.-Ustaz-Amir.jpg"
       },
       "cuti_umum": null
