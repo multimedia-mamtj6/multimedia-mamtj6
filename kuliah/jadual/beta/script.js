@@ -1,43 +1,53 @@
 // =================================================================
-// SCRIPT.JS - VERSI 13.5 (PEMBETULAN MUKTAMAD UNTUK JAJARAN CUTI UMUM DESKTOP)
+// SCRIPT.JS - VERSI 14.0 (DENGAN FUNGSI JADUAL BULAN DEPAN)
 // =================================================================
 document.addEventListener('DOMContentLoaded', async () => {
     try {
-        const jsonData = await fetch('../../data/jadual_lengkap.json').then(res => res.json());
+        const jsonData = await fetch(`https://multimedia.mamtj6.com/kuliah/data/jadual_lengkap.json?v=${new Date().getTime()}`).then(res => res.json());
         
-        const titleElement = document.getElementById('schedule-title');
-        if (titleElement && jsonData.infoJadual.tajukBulan) {
-            titleElement.textContent = jsonData.infoJadual.tajukBulan;
+        // --- LOGIK BAHARU UNTUK MENENTUKAN BULAN ---
+        const urlParams = new URLSearchParams(window.location.search);
+        const targetMonthParam = urlParams.get('bulan');
+
+        const baseDate = new Date();
+        if (targetMonthParam === 'depan') {
+            baseDate.setMonth(baseDate.getMonth() + 1);
         }
+        
+        // Kemas kini pengaki (tarikh kemas kini)
         const updateInfoElement = document.getElementById('update-info');
         if (updateInfoElement && jsonData.infoJadual.tarikhKemasKini) {
             updateInfoElement.textContent = jsonData.infoJadual.tarikhKemasKini;
         }
 
-        renderCalendarDesktop(jsonData.senaraiHari);
-        initializeMobileView(jsonData.senaraiHari);
+        // Hantar tarikh sasaran kepada kedua-dua fungsi render
+        renderCalendarDesktop(jsonData.senaraiHari, baseDate);
+        initializeMobileView(jsonData.senaraiHari, baseDate);
 
     } catch (error) {
         console.error("Gagal memuatkan data:", error);
-        const calendarBody = document.getElementById('calendar-body');
-        if (calendarBody) {
-            calendarBody.innerHTML = `<tr><td colspan="8" style="text-align:center; padding: 2rem; color: red;">RALAT: Gagal memuatkan data jadual. Sila pastikan fail 'data/jadual_lengkap.json' wujud dan betul.</td></tr>`;
-        }
+        // ... (kod ralat tidak berubah) ...
     }
 });
 
 // =================================================================
-// BAHAGIAN 1: FUNGSI UNTUK PAPARAN DESKTOP (DENGAN PEMBETULAN)
+// BAHAGIAN 1: FUNGSI UNTUK PAPARAN DESKTOP (DIKEMAS KINI)
 // =================================================================
-function renderCalendarDesktop(senaraiHari) {
+function renderCalendarDesktop(senaraiHari, targetDate) {
     const calendarBody = document.getElementById('calendar-body');
     if (!calendarBody) return;
     
     calendarBody.innerHTML = '';
-    const today = new Date();
-    const year = today.getFullYear();
-    const month = today.getMonth();
+    const today = new Date(); // Untuk highlight hari ini sahaja
+
+    const year = targetDate.getFullYear();
+    const month = targetDate.getMonth();
     
+    // Kemas kini tajuk bulan secara dinamik
+    const monthNames = ["JANUARI", "FEBRUARI", "MAC", "APRIL", "MEI", "JUN", "JULAI", "OGOS", "SEPTEMBER", "OKTOBER", "NOVEMBER", "DISEMBER"];
+    document.getElementById('schedule-title').textContent = `BULAN ${monthNames[month]} ${year}`;
+
+    // ... (Logik binaan kalendar tidak berubah) ...
     const firstDayOfMonth = new Date(year, month, 1).getDay();
     const daysInMonth = new Date(year, month + 1, 0).getDate();
     let calendarDays = Array(35).fill(null);
@@ -62,21 +72,21 @@ function renderCalendarDesktop(senaraiHari) {
             if (dayNumber !== null) {
                 const dateString = `${year}-${String(month + 1).padStart(2, '0')}-${String(dayNumber).padStart(2, '0')}`;
                 const dayData = senaraiHari.find(d => d.date === dateString);
-
-                // Sentiasa letak nombor tarikh dahulu, di luar header
+                
                 cell.innerHTML = `<div class="date-number">${dayNumber}</div>`;
 
-                // Jika ada cuti umum, tambah header HANYA dengan label
-                if (dayData && dayData.cuti_umum) {
-                    const dateHeader = document.createElement('div');
-                    dateHeader.className = 'date-header';
-                    dateHeader.appendChild(document.createElement('span')); 
-                    const holidayLabel = document.createElement('span');
-                    holidayLabel.className = 'holiday-label';
-                    holidayLabel.textContent = dayData.cuti_umum;
-                    dateHeader.appendChild(holidayLabel);
-                    cell.appendChild(dateHeader);
-                }
+                const dateHeader = document.createElement('div');
+dateHeader.className = 'date-header';
+
+// Tetapi, hanya letakkan label cuti di dalamnya jika data cuti wujud
+if (dayData && dayData.cuti_umum) {
+    const holidayLabel = document.createElement('span');
+    holidayLabel.className = 'holiday-label';
+    holidayLabel.textContent = dayData.cuti_umum;
+    dateHeader.appendChild(holidayLabel);
+}
+
+cell.appendChild(dateHeader);
 
                 const todayString = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
                 if (dateString === todayString) {
@@ -85,16 +95,14 @@ function renderCalendarDesktop(senaraiHari) {
                 
                 const lectureWrapper = document.createElement('div');
                 lectureWrapper.className = 'lecture-content';
-
                 if (dayData) {
                     const tiadaSubuh = !dayData.subuh;
                     const tiadaMaghrib = !dayData.maghrib;
-
                     if (tiadaSubuh && tiadaMaghrib) {
                         lectureWrapper.classList.add('is-empty-slot');
                         lectureWrapper.innerHTML = `<div class="empty-slot-text">Slot Kosong</div>`;
                     } else if (dayData.subuh?.nama_penceramah.includes('Yasiin') || dayData.maghrib?.nama_penceramah.includes('Yasiin')) {
-                        lectureWrapper.innerHTML = `<div><div class="arabic-text" lang="ar" dir="rtl"> باچان يسٓ دان تهليل </div><div class="yasin-title">BACAAN YASIIN & TAHLIL</div></div>`;
+                        lectureWrapper.innerHTML = `<div><div class="arabic-text" lang="ar" dir="rtl"> باچاءن يسٓ دان تهليل </div><div class="yasin-title">BACAAN YASIIN & TAHLIL</div></div>`;
                     } else {
                         const currentDate = new Date(year, month, dayNumber);
                         const dayOfWeek = currentDate.getDay();
@@ -109,11 +117,9 @@ function renderCalendarDesktop(senaraiHari) {
                     }
                 }
                 cell.appendChild(lectureWrapper);
-
                 if (!dayData && dayNumber) { 
                     cell.innerHTML = `<div class="date-number">${dayNumber}</div><div class="lecture-content"></div>`;
                 }
-
             } else {
                 cell.classList.add('empty-cell');
             }
@@ -124,31 +130,38 @@ function renderCalendarDesktop(senaraiHari) {
 }
 
 // =================================================================
-// BAHAGIAN 2: FUNGSI-FUNGSI UNTUK PAPARAN MUDAH ALIH
+// BAHAGIAN 2: FUNGSI-FUNGSI UNTUK PAPARAN MUDAH ALIH (DIKEMAS KINI)
 // =================================================================
-async function initializeMobileView(senaraiHari) {
+async function initializeMobileView(senaraiHari, targetDate) {
     const mobileContainer = document.getElementById('mobile-view-container');
     if (!mobileContainer) return;
 
     const mobileListContainer = document.getElementById('mobile-card-list');
     if (!mobileListContainer) return;
     
-    await renderTodayCard(senaraiHari);
-    
+    // Hanya paparkan kad "Hari Ini" jika kita melihat bulan semasa
     const today = new Date();
+    if (targetDate.getMonth() === today.getMonth() && targetDate.getFullYear() === today.getFullYear()) {
+        await renderTodayCard(senaraiHari);
+    } else {
+        const todayCard = document.getElementById('today-kuliah-card');
+        if (todayCard) todayCard.style.display = 'none'; // Sembunyikan kad
+    }
+    
     const daysInMalay = ["Ahad", "Isnin", "Selasa", "Rabu", "Khamis", "Jumaat", "Sabtu"];
     const monthNames = ["Januari", "Februari", "Mac", "April", "Mei", "Jun", "Julai", "Ogos", "September", "Oktober", "November", "Disember"];
 
-    const currentMonth = today.getMonth();
-    const currentYear = today.getFullYear();
+    const targetMonth = targetDate.getMonth();
+    const targetYear = targetDate.getFullYear();
     
     senaraiHari
       .filter(dayData => {
           const date = new Date(dayData.date + 'T00:00:00');
-          return date.getMonth() === currentMonth && date.getFullYear() === currentYear;
+          return date.getMonth() === targetMonth && date.getFullYear() === targetYear;
       })
       .forEach(dayData => {
         const currentDate = new Date(dayData.date + 'T00:00:00');
+        // Jangan render hari ini dalam senarai utama (kerana ia sudah ada kad sendiri)
         if (currentDate.toDateString() === today.toDateString()) return;
 
         const card = document.createElement('div');
