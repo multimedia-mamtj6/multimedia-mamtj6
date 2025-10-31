@@ -1,7 +1,7 @@
 {
   "infoJadual": {
     "tajukBulan": "BULAN OKTOBER 2025",
-    "tarikhKemasKini": "*Dikemaskini oleh Biro Dakwah pada 28/10/2025"
+    "tarikhKemasKini": "*Dikemaskini oleh Biro Dakwah pada 31/10/2025"
   },
   "senaraiHari": [
     {
@@ -327,11 +327,7 @@
     {
       "date": "2025-10-31",
       "subuh": null,
-      "maghrib": {
-        "nama_penceramah": "Ustaz Anuar Suhaimi ",
-        "tajuk_kuliah": "132 Langkah Penyucian Jiwa",
-        "poster_url": "https://multimedia.mamtj6.com/kuliah/assets/poster-kuliah/1920X1080/06_5.-Ustaz-Anuar.jpg"
-      },
+      "maghrib": null,
       "cuti_umum": null
     },
     {
@@ -361,7 +357,11 @@
     {
       "date": "2025-11-03",
       "subuh": null,
-      "maghrib": null,
+      "maghrib": {
+        "nama_penceramah": "Ustaz Hisyamuddin",
+        "tajuk_kuliah": "Nasihat Agama dan Wasiat Iman",
+        "poster_url": "https://multimedia.mamtj6.com/kuliah/assets/poster-kuliah/1920X1080/03_2.-Ustaz-Hisyamuddin.jpg"
+      },
       "cuti_umum": null
     },
     {
@@ -411,7 +411,11 @@
         "tajuk_kuliah": "Fadilat Sedekah",
         "poster_url": "https://multimedia.mamtj6.com/kuliah/assets/poster-kuliah/1920X1080/15_14.-Ustaz-Badrul-Hisham.jpg"
       },
-      "maghrib": null,
+      "maghrib": {
+        "nama_penceramah": "Ustaz Nawawi",
+        "tajuk_kuliah": "Ringkasan Riyadhus Solihin",
+        "poster_url": "https://multimedia.mamtj6.com/kuliah/assets/poster-kuliah/1920X1080/16_15.-Ustaz-Nawawi.jpg"
+      },
       "cuti_umum": null
     },
     {
@@ -573,11 +577,7 @@
     {
       "date": "2025-11-23",
       "subuh": null,
-      "maghrib": {
-        "nama_penceramah": "Ustaz Amir",
-        "tajuk_kuliah": "a. Kitab Fekah : Syarah Safinah An-Naja; b. Kitab Tasawuf",
-        "poster_url": "https://multimedia.mamtj6.com/kuliah/assets/poster-kuliah/1920X1080/17_16.-Ustaz-Amir.jpg"
-      },
+      "maghrib": null,
       "cuti_umum": null
     },
     {
