@@ -1,7 +1,7 @@
 {
   "infoJadual": {
     "tajukBulan": "BULAN OKTOBER 2025",
-    "tarikhKemasKini": "*Dikemaskini oleh Biro Dakwah pada 17/11/2025"
+    "tarikhKemasKini": "*Dikemaskini oleh Biro Dakwah pada 22/11/2025"
   },
   "senaraiHari": [
     {
@@ -560,7 +560,11 @@
     },
     {
       "date": "2025-11-23",
-      "subuh": null,
+      "subuh": {
+        "nama_penceramah": "Ustaz Badrul Hisham",
+        "tajuk_kuliah": "Fadilat Sedekah",
+        "poster_url": "https://multimedia.mamtj6.com/kuliah/assets/poster-kuliah/1920X1080/15_14.-Ustaz-Badrul-Hisham.jpg"
+      },
       "maghrib": {
         "nama_penceramah": "Ustaz Amir",
         "tajuk_kuliah": "a. Kitab Fekah : Syarah Safinah An-Naja; b. Kitab Tasawuf",
