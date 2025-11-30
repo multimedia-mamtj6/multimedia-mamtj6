@@ -1,89 +1,215 @@
-# Masjid Al-Mukhlisin - Lecture Schedule & Digital Signage Project
+# Masjid Al-Mukhlisin - Project Jadual Kuliah
 
-This is a comprehensive web project designed to display the monthly lecture schedule for Masjid Al-Mukhlisin. It consists of two main components: a detailed monthly calendar view and a fullscreen digital signage display for individual lecture posters.
+This project is a responsive web application designed to display the monthly lecture (kuliah) schedule for Masjid Al-Mukhlisin. It features a traditional calendar view for desktops and a modern, card-based list view for mobile devices.
 
-The entire system is dynamically powered by a single Google Sheet, making it incredibly easy for non-technical users to manage the schedule.
+The entire system is powered by a single JSON data source, which is automatically generated and updated from a user-friendly Google Sheet, making schedule management easy and efficient.
 
----
+## Key Features
 
-## Live Links
-
-*   **Main Website (Info Kuliah):** [https://www.mamtj6.com/pengimarahan/info-kuliah](https://www.mamtj6.com/pengimarahan/info-kuliah)
-*   **Live Calendar View:** [https://multimedia.mamtj6.com/kuliah/jadual/jadual.html](https://multimedia.mamtj6.com/kuliah/jadual/jadual.html)
-*   **Management Google Sheet:** [View the Google Sheet](https://docs.google.com/spreadsheets/d/1WRbrMkfF_zwFi49j2p3sjebxcUoTbsDgWQxAxcuaUCw/edit?usp=sharing)
-
-#### Digital Signage Links
-*   **Today's Maghrib:** [today_maghrib.html](https://multimedia.mamtj6.com/kuliah/paparan/today_maghrib.html)
-*   **Today's Subuh:** [today_subuh.html](https://multimedia.mamtj6.com/kuliah/paparan/today_subuh.html)
-*   **Tomorrow's Maghrib:** [tomorrow_maghrib.html](https://multimedia.mamtj6.com/kuliah/paparan/tomorrow_maghrib.html)
-*   **Tomorrow's Subuh:** [tomorrow_subuh.html](https://multimedia.mamtj6.com/kuliah/paparan/tomorrow_subuh.html)
-
----
-
-## Features
-
-*   **Centralized Management:** The entire schedule is managed from a single, user-friendly Google Sheet. No manual JSON editing is required.
-*   **Dynamic Content:** The month/year title, "last updated" date, and public holiday labels are all generated automatically based on the Google Sheet data.
-*   **Monthly Calendar View:** A responsive, fullscreen calendar that displays all Subuh and Maghrib lectures for the current month.
-*   **Digital Signage View:** Four dedicated pages that display a fullscreen poster for a specific lecture (e.g., today's Maghrib, tomorrow's Subuh). If no lecture is scheduled, a clear message is shown.
-*   **Today Highlighting:** The current day is automatically highlighted in the calendar view for easy reference.
-*   **Public Holiday Labels:** A custom label is displayed next to the date for any designated public holidays.
-
----
+-   **Fully Responsive:** Automatically switches between a full calendar view on desktop and a mobile-friendly card view.
+-   **Automated Data Management:** All schedule data is managed via a single Google Sheet. A Google Apps Script processes this sheet and pushes the updated data to the repository.
+-   **Dynamic Content:** The displayed month, "last updated" date, and public holiday labels are all generated dynamically from the data source.
+-   **"Kuliah Hari Ini" Card:** A special card on the mobile view highlights the current day's schedule, complete with Hijri date integration from JAKIM's e-Solat API.
+-   **Next Month Preview:** Users can easily navigate to view the schedule for the upcoming month.
+-   **Digital Signage Integration:** The "Kuliah Hari Ini" card embeds live posters from the separate Digital Signage system.
+-   **Print-Friendly:** Includes a dedicated print stylesheet for generating clean, A4 landscape PDFs of the desktop calendar view.
 
 ## Project Structure
 
-The project is organized into modular components for easy maintenance.
+The project is organized into a modular structure for easy maintenance.
 
-```
-projek-jadual-masjid/
+📁 projek-jadual-masjid/
 │
-├── 📄 index.html             # Main hub page with navigation links
-├── 📄 README.md              # This file
+├── 📄 index.html # Main landing page (hub)
+├── 📄 README.md # This file
 │
 ├── 📁 data/
-│    └── 📄 jadual_lengkap.json  # THE SINGLE SOURCE OF TRUTH (auto-generated)
-│
-├── 📁 paparan/
-│  	 ├── 📄 today_maghrib.html
-│  	 ├── 📄 today_subuh.html
-│   	 ├── 📄 tomorrow_maghrib.html
-│   	 ├── 📄 tomorrow_subuh.html
-│  	 ├── 📄 script.js          # Logic for the Digital Signage
-│  	 └── 📄 style.css          # Styles for the Digital Signage
+│ └── 📄 jadual_lengkap.json # The single source of truth for all data
 │
 └── 📁 jadual/
-    ├── 📄 jadual.html            # The Calendar View page
-    ├── 📄 script.js              # Logic for the Calendar View
-    ├── 📄 style.css              # Styles for the Calendar View
-    ├── 📄 logo.png
-    └── ... (optional download files)
-```
-
----
+├── 📄 jadual.html # The main schedule page (renders both views)
+├── 📄 script.js # Core logic for rendering desktop & mobile views
+├── 📄 style.css # Styles for both desktop & mobile views
+└── 📄 logo.png
 
 ## How It Works
 
-1.  **Data Management (Google Sheet):**
-    *   The administrator updates the schedule in two tabs of the [Google Sheet](https://docs.google.com/spreadsheets/d/1WRbrMkfF_zwFi49j2p3sjebxcUoTbsDgWQxAxcuaUCw/edit?usp=sharing):
-        *   `Posters`: Maps a lecturer's short name to their full name, lecture topic, and poster filename.
-        *   `Schedule`: Lists the dates for the month, assigning a lecturer's short name to the Subuh and Maghrib slots. A "Cuti Umum" column is used for holiday labels.
-2.  **Automation (Google Apps Script):**
-    *   A custom Google Apps Script is attached to the spreadsheet.
-    *   When triggered (via the `📤 Export Files` menu), the script reads the data from both tabs.
-    *   It automatically generates metadata (like the month title and last updated date) and constructs a single, comprehensive `jadual_lengkap.json` file.
-    *   Using the GitHub API, the script pushes this updated JSON file directly to the `data/` directory in the repository.
-3.  **Frontend Rendering (Client-Side):**
-    *   Both the **Calendar View** (`jadual/script.js`) and the **Digital Signage** (`paparan/script.js`) fetch their data from the same `../data/jadual_lengkap.json` file.
-    *   The JavaScript then dynamically builds the HTML content based on this data, ensuring both views are always perfectly in sync.
+1.  **Data Management (Google Sheets):**
+    -   A Google Sheet with two tabs (`Schedule` and `Posters`) is used to manage all lecture data.
+    -   A Google Apps Script reads these sheets, constructs a structured JSON object containing all necessary information (lecturer names, topics, poster URLs, public holidays), and automatically pushes it to the `data/jadual_lengkap.json` file in this repository.
+
+2.  **Client-Side Rendering (`jadual/script.js`):**
+    -   When a user visits `jadual.html`, the script fetches the master `data/jadual_lengkap.json` file.
+    -   It checks the URL for a `?bulan=depan` parameter to determine which month to display (current or next).
+    -   It then dynamically renders **two versions** of the schedule in the HTML:
+        -   A traditional `<table>` for the desktop view.
+        -   A series of `<div>` cards for the mobile view.
+    -   For the mobile view, it also fetches the current Hijri date from JAKIM's e-Solat API to display in the "Kuliah Hari Ini" card.
+
+3.  **Responsive Display (`jadual/style.css`):**
+    -   The stylesheet contains a `@media query` for screens 768px wide or less.
+    -   On desktop screens, the `<table>` is displayed, and the mobile card container is hidden (`display: none`).
+    -   On mobile screens, the `<table>` is hidden, and the mobile card container is displayed.
+
+## Data Management Workflow
+
+To update the schedule, you **only need to edit the Google Sheet**.
+
+1.  **`Posters` Sheet:** Ensure all lecturers and their details (full name, topic, poster filename) are listed here.
+2.  **`Schedule` Sheet:** Fill in the monthly schedule using the `Short_Name` from the `Posters` sheet. You can add data for future months at the bottom of the current month's data.
+3.  **Run the Script:** From the Google Sheet menu, run **`Export Files` > `Update Live Schedule (JSON)`**.
+
+This will automatically update the `jadual_lengkap.json` file, and the changes will be live on the website.
+
+## Running Locally
+
+Because the page fetches a JSON file, you must run it through a local web server.
+
+1.  Navigate to the project's root directory (`projek-jadual-masjid/`) in your terminal.
+2.  Start a local server. A simple way is using Python:
+    ```bash
+    python -m http.server
+    ```
+3.  Open your browser and navigate to `http://localhost:8000/jadual/jadual.html`.
+
+## Customization
+
+-   **Next Month View:** The link for the next month's schedule is located in `index.html` and points to `jadual/jadual.html?bulan=depan`.
+-   **Digital Signage URLs:** The URLs for the embedded posters are hardcoded in `jadual/script.js` within the `renderTodayCard` function.
+-   **e-Solat Zone:** The JAKIM API zone is set to `WLY01` in `jadual/script.js` within the `loadHijriDate` function. This can be changed to match your location.
+
+
+Tentu. Berdasarkan set kod terakhir yang lengkap dan berfungsi, berikut adalah ringkasan perubahan utama dan perkara-perkara penting yang memastikan kedua-dua paparan (desktop dan mudah alih) berfungsi dengan betul.
+
+Ini adalah "manual rujukan" yang baik untuk projek anda.
 
 ---
 
-## How to Run Locally
+### **Ringkasan Perubahan Utama & Perkara Penting**
 
-Because the project fetches a JSON file, you cannot simply open the `.html` files in your browser via the `file://` protocol. You must serve them through a local web server.
+#### **1. Sistem Dua Paparan dalam Satu Halaman**
 
-1.  **Open the project** in a code editor like VS Code.
-2.  **Use a live server extension.** The most popular one is **Live Server** by Ritwick Dey.
-3.  **Right-click on `index.html`** in the root directory and select "Open with Live Server".
-4.  This will open the main hub page (e.g., at `http://127.0.0.1:5500`), and all links will work correctly from there.
+*   **Perubahan Utama:** Daripada mempunyai reka letak yang cuba menyesuaikan diri, kita kini mempunyai **dua reka letak yang berasingan sepenuhnya** di dalam `jadual.html`:
+    1.  Sebuah `<table>` dengan id `calendar-body` (untuk desktop).
+    2.  Sebuah `<div>` dengan id `mobile-view-container` (untuk mudah alih).
+*   **Bagaimana Ia Berfungsi:** `script.js` kini menjalankan **dua fungsi render** yang berbeza (`renderCalendarDesktop` dan `initializeMobileView`), yang mengisi kedua-dua bekas ini serentak.
+*   **Perkara Penting:** Fail `style.css` menggunakan `@media query` untuk mengawal mana satu yang dipaparkan.
+    *   **Desktop:** `.schedule-table` dipaparkan, `#mobile-view-container` disembunyikan.
+    *   **Mudah Alih:** `.schedule-table` disembunyikan, `#mobile-view-container` dipaparkan.
+    *   Ini adalah kunci utama yang menyelesaikan masalah paparan yang "hancur" sebelum ini.
+
+#### **2. Pengurusan Data Melalui Google Sheet & JSON Berstruktur**
+
+*   **Perubahan Utama:** Kita telah beralih daripada menguruskan `jadual.json` dan `ustaz.json` secara manual kepada satu aliran kerja automatik.
+*   **Bagaimana Ia Berfungsi:**
+    1.  **Google Sheet:** Menjadi satu-satunya tempat untuk mengurus data.
+    2.  **Skrip Google Apps:** Bertindak sebagai "enjin" yang membaca Google Sheet dan menghasilkan fail `jadual_lengkap.json`.
+    3.  **`jadual_lengkap.json`:** Fail ini kini mempunyai struktur objek yang lebih kaya, mengandungi `infoJadual` (metadata) dan `senaraiHari` (jadual).
+*   **Perkara Penting:** Mana-mana `script.js` (sama ada untuk Jadual Kalendar atau Digital Signage) yang ingin membaca data ini **mesti** tahu untuk mengakses `jsonData.senaraiHari` terlebih dahulu, bukan `jsonData` secara terus.
+
+#### **3. Ciri-ciri Paparan Desktop (Kekal dengan `position: absolute`)**
+
+*   **Perubahan Utama:** Kita telah membuat keputusan untuk mengekalkan kaedah `position: absolute` untuk paparan desktop bagi memastikan ia kelihatan 100% sama seperti reka bentuk asal anda.
+*   **Bagaimana Ia Berfungsi:**
+    *   `.day-cell` mempunyai `position: relative`.
+    *   `.date-number` dan `.lecture-content` mempunyai `position: absolute` dan diletakkan pada koordinat `top`, `left`, `bottom`, `right` yang spesifik.
+*   **Perkara Penting:**
+    *   **`Highlight` Hari Ini:** Untuk `highlight` berfungsi dalam kaedah ini, `script.js` **mesti** menambah kelas `is-today` pada `.day-cell` (`<td>`), dan `style.css` **mesti** mempunyai peraturan `.day-cell.is-today` untuk mewarnakan latar belakangnya.
+    *   **Jajaran Cuti Umum:** Untuk memastikan nombor tarikh tidak "lari" pada hari cuti, `script.js` kini menggunakan helah: ia memaparkan nombor tarikh seperti biasa, dan jika ada cuti, ia menambah `<div class="date-header">` yang hanya mengandungi label cuti dan satu `<span>` kosong untuk menolaknya ke kanan.
+
+#### **4. Ciri-ciri Paparan Mudah Alih (Kad Responsif)**
+
+*   **Perubahan Utama:** Paparan jadual digantikan dengan dua komponen: kad "Kuliah Hari Ini" dan senarai kad harian.
+*   **Bagaimana Ia Berfungsi:**
+    *   **Kad "Hari Ini":** Dicipta secara dinamik oleh `renderTodayCard`. Ia membuat panggilan `fetch` tambahan ke API e-solat JAKIM untuk mendapatkan tarikh Hijri. Ia juga membenamkan (embed) paparan Digital Signage menggunakan `<iframe>`.
+    *   **Senarai Kad:** Dicipta oleh `initializeMobileView`. Ia akan `filter` data untuk bulan semasa dan melangkau hari yang tiada kuliah.
+*   **Perkara Penting:**
+    *   **Struktur:** Semua kandungan mudah alih berada di dalam `<div id="mobile-view-container">`.
+    *   **Saiz Fon:** Saiz fon untuk paparan mudah alih dikawal secara berasingan di dalam blok `@media query` menggunakan unit `em` dan `rem`, yang lebih sesuai untuk skrin kecil.
+    *   **Poster Responsif:** Gaya untuk `.poster-wrapper` menggunakan `aspect-ratio: 16 / 9;` untuk memastikan `iframe` poster sentiasa mengekalkan nisbah aspek yang betul.
+
+Secara ringkasnya, kunci utama sistem anda sekarang ialah **pengasingan**: pengasingan antara logik data (Google Sheet) dan paparan (laman web), serta pengasingan antara gaya paparan desktop dan gaya paparan mudah alih.
+
+Tentu. Berdasarkan versi terakhir yang berfungsi dengan baik, berikut adalah ringkasan perkara-perkara penting (key points) di dalam blok `@media print` anda dan mengapa setiap satu daripadanya kritikal.
+
+### **Kunci Utama dalam `@media print`**
+
+#### **1. Penetapan Halaman & Susun Atur Utama (`@page` & `Flexbox`)**
+
+*   **Kod:**
+    ```css
+    @page {
+        size: A4 landscape;
+        margin: 0;
+    }
+    .page-container {
+        display: flex;
+        flex-direction: column;
+        height: 100vh !important;
+        padding: 1cm !important;
+    }
+    main {
+        flex-grow: 1;
+    }
+    ```
+*   **Mengapa Penting:** Ini adalah asas kepada penyelesaian masalah "footer terkeluar".
+    *   **`size: A4 landscape;`**: Menetapkan orientasi kertas, memastikan jadual yang lebar mempunyai ruang yang cukup.
+    *   **`display: flex;` pada `.page-container`**: Mengubah bekas utama menjadi bekas Flexbox.
+    *   **`flex-grow: 1;` pada `main`**: Ini adalah arahan yang paling kritikal. Ia "memaksa" bahagian `main` (yang mengandungi jadual) untuk **memanjang dan mengisi semua ruang kosong** di antara `header` dan `footer`, memastikan `footer` sentiasa kekal di bahagian bawah halaman yang sama.
+
+#### **2. Mengekalkan Kaedah `position: absolute`**
+
+*   **Kod:**
+    ```css
+    .day-cell { position: relative !important; }
+    .date-number { position: absolute; ... }
+    .date-header { position: absolute; ... }
+    .lecture-content { position: absolute; ... }
+    ```
+*   **Mengapa Penting:** Paparan desktop anda dibina di atas kaedah ini. Untuk memastikan hasil cetakan kelihatan **sama seperti paparan desktop**, kita perlu mengekalkan kaedah penggayaan ini. `!important` pada `.day-cell` memastikan ia tidak diatasi oleh mana-mana gaya lain.
+
+#### **3. Penggunaan Unit Mesra Cetakan (`pt`)**
+
+*   **Kod:**
+    ```css
+    .lecture-content { font-size: 6.5pt; top: 16pt; }
+    .date-number { font-size: 9pt; top: 2pt; }
+    ```
+*   **Mengapa Penting:** Unit `vmin` (yang digunakan pada desktop) adalah tidak menentu dalam mod cetak. Menukar semua saiz fon dan kedudukan (`top`, `bottom`, dll.) kepada unit **Points (`pt`)** adalah kunci untuk mendapatkan **konsistensi visual**. `pt` adalah unit standard untuk saiz fon pada kertas, jadi ia akan sentiasa kelihatan sama. Ini menyelesaikan masalah teks yang "melimpah".
+
+#### **4. Pengurusan Garisan Sempadan (`border`)**
+
+*   **Kod:**
+    ```css
+    .schedule-table td { padding: 1px !important; }
+    .day-cell { background-color: transparent !important; }
+    .day-cell::before {
+        content: '';
+        position: absolute;
+        top: 1px; left: 1px; right: 1px;
+        height: 15pt;
+        background-color: var(--date-header-bg);
+    }
+    ```
+*   **Mengapa Penting:** Ini adalah "helah" untuk memaparkan semula garisan sempadan jadual yang hilang.
+    *   `.day-cell` dijadikan lutsinar (`transparent`) supaya garisan di bawahnya boleh kelihatan.
+    *   Elemen palsu `::before` dicipta untuk "melukis semula" jalur kuning di dalam ruang yang kini lutsinar itu.
+    *   `padding: 1px` pada `<td>` mencipta ruang kecil untuk garisan itu "bernafas".
+
+#### **5. Menyembunyikan Elemen Tidak Perlu**
+
+*   **Kod:**
+    ```css
+    .footer-link,
+    .legend-box.today-legend {
+        display: none !important;
+    }
+    .day-cell.is-today {
+        background-color: var(--date-header-bg) !important;
+    }
+    ```
+*   **Mengapa Penting:** Ini mengemaskan hasil cetakan.
+    *   Menyembunyikan pautan yang tidak boleh diklik dan petunjuk "Hari Ini" yang tidak relevan pada kertas.
+    *   Memastikan petak "Hari Ini" kembali kepada warna kuning biasa, menjadikan keseluruhan jadual seragam dari segi visual.
+
+Secara ringkasnya, kunci utama `@media print` anda ialah **menggabungkan susun atur Flexbox peringkat tinggi** (untuk `page-container`) dengan **pengekalan gaya `position: absolute` peringkat rendah** (untuk kandungan petak), sambil **menukar semua unit kepada `pt`** untuk konsistensi cetakan.
