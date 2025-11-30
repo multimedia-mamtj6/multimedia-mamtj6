@@ -625,7 +625,11 @@
     {
       "date": "2025-12-29",
       "subuh": null,
-      "maghrib": null,
+      "maghrib": {
+        "nama_penceramah": "Penceramah akan diumumkan",
+        "tajuk_kuliah": "Topik akan diumumkan",
+        "poster_url": "https://multimedia.mamtj6.com/kuliah/assets/poster-kuliah/1920X1080/19_18.-Ustaz-Mohd-Fadhli-Bin-Johari.jpg"
+      },
       "cuti_umum": null
     },
     {
