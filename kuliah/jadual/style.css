@@ -42,7 +42,7 @@ main { flex-grow: 1; min-height: 0; }
 .schedule-table th, .schedule-table td { border: 1px solid var(--border-color); vertical-align: top; padding: 0.5vmin; }
 .schedule-table thead th { background-color: var(--week-bg); font-size: 1.6vmin; text-align: center; vertical-align: middle; }
 .week-header-title { background-color: var(--week-col-bg) !important; width: 2%; }
-.week-number-cell { background-color: var(--week-col-bg); font-weight: bold; font-size: 1.6vmin; text-align: center; vertical-align: middle; writing-mode: vertical-lr; transform: rotate(180deg); }
+.week-number-cell { background-color: var(--week-col-bg); font-weight: bold; font-size: 1.6vmin; text-align: center; vertical-align: middle; writing-mode: vertical-lr; -webkit-writing-mode: vertical-lr; -ms-writing-mode: tb-rl; transform-origin: center center; -webkit-transform: rotate(180deg); -moz-transform: rotate(180deg); -ms-transform: rotate(180deg); -o-transform: rotate(180deg); transform: rotate(180deg); }
 
 .day-cell { position: relative; background-color: var(--date-header-bg); }
 .day-cell.empty-cell { background-color: var(--empty-cell-bg); }
@@ -117,4 +117,3 @@ main { flex-grow: 1; min-height: 0; }
     .legend { flex-wrap: wrap; justify-content: center; display: none;}
     .legend-box { width: auto; flex-grow: 1; padding: 8px 12px; font-size: 0.9em; }
 }
-
