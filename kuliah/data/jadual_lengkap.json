@@ -1,7 +1,7 @@
 {
   "infoJadual": {
     "tajukBulan": "BULAN NOVEMBER 2025",
-    "tarikhKemasKini": "*Dikemaskini oleh Biro Dakwah pada 30/11/2025"
+    "tarikhKemasKini": "*Dikemaskini oleh Biro Dakwah pada 1/12/2025"
   },
   "senaraiHari": [
     {
@@ -625,7 +625,11 @@
     {
       "date": "2025-12-29",
       "subuh": null,
-      "maghrib": null,
+      "maghrib": {
+        "nama_penceramah": "Ustaz Ahmad Termizi",
+        "tajuk_kuliah": "Sesi Tajwid & Talaqqi Al-Quran",
+        "poster_url": "https://multimedia.mamtj6.com/kuliah/assets/poster-kuliah/1920X1080/02_1.-Ustaz-Ahmad-Termizi.jpg"
+      },
       "cuti_umum": null
     },
     {
