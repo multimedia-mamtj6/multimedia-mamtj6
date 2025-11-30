@@ -24,8 +24,10 @@
         </header>
 
         <div class="nav-buttons">
-            <a href="jadual.html" class="nav-button full-width">Lihat Jadual Bulan Ini</a>
-            
+            <a href="jadual.html" class="nav-button full-width" id="current-month-button">
+                LIHAT JADUAL <span id="current-month-name">...</span>
+            </a>
+
             <!-- BUTANG BAHARU UNTUK BULAN DEPAN -->
             <a href="jadual.html?bulan=depan" class="nav-button full-width" id="next-month-button">
                 LIHAT JADUAL <span id="next-month-name">...</span>
@@ -35,21 +37,34 @@
             <a href="./jadual-kuliah.pdf" download class="nav-button">Muat Turun PDF</a>
             <a href="#" class="nav-button full-width">Panel Kawalan Admin</a>
         </div>
+
+        <footer style="margin-top: 2rem; font-size: 0.9rem; color: #666;">
+            <p>Versi 14.1 • Dikemaskini Disember 2025</p>
+        </footer>
     </div>
 
     <script>
-        // Skrip kecil untuk mengemas kini nama bulan depan pada butang
+        // Skrip kecil untuk mengemas kini nama bulan semasa dan bulan depan pada butang
         document.addEventListener('DOMContentLoaded', () => {
+            const monthNames = ["JANUARI", "FEBRUARI", "MAC", "APRIL", "MEI", "JUN", "JULAI", "OGOS", "SEPTEMBER", "OKTOBER", "NOVEMBER", "DISEMBER"];
+            const today = new Date();
+
+            // Update bulan semasa
+            const currentMonthNameSpan = document.getElementById('current-month-name');
+            if (currentMonthNameSpan) {
+                const currentMonth = monthNames[today.getMonth()];
+                const currentYear = today.getFullYear();
+                currentMonthNameSpan.textContent = `BULAN ${currentMonth} ${currentYear}`;
+            }
+
+            // Update bulan depan
             const nextMonthNameSpan = document.getElementById('next-month-name');
             if (nextMonthNameSpan) {
-                const today = new Date();
                 // Pergi ke bulan depan
                 const nextMonthDate = new Date(today.getFullYear(), today.getMonth() + 1, 1);
-                
-                const monthNames = ["JANUARI", "FEBRUARI", "MAC", "APRIL", "MEI", "JUN", "JULAI", "OGOS", "SEPTEMBER", "OKTOBER", "NOVEMBER", "DISEMBER"];
                 const monthName = monthNames[nextMonthDate.getMonth()];
                 const year = nextMonthDate.getFullYear();
-                
+
                 nextMonthNameSpan.textContent = `BULAN ${monthName} ${year}`;
             }
         });
