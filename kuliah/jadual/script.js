@@ -100,7 +100,7 @@ function renderCalendarDesktop(senaraiHari, targetDate) {
                         lectureWrapper.classList.add('is-empty-slot');
                         lectureWrapper.innerHTML = `<div class="empty-slot-text">Slot Kosong</div>`;
                     } else if (dayData.subuh?.nama_penceramah.includes('Yasiin') || dayData.maghrib?.nama_penceramah.includes('Yasiin')) {
-                        lectureWrapper.innerHTML = `<div><div class="arabic-text" lang="ar" dir="rtl"> باچان يسٓ دان تهليل </div><div class="yasin-title">BACAAN YASIIN & TAHLIL</div></div>`;
+                        lectureWrapper.innerHTML = `<div><div class="arabic-text" lang="ar" dir="rtl"> باچاءن يسٓ دان تهليل </div><div class="yasin-title">BACAAN YASIIN & TAHLIL</div></div>`;
                     } else {
                         const currentDate = new Date(year, month, dayNumber);
                         const dayOfWeek = currentDate.getDay();

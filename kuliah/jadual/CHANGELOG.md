@@ -14,6 +14,17 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
   - Maintains the required 180° rotation for correct text orientation
   - File modified: `jadual/style.css` (line 45, `.week-number-cell` class)
 
+- **Print layout missing styles** - Added complete `@media print` styles that were missing from the CSS file
+  - Implements A4 landscape page layout with proper margins
+  - Uses Flexbox layout to prevent footer overflow on printed pages
+  - Applies `box-shadow` technique to preserve background colors (green headers, yellow date cells, gray empty slots) in print output
+  - Converts all font sizes and positioning to `pt` units for print consistency
+  - Sets vertical week labels with `writing-mode: vertical-lr` and 180° rotation for correct orientation
+  - Maintains `position: absolute` layout for content fidelity between screen and print
+  - Shows footer link in printed output (removed `.footer-link` from hidden elements)
+  - Hides print button and "today" legend box
+  - File modified: `jadual/style.css` (lines 121-217, added complete `@media print` block)
+
 ### Added
 - **Dynamic month names on navigation buttons** - Both current and next month buttons now display the actual month name and year
   - Current month button shows: "LIHAT JADUAL BULAN [MONTH] [YEAR]"
