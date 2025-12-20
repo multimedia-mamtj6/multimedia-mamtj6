@@ -1,7 +1,7 @@
 {
   "infoJadual": {
     "tajukBulan": "BULAN DISEMBER 2025",
-    "tarikhKemasKini": "*Dikemaskini oleh Biro Dakwah pada 7/12/2025"
+    "tarikhKemasKini": "*Dikemaskini oleh Biro Dakwah pada 20/12/2025"
   },
   "senaraiHari": [
     {
@@ -200,11 +200,7 @@
     },
     {
       "date": "2025-12-20",
-      "subuh": {
-        "nama_penceramah": "Ustaz Badrul Hisham",
-        "tajuk_kuliah": "Fadilat Sedekah",
-        "poster_url": "https://multimedia.mamtj6.com/kuliah/assets/poster-kuliah/1920X1080/15_14.-Ustaz-Badrul-Hisham.jpg"
-      },
+      "subuh": null,
       "maghrib": {
         "nama_penceramah": "Ustaz Nawawi",
         "tajuk_kuliah": "Ringkasan Riyadhus Solihin",
