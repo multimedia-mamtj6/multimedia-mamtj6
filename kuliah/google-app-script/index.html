@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+<head>
+<base target="_top">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+/* --- UNIVERSAL STYLES --- */
+* {
+box-sizing: border-box;
+}
+  html, body {
+    height: 100%; /* Ensure body can fill the screen */
+  }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+    background-color: #f4f5f7;
+    color: #172b4d;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start; 
+    margin: 0;
+    padding: 2em 1em;
+  }
+  .container {
+    background: white;
+    padding: 2em;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    text-align: center;
+    width: 100%;
+    max-width: 420px;
+  }
+  h2 {
+    margin-top: 0;
+    font-size: 1.6em;
+  }
+  p {
+    color: #5e6c84;
+    font-size: 1em;
+    line-height: 1.5;
+  }
+  input[type="password"] {
+    width: 100%;
+    padding: 12px;
+    font-size: 1.1em;
+    border: 1px solid #dfe1e6;
+    border-radius: 4px;
+    margin-bottom: 1.2em;
+  }
+  button {
+    width: 100%;
+    padding: 14px;
+    font-size: 1.1em;
+    font-weight: bold;
+    color: white;
+    background-color: #0052cc;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+  }
+  button:hover {
+    background-color: #0065ff;
+  }
+  button:disabled {
+    background-color: #a5adba;
+    cursor: not-allowed;
+  }
+  #status {
+    margin-top: 1.5em;
+    font-weight: bold;
+    min-height: 22px;
+    word-wrap: break-word; /* To prevent long error messages from breaking layout */
+  }
+  .loader {
+    border: 4px solid #f3f3f3;
+    border-radius: 50%;
+    border-top: 4px solid #0052cc;
+    width: 22px;
+    height: 22px;
+    animation: spin 1s linear infinite;
+    display: inline-block;
+    vertical-align: middle;
+    margin-right: 10px;
+  }
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+</style>
+
+</head>
+<body>
+<div class="container">
+<h2>GitHub Sync Control Panel</h2>
+<p>Enter your secret key to start the sync process from Google Sheets to GitHub.</p>
+  <form id="syncForm" onsubmit="event.preventDefault(); handleFormSubmit();">
+    <input type="password" id="secretKey" placeholder="Enter your secret key" required>
+    <button type="submit" id="syncButton">Sync Files Now</button>
+  </form>
+  
+  <div id="status"></div>
+</div>
+
+<script>
+  function handleFormSubmit() {
+    const key = document.getElementById('secretKey').value;
+    const button = document.getElementById('syncButton');
+    const statusDiv = document.getElementById('status');
+    button.disabled = true;
+    statusDiv.innerHTML = '<div class="loader"></div>Syncing, please wait... This may take a moment.';
+    google.script.run
+      .withSuccessHandler(onSuccess)
+      .withFailureHandler(onFailure)
+      .runSyncWithKey(key);
+  }
+  function onSuccess(message) {
+    const button = document.getElementById('syncButton');
+    const statusDiv = document.getElementById('status');
+    statusDiv.innerHTML = message;
+    button.disabled = false;
+    document.getElementById('secretKey').value = ''; // Clear the key on success
+  }
+  function onFailure(error) {
+    const button = document.getElementById('syncButton');
+    const statusDiv = document.getElementById('status');
+    statusDiv.innerHTML = '❌ Error: ' + error.message;
+    button.disabled = false;
+  }
+</script>
+</body>
+</html>

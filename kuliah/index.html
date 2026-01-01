@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Masjid Al-Mukhlisin - Halaman Utama</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- Gaya tambahan diletakkan di sini untuk kesederhanaan -->
+    <style>
+        .hub-container { display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; height: 100vh; }
+        .hub-logo { width: 200px; height: auto; margin-bottom: 2rem; }
+        .hub-header { margin-bottom: 3rem; }
+        .nav-buttons { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; width: 100%; max-width: 600px; }
+        .nav-button { background-color: #fff; color: #005a9c; border: 2px solid #005a9c; padding: 1.5rem; border-radius: 12px; text-decoration: none; font-size: 1.2rem; font-weight: 700; transition: all 0.3s ease; }
+        .nav-button:hover { background-color: #005a9c; color: #fff; transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0, 90, 156, 0.2); }
+        .nav-button.full-width { grid-column: 1 / -1; }
+        .pdf-button { background-color: #e8f4f8; color: #005a9c; border: 2px solid #005a9c; padding: 1.5rem; border-radius: 8px; text-decoration: none; font-size: 1.2rem; font-weight: 700; transition: all 0.3s ease; display: inline-block; }
+        .pdf-button:hover { background-color: #005a9c; color: #fff; transform: translateY(-3px); box-shadow: 0 5px 15px rgba(0, 90, 156, 0.2); }
+        .pdf-button::before { content: "📄 "; }
+        .section-label { grid-column: 1 / -1; font-size: 0.85rem; font-weight: 600; color: #666; text-transform: uppercase; letter-spacing: 0.5px; padding: 0.5rem 0; margin-top: 0.5rem; }
+        .section-label:first-child { margin-top: 0; }
+        @media (max-width: 600px) {
+            .nav-buttons { grid-template-columns: 1fr; }
+            .hub-container { padding-left: 1.5rem; padding-right: 1.5rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="hub-container">
+        <img src="https://dev.mamtj6.com/media/logo-mamtj6/SVG/mamtj6-black.svg" alt="Logo MAMTJ6" class="hub-logo">
+
+        <header class="header hub-header">
+            <h1>SISTEM JADUAL KULIAH</h1>
+            <h1>MASJID AL-MUKHLISIN, TAMAN JAYA 6</h1>
+            <p>28000 TEMERLOH, PAHANG</p>
+        </header>
+
+        <div class="nav-buttons">
+            <!-- Current Month Section -->
+            <div class="section-label">Bulan Semasa</div>
+
+            <a href="jadual.html" class="nav-button" id="current-month-button">
+                LIHAT JADUAL <span id="current-month-name">...</span>
+            </a>
+
+            <a href="jadual.html?file=pdf" class="pdf-button" id="current-month-pdf-button">
+                EXPORT PDF <span id="current-month-pdf-name">...</span>
+            </a>
+
+            <!-- Next Month Section -->
+            <div class="section-label">Bulan Depan</div>
+
+            <a href="jadual.html?bulan=depan" class="nav-button" id="next-month-button">
+                LIHAT JADUAL <span id="next-month-name">...</span>
+            </a>
+
+            <a href="jadual.html?file=pdf&bulan=depan" class="pdf-button" id="next-month-pdf-button">
+                EXPORT PDF <span id="next-month-pdf-name">...</span>
+            </a>
+
+            <!-- Admin Section -->
+            <div class="section-label">Tetapan</div>
+
+            <a href="https://docs.google.com/spreadsheets/d/1WRbrMkfF_zwFi49j2p3sjebxcUoTbsDgWQxAxcuaUCw/edit?usp=sharing" class="nav-button full-width">Panel Kawalan Admin</a>
+        </div>
+
+        <footer style="margin-top: 2rem; font-size: 0.9rem; color: #666;">
+            <p>Versi 15.0 • Dikemaskini 30 Disember 2025</p>
+        </footer>
+    </div>
+
+    <script>
+        // Skrip kecil untuk mengemas kini nama bulan semasa dan bulan depan pada butang
+        document.addEventListener('DOMContentLoaded', () => {
+            const monthNames = ["JANUARI", "FEBRUARI", "MAC", "APRIL", "MEI", "JUN", "JULAI", "OGOS", "SEPTEMBER", "OKTOBER", "NOVEMBER", "DISEMBER"];
+            const today = new Date();
+
+            // Update bulan semasa
+            const currentMonthNameSpan = document.getElementById('current-month-name');
+            if (currentMonthNameSpan) {
+                const currentMonth = monthNames[today.getMonth()];
+                const currentYear = today.getFullYear();
+                currentMonthNameSpan.textContent = `BULAN ${currentMonth} ${currentYear}`;
+            }
+
+            // Update bulan semasa (PDF button)
+            const currentMonthPdfNameSpan = document.getElementById('current-month-pdf-name');
+            if (currentMonthPdfNameSpan) {
+                const currentMonth = monthNames[today.getMonth()];
+                const currentYear = today.getFullYear();
+                currentMonthPdfNameSpan.textContent = `BULAN ${currentMonth} ${currentYear}`;
+            }
+
+            // Update bulan depan
+            const nextMonthNameSpan = document.getElementById('next-month-name');
+            if (nextMonthNameSpan) {
+                // Pergi ke bulan depan
+                const nextMonthDate = new Date(today.getFullYear(), today.getMonth() + 1, 1);
+                const monthName = monthNames[nextMonthDate.getMonth()];
+                const year = nextMonthDate.getFullYear();
+
+                nextMonthNameSpan.textContent = `BULAN ${monthName} ${year}`;
+            }
+
+            // Update bulan depan (PDF button)
+            const nextMonthPdfNameSpan = document.getElementById('next-month-pdf-name');
+            if (nextMonthPdfNameSpan) {
+                const nextMonthDate = new Date(today.getFullYear(), today.getMonth() + 1, 1);
+                const monthName = monthNames[nextMonthDate.getMonth()];
+                const year = nextMonthDate.getFullYear();
+
+                nextMonthPdfNameSpan.textContent = `BULAN ${monthName} ${year}`;
+            }
+        });
+    </script>
+</body>
+</html>

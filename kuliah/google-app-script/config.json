@@ -1,0 +1,200 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "version": "1.0.0",
+  "lastUpdated": "2025-12-30",
+  "environments": {
+    "production": {
+      "GITHUB_USERNAME": "multimedia-mamtj6",
+      "GITHUB_REPO": "dev",
+      "GITHUB_TOKEN": "ghp_eZH0cWr0f8Ha2cVkcevDMI44q1xjWk0",
+      "IMAGE_BASE_URL": "https://multimedia.mamtj6.com/kuliah/asse",
+      "SECRET_KEY": "update"
+    },
+    "development": {
+      "GITHUB_USERNAME": "multimedia-mamtj6",
+      "GITHUB_REPO": "dev",
+      "GITHUB_TOKEN": "ghp_YOUR_DEV_TOKEN_HERE",
+      "IMAGE_BASE_URL": "https://multimedia.mamtj6.com/kuliah/asse",
+      "SECRET_KEY": "dev_secret_key"
+    },
+    "staging": {
+      "GITHUB_USERNAME": "multimedia-mamtj6",
+      "GITHUB_REPO": "staging",
+      "GITHUB_TOKEN": "ghp_YOUR_STAGING_TOKEN_HERE",
+      "IMAGE_BASE_URL": "https://staging.multimedia.mamtj6.com/kuliah/asse",
+      "SECRET_KEY": "staging_secret_key"
+    }
+  },
+  "activeEnvironment": "production",
+  "metadata": {
+    "projectName": "Jadual Kuliah Sync System",
+    "description": "Configuration file for Google Apps Script properties. This file contains sensitive credentials and should NEVER be committed to version control or shared publicly.",
+    "owner": "Biro Dakwah - Masjid Tengku Ampuan Jemaah",
+    "setupDate": "2025-12-30"
+  },
+  "validation": {
+    "GITHUB_USERNAME": {
+      "type": "string",
+      "required": true,
+      "pattern": "^[a-zA-Z0-9-]+$",
+      "description": "GitHub username or organization name. Must contain only alphanumeric characters and hyphens."
+    },
+    "GITHUB_REPO": {
+      "type": "string",
+      "required": true,
+      "pattern": "^[a-zA-Z0-9._-]+$",
+      "description": "GitHub repository name. Must be a valid repository under the specified username."
+    },
+    "GITHUB_TOKEN": {
+      "type": "string",
+      "required": true,
+      "pattern": "^ghp_[a-zA-Z0-9]{36}$",
+      "description": "GitHub Personal Access Token with 'repo' scope. Format: ghp_XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX (40 chars total)",
+      "security": "CRITICAL - Never share or commit this token. Rotate regularly."
+    },
+    "IMAGE_BASE_URL": {
+      "type": "string",
+      "required": true,
+      "pattern": "^https?://.*",
+      "format": "uri",
+      "description": "Base URL for poster images. Must be a valid HTTP/HTTPS URL. Should NOT end with a slash.",
+      "example": "https://multimedia.mamtj6.com/kuliah/assets"
+    },
+    "SECRET_KEY": {
+      "type": "string",
+      "required": true,
+      "minLength": 8,
+      "description": "Secret key for authenticating web app sync requests. Use a strong, unique value.",
+      "security": "IMPORTANT - Change from default value. Used to protect the web app endpoint."
+    }
+  },
+  "setupInstructions": {
+    "step1": {
+      "title": "Obtain GitHub Personal Access Token",
+      "steps": [
+        "1. Go to GitHub Settings → Developer settings → Personal access tokens → Tokens (classic)",
+        "2. Click 'Generate new token (classic)'",
+        "3. Give it a descriptive name: 'Google Apps Script - Jadual Sync'",
+        "4. Set expiration (recommended: 90 days, then rotate)",
+        "5. Select scopes: Check 'repo' (Full control of private repositories)",
+        "6. Click 'Generate token'",
+        "7. IMPORTANT: Copy the token immediately (you won't see it again)",
+        "8. Paste the token in this config file under GITHUB_TOKEN"
+      ],
+      "documentation": "https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token"
+    },
+    "step2": {
+      "title": "Configure Google Apps Script Properties",
+      "steps": [
+        "1. Open your Google Sheet",
+        "2. Go to Extensions → Apps Script",
+        "3. Click the gear icon ⚙️ (Project Settings) in the left sidebar",
+        "4. Scroll down to 'Script Properties'",
+        "5. Click 'Add script property' for each property below:",
+        "   - Property: GITHUB_USERNAME | Value: [from config.json]",
+        "   - Property: GITHUB_REPO     | Value: [from config.json]",
+        "   - Property: GITHUB_TOKEN    | Value: [from config.json]",
+        "   - Property: IMAGE_BASE_URL  | Value: [from config.json]",
+        "   - Property: SECRET_KEY      | Value: [from config.json]",
+        "6. Click 'Save script properties'",
+        "7. Test the sync by clicking 📤 Export Files → Update Live Schedule (JSON)"
+      ]
+    },
+    "step3": {
+      "title": "Verify Configuration",
+      "steps": [
+        "1. Run the script from the custom menu: 📤 Export Files → Update Live Schedule (JSON)",
+        "2. Check for success message: '✅ Success! The kuliah/data/jadual_lengkap.json file has been updated on GitHub.'",
+        "3. Verify the file on GitHub: https://github.com/[USERNAME]/[REPO]/blob/main/kuliah/data/jadual_lengkap.json",
+        "4. Check the commit history to confirm automatic updates are working"
+      ]
+    },
+    "step4": {
+      "title": "Security Best Practices",
+      "practices": [
+        "✓ NEVER commit config.json to version control (add to .gitignore if using Git)",
+        "✓ NEVER share the GITHUB_TOKEN publicly or in screenshots",
+        "✓ Rotate the GitHub token every 90 days",
+        "✓ Use a strong, unique SECRET_KEY (not 'update')",
+        "✓ Limit Script Properties access to authorized users only",
+        "✓ Review GitHub repository permissions regularly",
+        "✓ Enable two-factor authentication (2FA) on GitHub account",
+        "✓ Monitor GitHub repository access logs for suspicious activity"
+      ]
+    },
+    "step5": {
+      "title": "Environment Switching",
+      "steps": [
+        "1. Update 'activeEnvironment' in config.json to switch environments",
+        "2. Manually copy the values from the desired environment to Script Properties",
+        "3. Test the script to ensure it's pointing to the correct repository",
+        "4. Use 'development' for testing, 'staging' for pre-production, 'production' for live"
+      ]
+    }
+  },
+  "troubleshooting": {
+    "errorTokenInvalid": {
+      "error": "Authentication failed or 'Bad credentials'",
+      "causes": [
+        "GitHub token is expired or invalid",
+        "Token doesn't have 'repo' scope permissions",
+        "Token was revoked or deleted"
+      ],
+      "solutions": [
+        "Generate a new GitHub Personal Access Token",
+        "Ensure 'repo' scope is selected when creating the token",
+        "Update GITHUB_TOKEN in Script Properties with the new token"
+      ]
+    },
+    "errorRepoNotFound": {
+      "error": "404 Not Found or repository doesn't exist",
+      "causes": [
+        "GITHUB_USERNAME or GITHUB_REPO is incorrect",
+        "Repository is private and token doesn't have access",
+        "Repository was deleted or renamed"
+      ],
+      "solutions": [
+        "Verify repository exists: https://github.com/[USERNAME]/[REPO]",
+        "Check spelling of GITHUB_USERNAME and GITHUB_REPO",
+        "Ensure token has access to private repositories if applicable"
+      ]
+    },
+    "errorConfigMissing": {
+      "error": "Configuration is missing. Please set all properties...",
+      "causes": [
+        "Script Properties not set in Google Apps Script",
+        "Property names don't match SCRIPT_PROP_KEYS in code.gs"
+      ],
+      "solutions": [
+        "Follow Step 2 in setupInstructions to configure Script Properties",
+        "Ensure property names are EXACT MATCHES (case-sensitive)"
+      ]
+    },
+    "errorImageUrlBroken": {
+      "error": "Poster images not loading on website",
+      "causes": [
+        "IMAGE_BASE_URL is incorrect or has wrong format",
+        "Filename in Posters sheet doesn't match actual file on server",
+        "Image hosting server is down or requires authentication"
+      ],
+      "solutions": [
+        "Verify IMAGE_BASE_URL by pasting in browser + /test.jpg",
+        "Ensure URL does NOT end with a slash (will be added by code)",
+        "Check that filenames in Posters sheet are correct",
+        "Test poster_url in generated JSON file"
+      ]
+    }
+  },
+  "changelog": {
+    "1.0.0": {
+      "date": "2025-12-30",
+      "changes": [
+        "Initial creation of config.json file",
+        "Added multi-environment support (production, development, staging)",
+        "Added comprehensive setup instructions",
+        "Added validation rules for all properties",
+        "Added troubleshooting guide"
+      ]
+    }
+  }
+}
